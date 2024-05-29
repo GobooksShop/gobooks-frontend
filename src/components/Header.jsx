@@ -18,8 +18,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useState } from 'react';
 
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-
 const categoriesExample = [
   {
     id: 123,
