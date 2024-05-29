@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { ThemeProvider, createTheme } from '@mui/material';
 
 import Cart from './pages/cart/Cart';
 import Category from './pages/manager/category/Category';
@@ -13,27 +14,46 @@ import ProductDetail from './pages/productDetail/ProductDetail';
 import ProductList from './pages/productList/ProductList';
 
 function App() {
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#1cc7d0',
+        // light: will be calculated from palette.primary.main,
+        // dark: will be calculated from palette.primary.main,
+        // contrastText: will be calculated to contrast with palette.primary.main
+      },
+      secondary: {
+        main: '#E0C2FF',
+        light: '#F5EBFF',
+        // dark: will be calculated from palette.secondary.main,
+        contrastText: '#47008F',
+      },
+    },
+  });
+
   return (
     <div className="App">
-      <BrowserRouter>
-        <Header />
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <Header />
 
-        <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/join" element={<Join />} />
-          <Route path="/order" element={<Order />} />
-          <Route
-            path="/product/list/:category1/:category2?"
-            element={<ProductList />}
-          />
-          <Route path="/product/detail" element={<ProductDetail />} />
-          <Route path="/product/management" element={<Product />} />
-          <Route path="/category/management" element={<Category />} />
-          <Route path="/cart" element={<Cart />} />
-        </Routes>
-        <Footer />
-      </BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Main />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/join" element={<Join />} />
+            <Route path="/order" element={<Order />} />
+            <Route
+              path="/product/list/:category1/:category2?"
+              element={<ProductList />}
+            />
+            <Route path="/product/detail" element={<ProductDetail />} />
+            <Route path="/product/management" element={<Product />} />
+            <Route path="/category/management" element={<Category />} />
+            <Route path="/cart" element={<Cart />} />
+          </Routes>
+          <Footer />
+        </BrowserRouter>
+      </ThemeProvider>
     </div>
   );
 }

@@ -72,7 +72,7 @@ function Header() {
                 fontFamily: 'monospace',
                 fontWeight: 700,
                 letterSpacing: '.3rem',
-                color: 'inherit',
+                color: '#050f2c',
                 textDecoration: 'none',
               }}
             >
@@ -150,22 +150,47 @@ function Header() {
               ))}
             </Box>
 
-            <ul className="flex gap-[10px] mr-[10px]">
+            <ul className="flex items-center gap-[10px] mr-[10px] ">
               <li>
-                <Link to="/login">로그인</Link>
+                <Button sx={{ my: 2, color: 'white', display: 'block' }}>
+                  <Link to="/login">로그인</Link>
+                </Button>
               </li>
               <li>
-                <Link to="/join">회원가입</Link>
+                <Button
+                  sx={{
+                    my: 2,
+                    color: 'white',
+                    display: 'block',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  <Link to="/join">회원가입</Link>
+                </Button>
               </li>
               <li>
-                <Link to="/cart">
-                  <ShoppingCartIcon />
-                </Link>
+                <IconButton
+                  className="w-[35px] h-[35px]"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                >
+                  <Link to="/cart">
+                    <ShoppingCartIcon />
+                  </Link>
+                </IconButton>
               </li>
               <li>
-                <Link to="/category/management">
-                  <ManageAccountsIcon />
-                </Link>
+                <IconButton
+                  className="w-[35px] h-[35px]"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                >
+                  <Link to="/category/management">
+                    <ManageAccountsIcon />
+                  </Link>
+                </IconButton>
               </li>
             </ul>
 
