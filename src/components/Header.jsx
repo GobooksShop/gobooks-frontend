@@ -58,26 +58,28 @@ function Header() {
 
   return (
     <>
-      <AppBar position="fixed">
+      <AppBar position="fixed" color="">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
-              href="#app-bar-with-responsive-menu"
-              sx={{
-                mr: 2,
-                display: { xs: 'none', md: 'flex' },
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: '#050f2c',
-                textDecoration: 'none',
-              }}
-            >
-              GoBooks
-            </Typography>
+            <Link to="/">
+              <Typography
+                variant="h6"
+                noWrap
+                component="a"
+                href="#app-bar-with-responsive-menu"
+                sx={{
+                  mr: 2,
+                  display: { xs: 'none', md: 'flex' },
+                  fontFamily: 'monospace',
+                  fontWeight: 700,
+                  letterSpacing: '.3rem',
+
+                  textDecoration: 'none',
+                }}
+              >
+                GoBooks
+              </Typography>
+            </Link>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
               <IconButton
@@ -86,7 +88,9 @@ function Header() {
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handleOpenNavMenu}
-                color="inherit"
+                sx={{
+                  color: '#000000',
+                }}
               >
                 <MenuIcon />
               </IconButton>
@@ -142,7 +146,7 @@ function Header() {
                 <Link key={category.id} to={`/product/list/${category.id}`}>
                   <Button
                     onClick={handleCloseNavMenu}
-                    sx={{ my: 2, color: 'white', display: 'block' }}
+                    sx={{ my: 2, display: 'block', color: '#000' }}
                   >
                     {category.name}
                   </Button>
