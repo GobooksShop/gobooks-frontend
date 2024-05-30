@@ -1,40 +1,62 @@
-import { AppBar, Container, Toolbar, Typography } from '@mui/material';
-import { CategoryMenuMobile, CategoryMenuPC } from './fragments/CategoryMenu';
-import { LogoMobile, LogoPC } from './fragments/Logo';
+import { AppBar, Box, Toolbar } from '@mui/material';
 
+import { CategoryMenu } from './fragments/CategoryMenu';
+import { Logo } from './fragments/Logo';
 import { UserMenu } from './fragments/UserMenu';
 import { useState } from 'react';
 
 const categoriesExample = [
   {
     id: 123,
-    name: '소설',
+    name: '국내도서',
+    descendants: [
+      {
+        id: 126,
+        name: '소설',
+        descendants: [
+          { id: 126, name: '한국소설' },
+          { id: 127, name: '영미소설' },
+        ],
+      },
+      {
+        id: 127,
+        name: '시/에세이',
+        descendants: [
+          { id: 126, name: '한국시' },
+          { id: 127, name: '해외시' },
+        ],
+      },
+    ],
   },
   {
-    id: 124,
-    name: '에세이',
+    id: 222,
+    name: '서양도서',
+    descendants: [],
   },
   {
     id: 125,
-    name: '비문학',
+    name: '일본도서',
+    descendants: [
+      {
+        id: 126,
+        name: '잡지',
+        descendants: [],
+      },
+    ],
   },
 ];
 
 function Header() {
   const [categories, setCategories] = useState(categoriesExample);
-  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
+  const handleMenu = (event) => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   const handleOpenProfileMenu = (event) => {
     setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   const handleCloseProfileMenu = () => {
@@ -44,24 +66,24 @@ function Header() {
   return (
     <>
       <AppBar position="fixed" color="">
-        <Container maxWidth="xl">
-          <Toolbar disableGutters>
-            <LogoPC />
-            <CategoryMenuMobile
+        <Box className="flex items-center px-[24px]" maxWidth="1536px">
+          <Logo />
+          {categories && (
+            <CategoryMenu
               categories={categories}
-              onOpen={handleOpenNavMenu}
-              onClose={handleCloseNavMenu}
-              anchorElNav={anchorElNav}
+              handleMenu={handleMenu}
+              isMenuOpen={isMenuOpen}
             />
-            <LogoMobile />
-            <CategoryMenuPC categories={categories} />
+          )}
+
+          <Toolbar disableGutters>
             <UserMenu
               onOpen={handleOpenProfileMenu}
               onClose={handleCloseProfileMenu}
               anchorElUser={anchorElUser}
             />
           </Toolbar>
-        </Container>
+        </Box>
       </AppBar>
       <div className="h-[70px] w-full" />
     </>
