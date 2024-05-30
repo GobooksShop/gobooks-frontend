@@ -82,7 +82,9 @@ export function UserMenu({ onOpen, onClose, anchorElUser }) {
           onClose={onClose}
         >
           <MenuItem onClick={onClose}>
-            <Typography textAlign="center">마이페이지</Typography>
+            <Link to="/myPage">
+              <Typography textAlign="center">마이페이지</Typography>
+            </Link>
           </MenuItem>
           <MenuItem onClick={onClose}>
             <Typography textAlign="center">로그아웃</Typography>
