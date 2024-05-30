@@ -154,15 +154,14 @@ function Header() {
 
             <ul className="flex items-center gap-[10px] mr-[10px] ">
               <li>
-                <Button sx={{ my: 2, color: 'white', display: 'block' }}>
+                <Button sx={{ my: 2, color: '#000', display: 'block' }}>
                   <Link to="/login">로그인</Link>
                 </Button>
               </li>
               <li>
                 <Button
-                  sx={{
-                    my: 2,
-                    color: 'white',
+                  sx={{my: 2,
+                    color: '#000',
                     display: 'block',
                     whiteSpace: 'nowrap',
                   }}
