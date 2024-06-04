@@ -12,9 +12,9 @@ const COLORS = {
 
 const CustomButton = ({ size,color, text, onClick }) => {
 
-  const btnSize = size ? SIZES[size] : SIZES[SIZES.medium];
-  const btnColor = COLORS[color];
-  const handleReferencedFunction = onClick ? onClick : () => {};
+  const btnSize = size ? SIZES[size] : SIZES.medium;
+  const btnColor = color ? COLORS[color] : COLORS.cancel;
+  const handleReferencedFunction = onClick ? onClick : () => console.warn("undefined or null Error Handle Btn Click");
   const defaultBtnStyle = 'tw-text-white tw-outline-none tw-border-none tw-font-semibold tw-rounded';
 
   return (

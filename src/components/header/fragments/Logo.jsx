@@ -7,7 +7,6 @@ export function Logo() {
       <Typography
         variant="h6"
         noWrap
-        component="a"
         sx={{
           mr: 2,
           fontFamily: 'monospace',
