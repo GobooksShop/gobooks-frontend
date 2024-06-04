@@ -4,10 +4,11 @@ import { ThemeProvider, createTheme } from '@mui/material';
 import Cart from './pages/cart/Cart';
 import Category from './pages/manager/category/Category';
 import Footer from './components/Footer';
-import Header from './components/Header';
+import Header from './components/header/Header';
 import Join from './pages/join/Join';
 import Login from './pages/login/Login';
 import Main from './pages/main/Main';
+import MyPage from './pages/myPage/MyPage';
 import Order from './pages/order/Order';
 import Product from './pages/manager/product/Product';
 import ProductDetail from './pages/productDetail/ProductDetail';
@@ -50,6 +51,7 @@ function App() {
             <Route path="/product/management" element={<Product />} />
             <Route path="/category/management" element={<Category />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/myPage" element={<MyPage />} />
           </Routes>
           <Footer />
         </BrowserRouter>
