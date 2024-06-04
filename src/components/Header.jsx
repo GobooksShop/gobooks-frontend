@@ -18,23 +18,23 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useState } from 'react';
 
-const categoriesExample = [
-  {
-    id: 123,
-    name: '소설',
-  },
-  {
-    id: 124,
-    name: '에세이',
-  },
-  {
-    id: 125,
-    name: '비문학',
-  },
-];
+// const categoriesExample = [
+//   {
+//     id: 123,
+//     name: '소설',
+//   },
+//   {
+//     id: 124,
+//     name: '에세이',
+//   },
+//   {
+//     id: 125,
+//     name: '비문학',
+//   },
+// ];
 
 function Header() {
-  const [categories, setCategories] = useState(categoriesExample);
+  // const [categories, setCategories] = useState(categoriesExample);
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -110,15 +110,15 @@ function Header() {
                   display: { xs: 'block', md: 'none' },
                 }}
               >
-                {categories.map((category) => (
-                  <MenuItem key={category.id} onClick={handleCloseNavMenu}>
-                    <Link key={category.id} to={`/product/list/${category.id}`}>
-                      <Typography textAlign="center">
-                        {category.name}
-                      </Typography>
-                    </Link>
-                  </MenuItem>
-                ))}
+                {/*{categories.map((category) => (*/}
+                {/*  <MenuItem key={category.id} onClick={handleCloseNavMenu}>*/}
+                {/*    <Link key={category.id} to={`/product/list/${category.id}`}>*/}
+                {/*      <Typography textAlign="center">*/}
+                {/*        {category.name}*/}
+                {/*      </Typography>*/}
+                {/*    </Link>*/}
+                {/*  </MenuItem>*/}
+                {/*))}*/}
               </Menu>
             </Box>
             <Typography
@@ -140,16 +140,16 @@ function Header() {
               Gobooks
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              {categories.map((category) => (
-                <Link key={category.id} to={`/product/list/${category.id}`}>
-                  <Button
-                    onClick={handleCloseNavMenu}
-                    sx={{ my: 2, display: 'block', color: '#000' }}
-                  >
-                    {category.name}
-                  </Button>
-                </Link>
-              ))}
+              {/*{categories.map((category) => (*/}
+              {/*  <Link key={category.id} to={`/product/list/${category.id}`}>*/}
+              {/*    <Button*/}
+              {/*      onClick={handleCloseNavMenu}*/}
+              {/*      sx={{ my: 2, display: 'block', color: '#000' }}*/}
+              {/*    >*/}
+              {/*      {category.name}*/}
+              {/*    </Button>*/}
+              {/*  </Link>*/}
+              {/*))}*/}
             </Box>
 
             <ul className="flex items-center gap-[10px] mr-[10px] ">
