@@ -152,7 +152,7 @@ function Header() {
               {/*))}*/}
             </Box>
 
-            <ul className="flex items-center gap-[10px] mr-[10px] ">
+            <ul className="tw-flex tw-items-center tw-gap-[10px] tw-mr-[10px] ">
               <li>
                 <Button sx={{ my: 2, color: 'white', display: 'block' }}>
                   <Link to="/login">로그인</Link>
@@ -229,7 +229,7 @@ function Header() {
           </Toolbar>
         </Container>
       </AppBar>
-      <div className="h-[70px] w-full" />
+      <div className="tw-h-[70px] tw-w-full" />
     </>
   );
 }
