@@ -65,7 +65,7 @@ function Header() {
 
   return (
     <>
-      <AppBar position="fixed" color="">
+      <AppBar position="relative" color="">
         <Box className="tw-flex tw-items-center tw-px-[24px]" maxWidth="1536px">
           <Logo />
           {categories && (
