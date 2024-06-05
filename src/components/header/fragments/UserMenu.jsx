@@ -16,7 +16,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 export function UserMenu({ onOpen, onClose, anchorElUser }) {
   return (
     <>
-      <ul className="flex items-center gap-[10px] mr-[10px] ">
+      <ul className="tw-flex tw-items-center tw-gap-[10px] tw-mr-[10px]">
         <li>
           <Button sx={{ my: 2, color: '#000', display: 'block' }}>
             <Link to="/login">로그인</Link>
@@ -48,7 +48,7 @@ export function UserMenu({ onOpen, onClose, anchorElUser }) {
         </li>
         <li>
           <IconButton
-            className="w-[35px] h-[35px]"
+            className="tw-w-[35px] tw-h-[35px]"
             aria-label="account of current user"
             aria-controls="menu-appbar"
             aria-haspopup="true"

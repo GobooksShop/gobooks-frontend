@@ -36,12 +36,12 @@ const Depth2 = ({ category, selectedCategory, handleCategory }) => {
           <>
             {selectedCategory?.id === category.id ? (
               <IndeterminateCheckBoxIcon
-                className="cursor-pointer"
+                className="tw-cursor-pointer"
                 onClick={() => handleCategory()}
               />
             ) : (
               <AddBoxIcon
-                className="cursor-pointer"
+                className="tw-cursor-pointer"
                 onClick={() => handleCategory(category)}
               />
             )}
@@ -82,7 +82,7 @@ export function CategoryMenu({ categories, handleMenu, isMenuOpen }) {
   return (
     <>
       {selectedDepth1 && (
-        <Box className={'relative'} sx={{ flexGrow: 1 }}>
+        <Box className={'tw-relative'} sx={{ flexGrow: 1 }}>
           <IconButton
             size="large"
             aria-label="account of current user"
@@ -97,7 +97,7 @@ export function CategoryMenu({ categories, handleMenu, isMenuOpen }) {
           </IconButton>
           {isMenuOpen && (
             <Box
-              className="flex absolute w-full p-[10px] bottom-[-5px] bg-white"
+              className="tw-flex tw-absolute tw-w-full tw-p-[10px] tw-bottom-[-5px] tw-bg-white"
               sx={{
                 border: '1px solid #000',
                 borderRadius: '20px',
