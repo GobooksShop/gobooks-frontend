@@ -1,7 +1,8 @@
 const SIZES = {
-  small : 'tw-text-sm tw-min-h-[24px] tw-min-w-[40px]',
-  medium: 'tw-text-base tw-min-h-[32px] tw-min-w-[40px]',
-  large : 'tw-text-lg tw-min-h-[40px] tw-min-w-[50px]',
+  small : 'tw-text-sm tw-min-h-[24px] tw-max-h-[24px] tw-min-w-[40px]',
+  medium: 'tw-text-base tw-min-h-[32px] tw-max-h-[32px] tw-min-w-[40px]',
+  large : 'tw-text-lg tw-min-h-[40px] tw-max-h-[40px] tw-min-w-[50px]',
+  largeXl: ''
 }
 
 const COLORS = {
