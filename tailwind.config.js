@@ -3,7 +3,7 @@ module.exports = {
   corePlugins: {
     preflight: false,
   },
-  important: true,
+  important: false,
   prefix: 'tw-',
   content: ["./src/**/*.{js,jsx}"],
   theme: {
