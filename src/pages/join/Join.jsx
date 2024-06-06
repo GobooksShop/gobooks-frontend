@@ -50,9 +50,10 @@ function Join() {
       formData.nickname &&
       isVerified &&
       isEmailUnique &&
+      termsAgreed &&
       !Object.values(errors).some(Boolean)
     );
-  }, [formData, errors, isVerified, isEmailUnique]);
+  }, [formData, errors, isVerified, isEmailUnique, termsAgreed]);
 
   useEffect(() => {
     validateForm();
