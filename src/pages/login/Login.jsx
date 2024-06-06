@@ -1,11 +1,11 @@
 import { Button } from '@mui/material';
 import { PageContainer } from '../../components/PageContainer';
 import { useEffect } from 'react';
-import useStore from '../../store/useStore';
+import useUserStore from '../../store/useUserStore';
 
 function Login() {
-  const store = useStore();
-  const setUser = useStore((state) => state.setUser);
+  const store = useUserStore();
+  const setUser = useUserStore((state) => state.setUser);
 
   const onClickLogin = () => {
     setUser({

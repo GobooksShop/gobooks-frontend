@@ -1,7 +1,7 @@
 // src/store/useStore.js
 import create from 'zustand';
 
-const useStore = create((set) => ({
+const useUserStore = create((set) => ({
   user: {
     name: '',
     email: '',
@@ -11,4 +11,4 @@ const useStore = create((set) => ({
   clearUser: () => set({ user: { name: '', email: '', role: '' } }),
 }));
 
-export default useStore;
+export default useUserStore;
