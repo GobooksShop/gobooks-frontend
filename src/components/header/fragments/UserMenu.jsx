@@ -80,6 +80,7 @@ export function UserMenu({ onOpen, onClose, anchorElUser }) {
           }}
           open={Boolean(anchorElUser)}
           onClose={onClose}
+          disableScrollLock={true}
         >
           <MenuItem onClick={onClose}>
             <Link to="/myPage">

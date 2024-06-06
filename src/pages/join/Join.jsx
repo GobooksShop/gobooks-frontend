@@ -1,4 +1,12 @@
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import {
+  Button,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Grid,
+  TextField,
+  Typography,
+} from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   checkEmail,
@@ -8,6 +16,7 @@ import {
 } from '../../api/authApi';
 
 import { PageContainer } from '../../components/PageContainer';
+import TermsModal from './fragments/TermsModal';
 import { useNavigate } from 'react-router-dom';
 
 function Join() {
@@ -29,20 +38,20 @@ function Join() {
   const [codeChecked, setCodeChecked] = useState(false);
   const [emailButtonDisabled, setEmailButtonDisabled] = useState(false);
   const [sendCodeButtonDisabled, setSendCodeButtonDisabled] = useState(false);
+  const [termsAgreed, setTermsAgreed] = useState(false);
+  const [marketingAgreed, setMarketingAgreed] = useState(false);
+  const [agreedModalOpen, setAgreedModalOpen] = useState(false);
 
   const validateForm = useCallback(() => {
-    const isValid =
+    return (
       formData.name &&
       formData.email &&
       formData.password &&
       formData.nickname &&
-      !errors.name &&
-      !errors.email &&
-      !errors.password &&
-      !errors.nickname &&
       isVerified &&
-      isEmailUnique;
-    return isValid;
+      isEmailUnique &&
+      !Object.values(errors).some(Boolean)
+    );
   }, [formData, errors, isVerified, isEmailUnique]);
 
   useEffect(() => {
@@ -51,10 +60,7 @@ function Join() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData((prev) => ({ ...prev, [name]: value }));
     validateField(name, value);
   };
 
@@ -77,12 +83,12 @@ function Join() {
     try {
       const isVerified = await verifyCode(formData.email, code);
       if (isVerified) {
-        setVerificationStatus('Verified');
+        setVerificationStatus('인증 완료');
         setIsVerified(true);
         setCodeChecked(true);
         console.log('Code verified successfully.');
       } else {
-        setVerificationStatus('Verification failed');
+        setVerificationStatus('인증실패');
         setIsVerified(false);
         console.error('Verification failed.');
       }
@@ -149,6 +155,17 @@ function Join() {
     } catch (error) {
       console.error('Error checking email uniqueness:', error);
     }
+  };
+
+  const handleTermsChange = (event) => {
+    setTermsAgreed(event.target.checked);
+    if (!event.target.checked) {
+      setAgreedModalOpen(true);
+    }
+  };
+
+  const handleMarketingChange = (event) => {
+    setMarketingAgreed(event.target.checked);
   };
 
   const onClickJoin = async () => {
@@ -230,26 +247,34 @@ function Join() {
                   disabled={
                     !!errors.email || !formData.email || emailButtonDisabled
                   }
-                  style={{ marginTop: '16px' }}
+                  style={{
+                    marginTop: '16px',
+                    textTransform: 'none',
+                    fontSize: '1rem',
+                  }}
                 >
-                  {emailChecked ? 'Checked' : 'Check Email'}
+                  {emailChecked ? '사용 가능' : '중복 확인'}
                 </Button>
               </Grid>
               <Grid item xs={3}>
                 <Button
                   variant="contained"
-                  color="primary"
+                  color={isVerified ? 'secondary' : 'primary'}
                   fullWidth
-                  onClick={handleSendCode}
+                  onClick={isVerified ? null : handleSendCode}
                   disabled={
                     !!errors.email ||
                     !formData.email ||
                     !isEmailUnique ||
                     sendCodeButtonDisabled
                   }
-                  style={{ marginTop: '16px' }}
+                  style={{
+                    marginTop: '16px',
+                    textTransform: 'none',
+                    fontSize: '1rem',
+                  }}
                 >
-                  Send Code
+                  {isVerified ? '인증 완료' : '인증코드 발송'}
                 </Button>
               </Grid>
             </Grid>
@@ -270,8 +295,9 @@ function Join() {
                   fullWidth
                   onClick={codeChecked ? null : handleVerifyCode}
                   disabled={!code}
+                  style={{ textTransform: 'none', fontSize: '1rem' }}
                 >
-                  {codeChecked ? 'Verified' : 'Verify Code'}
+                  {codeChecked ? '인증 완료' : '코드 인증'}
                 </Button>
               </>
             )}
@@ -283,6 +309,7 @@ function Join() {
                 {verificationStatus}
               </Typography>
             )}
+
             <TextField
               fullWidth
               label="비밀번호"
@@ -308,6 +335,43 @@ function Join() {
               margin="normal"
               style={{ marginBottom: '20px' }}
             />
+            <FormGroup>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: 8,
+                }}
+              >
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={termsAgreed}
+                      onChange={(e) => setTermsAgreed(e.target.checked)}
+                    />
+                  }
+                  label={
+                    <Typography component="span">
+                      이용약관에 동의합니다. (필수)
+                    </Typography>
+                  }
+                  style={{ marginRight: 4 }}
+                />
+                <Button size="small" onClick={() => setAgreedModalOpen(true)}>
+                  약관 보기
+                </Button>
+              </div>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={marketingAgreed}
+                    onChange={(e) => setMarketingAgreed(e.target.checked)}
+                  />
+                }
+                label="마케팅 정보 수신에 동의합니다. (선택)"
+              />
+            </FormGroup>
+
             <Button
               variant="contained"
               color="primary"
@@ -318,6 +382,10 @@ function Join() {
             >
               회원가입
             </Button>
+            <TermsModal
+              open={agreedModalOpen}
+              handleClose={() => setAgreedModalOpen(false)}
+            />
           </form>
         </Grid>
       </Grid>

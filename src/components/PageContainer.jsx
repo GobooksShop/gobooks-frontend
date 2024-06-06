@@ -8,6 +8,7 @@ export function PageContainer({ children }) {
         width: '100%',
         maxWidth: '1536px',
         padding: '24px',
+        boxSizing: 'border-box',
       }}
     >
       {children}
