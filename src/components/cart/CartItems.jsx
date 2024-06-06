@@ -1,9 +1,8 @@
 const CartItems = ({ cartList }) => {
-  console.log('CartList진입' + cartList);
   return (
-    <div className="detailslayout tw-min-h-[1000px]">
+    <div className="detailslayout tw-min-h-[200px]">
       <header className="tw-flex tw-justify-between tw-items-center tw-px-2 tw-bg-gray-400/35 md:tw-min-h-14">
-        <div className="tw-flex">
+        <div className="tw-flex tw-ml-2">
           <input type="checkbox" />
           <span>전체 선택</span>
         </div>
@@ -12,9 +11,9 @@ const CartItems = ({ cartList }) => {
         </div>
       </header>
       <div className="grid-table-wrap tw-px-2 tw-border-0 tw-border-b tw-border-solid tw-border-gray-400/35">
-        <ul className="tw-px-2 tw-border-0 tw-border-b tw-border-solid tw-border-gray-400/35">
+        <ul className="tw-px-2">
           {cartList.map((item, index) => (
-            <li key={item.id + index} className="tw-flex md:tw-items-center md:tw-gap-10 md:tw-h-36"><input
+            <li key={item.id + index} className="tw-flex md:tw-items-center md:tw-gap-10 md:tw-h-36 tw-border-0 tw-border-b tw-border-solid tw-border-gray-400/35"><input
               type="checkbox" />
               <div className="tw-h-full tw-overflow-hidden"><img
                 src={item.img_url}

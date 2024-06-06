@@ -1,5 +1,6 @@
 import CustomButton from '../ui/CustomButton';
 import { useEffect, useState } from 'react';
+import Payment from '../payment/Payment';
 
 const CartInfo = (props) => {
   const [isFixed, setIsFixed] = useState(false);
@@ -44,7 +45,7 @@ const CartInfo = (props) => {
               <div>40000원</div>
             </div>
             <div className="tw-flex tw-justify-center tw-mt-5">
-              <CustomButton color="success" size="large" text="주문하기"></CustomButton>
+              {props.isOrders ? <Payment /> :  <CustomButton color="success" size="large" text="주문하기"></CustomButton> }
             </div>
           </div>
         </div>

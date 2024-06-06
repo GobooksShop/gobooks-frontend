@@ -1,5 +1,4 @@
 import { PageContainer } from '../../components/PageContainer';
-import CustomButton from '../../components/ui/CustomButton';
 import CartItems from '../../components/cart/CartItems';
 import { useEffect, useState } from 'react';
 import {getCartData} from '../../api/cart/cart';
@@ -35,7 +34,7 @@ function Cart() {
         <div className="main content tw-col-span-9">
           <CartItems cartList={cartItems} />
         </div>
-        <CartInfo />
+        <CartInfo isOrders={false}/>
       </div>
     </PageContainer>
   );
