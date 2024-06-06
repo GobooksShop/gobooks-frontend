@@ -28,5 +28,6 @@ module.exports = {
     'no-unused-vars': 'warn', // 사용하지 않는 변수 경고
     'react-hooks/rules-of-hooks': 'error', // 훅의 규칙을 강제
     'react-hooks/exhaustive-deps': 'warn', // 훅의 의존성 목록을 철저히 관리
+    'no-irregular-whitespace': 'off',
   },
 };
