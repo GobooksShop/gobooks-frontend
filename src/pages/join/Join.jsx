@@ -15,6 +15,7 @@ import {
   verifyCode,
 } from '../../api/authApi';
 
+import { LinearProgress } from '@mui/material';
 import { PageContainer } from '../../components/PageContainer';
 import TermsModal from './fragments/TermsModal';
 import { useNavigate } from 'react-router-dom';
@@ -41,6 +42,9 @@ function Join() {
   const [termsAgreed, setTermsAgreed] = useState(false);
   const [marketingAgreed, setMarketingAgreed] = useState(false);
   const [agreedModalOpen, setAgreedModalOpen] = useState(false);
+  const [timer, setTimer] = useState(0);
+  const [resendAvailable, setResendAvailable] = useState(false);
+  const [progress, setProgress] = useState(100); // Starts at 100%
 
   const validateForm = useCallback(() => {
     return (
@@ -74,6 +78,8 @@ function Join() {
       await sendVerificationCode(formData.email);
       setCodeSent(true);
       setSendCodeButtonDisabled(true);
+      setTimer(600); // Start the timer for 10 minutes
+      setResendAvailable(false);
       alert('Verification code sent to your email.');
     } catch (error) {
       console.error('Error sending verification code:', error);
@@ -187,6 +193,37 @@ function Join() {
     }
   };
 
+  useEffect(() => {
+    let interval;
+    if (codeSent && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prevTimer) => {
+          const newTimer = prevTimer - 1;
+          setProgress((newTimer / 600) * 100); // Calculate the progress
+          return newTimer;
+        });
+      }, 1000);
+    } else if (timer === 0 && codeSent) {
+      setResendAvailable(true);
+      setSendCodeButtonDisabled(false);
+      setProgress(0); // Reset progress when the timer hits 0
+    }
+    return () => clearInterval(interval);
+  }, [timer, codeSent]);
+
+  const handleResendCode = async () => {
+    try {
+      await sendVerificationCode(formData.email);
+      setCodeSent(true);
+      setSendCodeButtonDisabled(true);
+      setTimer(600); // Reset the timer to 10 minutes (600 seconds)
+      setResendAvailable(false);
+      alert('Verification code resent to your email.');
+    } catch (error) {
+      console.error('Error resending verification code:', error);
+    }
+  };
+
   return (
     <PageContainer>
       <Grid
@@ -262,7 +299,13 @@ function Join() {
                   variant="contained"
                   color={isVerified ? 'secondary' : 'primary'}
                   fullWidth
-                  onClick={isVerified ? null : handleSendCode}
+                  onClick={
+                    isVerified
+                      ? null
+                      : resendAvailable
+                        ? handleResendCode
+                        : handleSendCode
+                  }
                   disabled={
                     !!errors.email ||
                     !formData.email ||
@@ -275,9 +318,29 @@ function Join() {
                     fontSize: '1rem',
                   }}
                 >
-                  {isVerified ? '인증 완료' : '인증코드 발송'}
+                  {resendAvailable
+                    ? '재전송'
+                    : isVerified
+                      ? '인증 완료'
+                      : '인증코드 발송'}
                 </Button>
               </Grid>
+              {codeSent && !isVerified && (
+                <>
+                  <Typography
+                    variant="body2"
+                    style={{ textAlign: 'center', marginTop: '10px' }}
+                  >
+                    인증번호 유효 시간: {Math.floor(timer / 60)}분 {timer % 60}
+                    초
+                  </Typography>
+                  <LinearProgress
+                    variant="determinate"
+                    value={progress}
+                    style={{ margin: '10px 0' }}
+                  />
+                </>
+              )}
             </Grid>
             {codeSent && !isVerified && (
               <>
