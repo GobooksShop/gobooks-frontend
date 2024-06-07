@@ -1,9 +1,13 @@
 import CustomButton from '../ui/CustomButton';
 import { useEffect, useState } from 'react';
 import Payment from '../payment/Payment';
+import useCartOrderStore from '../../store/useCartOrderStore'; // useCartOrderStore import 추가
 
 const CartInfo = (props) => {
   const [isFixed, setIsFixed] = useState(false);
+  const totalAmount = useCartOrderStore((state) => state.totalAmount);
+  const discountAmount = useCartOrderStore((state) => state.discountAmount);
+  const updateTotalAmount = useCartOrderStore((state) => state.updateTotalAmount);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +25,10 @@ const CartInfo = (props) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleOrderClick = () => {
+    updateTotalAmount();
+  }
+
   return (
     <div className="tw-col-span-3 tw-relative">
       <div className={isFixed ? 'tw-fixed tw-top-24 tw-right-auto ' : 'tw-absolute tw-top-0 tw-right-0 tw-w-full'}>
@@ -35,17 +43,17 @@ const CartInfo = (props) => {
                 <div>할인 금액</div>
               </div>
               <div className="tw-flex tw-flex-col tw-items-end tw-gap-3">
-                <div>40,000원</div>
+                <div>{totalAmount}원</div> {/* totalAmount 상태를 표시 */}
                 <div>0원</div>
-                <div>-4000원</div>
+                <div>{-discountAmount}원</div>
               </div>
             </div>
             <div className="cartBottom tw-flex tw-justify-between tw-pt-3">
               <div>총주문 금액</div>
-              <div>40000원</div>
+              <div>{totalAmount}원</div> {/* totalAmount 상태를 표시 */}
             </div>
             <div className="tw-flex tw-justify-center tw-mt-5">
-              {props.isOrders ? <Payment /> :  <CustomButton color="success" size="large" text="주문하기"></CustomButton> }
+              {props.isOrders ? <Payment /> :  <CustomButton color="success" size="large" text="주문하기" onClick={handleOrderClick}></CustomButton> }
             </div>
           </div>
         </div>
