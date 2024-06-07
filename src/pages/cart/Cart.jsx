@@ -1,20 +1,7 @@
 import { PageContainer } from '../../components/PageContainer';
 import CartItems from '../../components/cart/CartItems';
-import { useEffect, useState } from 'react';
-import {getCartData} from '../../api/cart/cart';
 import CartInfo from '../../components/cart/CartInfo';
 function Cart() {
-  const [cartItems, setCartItems] = useState([]);
-
-  useEffect(() => {
-    const data = getCartData();
-    setCartItems(data);
-    console.log(cartItems);
-  }, []);
-
-  useEffect(() => {
-    console.log("cartItems이 변경되었습니다:", cartItems);
-  }, [cartItems]);
 
   return (
     <PageContainer>
@@ -32,7 +19,7 @@ function Cart() {
       <div
         className="tw-relative tw-grid tw-grid-cols-12 tw-mt-5 tw-gap-x-5 tw-max-w-[1440px] tw-min-h-[4000px]">
         <div className="main content tw-col-span-9">
-          <CartItems cartList={cartItems} />
+          <CartItems />
         </div>
         <CartInfo isOrders={false}/>
       </div>
