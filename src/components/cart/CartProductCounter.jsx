@@ -19,9 +19,9 @@ const CartProductCounter = ({ idx, productId, initialCount, onCountChange }) => 
 
   return (
     <div className="cart-product-counter">
-      <button onClick={handleDecrement}>-</button>
+      <button onClick={handleDecrement} className="hover:tw-cursor-pointer">-</button>
       <span>{count}</span>
-      <button onClick={handleIncrement}>+</button>
+      <button onClick={handleIncrement} className="hover:tw-cursor-pointer">+</button>
     </div>
   );
 };

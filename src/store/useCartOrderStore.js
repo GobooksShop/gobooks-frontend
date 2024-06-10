@@ -1,7 +1,7 @@
 import {create} from 'zustand';
 
 /**
- * @typedef {Object} CartItem
+ * @typedef {Object} CartItem - 카트 아이템 row의 속성들을 담는 오브젝트
  * @property {number} productId - 유니크한 productId값.
  * @property {number} quantity - 각 제품을 주문 및 카트에 담은 갯수.
  * @property {number} price - 각 제품의 가격

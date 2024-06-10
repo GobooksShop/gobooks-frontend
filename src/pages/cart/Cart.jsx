@@ -5,6 +5,7 @@ function Cart() {
 
   return (
     <PageContainer>
+      {/*todo 메뉴 관련 컴포넌트를 나눠야 합니다.*/}
       <div>
         <ul className="tw-flex tw-gap-10">
           <li>장바구니</li>
@@ -12,7 +13,6 @@ function Cart() {
           <li>완료</li>
         </ul>
       </div>
-      {/*todo 컴포넌트 나누기 */}
       <header className="title tw-h-24 tw-flex tw-items-center">
         <h1 className="tw-font-semibold tw-text-2xl">장바구니</h1>
       </header>
