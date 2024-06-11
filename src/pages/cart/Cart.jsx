@@ -19,7 +19,7 @@ function Cart() {
       <div
         className="tw-relative tw-grid tw-grid-cols-12 tw-mt-5 tw-gap-x-5 tw-max-w-[1440px] tw-min-h-[4000px]">
         <div className="main content tw-col-span-9">
-          <CartItems />
+          <CartItems isOrders={false}/>
         </div>
         <CartInfo isOrders={false}/>
       </div>
