@@ -1,0 +1,44 @@
+.product-list {
+  display: grid;
+  /*grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); !* 반응형으로 열 너비 조절 *!*/
+  /*grid-template-columns: repeat(5, 1fr); !* 5개의 열로 설정 *!*/
+  gap: 15px; /* 상품 카드 간 간격 */
+  max-width: 1200px; /* 최대 너비 설정 */
+  margin: 0 auto; /* 가운데 정렬 */
+}
+
+
+/* 화면 너비가 1200px 이하일 때 */
+@media (max-width: 1200px) {
+  .product-list {
+    grid-template-columns: repeat(4, 1fr); /* 4개씩 배열 */
+  }
+}
+
+/* 화면 너비가 1200px 초과일 때 */
+@media (min-width: 1201px) {
+  .product-list {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* 자동 조절 */
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.product-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.product-container h1 {
+  font-size: larger;
+  text-align: center;
+  font-weight: bold;
+  padding: 10px 0 10px 0;
+}
+
+.top-bar{
+  display: flex; /* Flexbox 사용 */
+  justify-content: space-between; /* 양쪽 정렬 */
+  /*align-items: center; !* 수직 가운데 정렬 *!*/
+  margin-bottom: 20px; /* 아래 여백 추가 */
+}
