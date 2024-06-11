@@ -2,9 +2,9 @@ import { Box, CircularProgress, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
-import Pagination from './Pagination';
-import ProductCard from './ProductCard';
-import Sort from './Sort';
+import Pagination from '../../components/util/Pagination';
+import ProductCard from '../../components/product/ProductCard'
+import Sort from '../../components/util/Sort';
 import axios from 'axios';
 
 function ProductList() {

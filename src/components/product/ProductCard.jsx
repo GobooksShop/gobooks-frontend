@@ -1,9 +1,8 @@
-import './ProductCard.css';
 
 import { Card, CardContent, CardMedia, CircularProgress, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
-import noImage from "./images/noimage.jpg"; // 기본 이미지 추가
+import noImage from "../../pages/productList/images/noimage.jpg"; // 기본 이미지 추가
 
 function ProductCard({ product }) {
   const [isLoading, setIsLoading] = useState(true);
