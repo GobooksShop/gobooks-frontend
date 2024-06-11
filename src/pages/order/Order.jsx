@@ -34,7 +34,7 @@ const Order = () => {
       <div
         className="tw-relative tw-grid tw-grid-cols-12 tw-mt-5 tw-gap-x-5 tw-max-w-[1440px] tw-min-h-[800px]">
         <div className="main content tw-col-span-9">
-          <CartItems cartList={cartItems} />
+          <CartItems cartList={cartItems} isOrders={true}/>
           <DeleveryInfo />
           <PaymentInfo />
         </div>

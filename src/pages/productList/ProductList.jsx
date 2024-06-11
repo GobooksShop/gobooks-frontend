@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import ProductCard from './ProductCard'; // 상품 카드 컴포넌트 (별도로 구현해야 합니다)
-import Pagination from './Pagination'; // 페이징 컴포넌트 (별도로 구현해야 합니다)
-import Sort from './Sort';
+import ProductCard from '../../components/product/ProductCard'; // 상품 카드 컴포넌트 (별도로 구현해야 합니다)
+import Pagination from '../../components/util/Pagination'; // 페이징 컴포넌트 (별도로 구현해야 합니다)
+import Sort from '../../components/util/Sort';
 import './ProductList.css';
 
 function ProductList() {
