@@ -19,7 +19,7 @@ const Router = () => {
       <Route path="/join" element={<Join />} />
       <Route path="/order" element={<Order />} />
       <Route path="/category/:categoryId" element={<ProductList />} />
-      <Route path="/product/detail" element={<ProductDetail />} />
+      <Route path="/product/detail/:id" element={<ProductDetail />} />
       <Route path="/product/management" element={<Product />} />
       <Route path="/category/management" element={<Category />} />
       <Route path="/cart" element={<Cart />} />
