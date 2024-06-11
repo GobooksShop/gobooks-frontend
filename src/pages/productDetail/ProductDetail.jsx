@@ -29,50 +29,75 @@ const ProductDetail = ({ product, onSave, onClose }) => {
     };
 
     return (
-        <div>
-            <h2>{product ? 'Edit Product' : 'Add Product'}</h2>
+        <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6">
+            <h2 className="text-2xl font-bold mb-4">{product ? 'Edit Product' : 'Add Product'}</h2>
             <form onSubmit={handleSubmit}>
-                <label>
-                    Name:
-                    <input
-                        type="text"
-                        name="name"
-                        value={productDetails.name}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
-                <label>
-                    Description:
-                    <input
-                        type="text"
-                        name="description"
-                        value={productDetails.description}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
-                <label>
-                    Price:
-                    <input
-                        type="number"
-                        name="price"
-                        value={productDetails.price}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
-                <label>
-                    Discount:
-                    <input
-                        type="text"
-                        name="discount"
-                        value={productDetails.discount}
-                        onChange={handleChange}
-                    />
-                </label>
-                <button type="submit">Save</button>
-                <button type="button" onClick={onClose}>Cancel</button>
+                <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700">
+                        Name:
+                        <input
+                            type="text"
+                            name="name"
+                            value={productDetails.name}
+                            onChange={handleChange}
+                            required
+                            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        />
+                    </label>
+                </div>
+                <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700">
+                        Description:
+                        <input
+                            type="text"
+                            name="description"
+                            value={productDetails.description}
+                            onChange={handleChange}
+                            required
+                            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        />
+                    </label>
+                </div>
+                <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700">
+                        Price:
+                        <input
+                            type="number"
+                            name="price"
+                            value={productDetails.price}
+                            onChange={handleChange}
+                            required
+                            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        />
+                    </label>
+                </div>
+                <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700">
+                        Discount:
+                        <input
+                            type="text"
+                            name="discount"
+                            value={productDetails.discount}
+                            onChange={handleChange}
+                            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        />
+                    </label>
+                </div>
+                <div className="flex justify-end">
+                    <button
+                        type="submit"
+                        className="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                        Save
+                    </button>
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="ml-4 px-4 py-2 bg-red-500 text-white rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                    >
+                        Cancel
+                    </button>
+                </div>
             </form>
         </div>
     );
