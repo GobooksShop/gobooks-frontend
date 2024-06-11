@@ -4,55 +4,19 @@ import { useEffect, useState } from 'react';
 import { CategoryMenu } from './fragments/CategoryMenu';
 import { Logo } from './fragments/Logo';
 import { UserMenu } from './fragments/UserMenu';
-import { useLocation } from 'react-router-dom'; // Import useLocation
-
-const categoriesExample = [
-  {
-    id: 123,
-    name: '국내도서',
-    descendants: [
-      {
-        id: 126,
-        name: '소설',
-        descendants: [
-          { id: 126, name: '한국소설' },
-          { id: 127, name: '영미소설' },
-        ],
-      },
-      {
-        id: 127,
-        name: '시/에세이',
-        descendants: [
-          { id: 126, name: '한국시' },
-          { id: 127, name: '해외시' },
-        ],
-      },
-    ],
-  },
-  {
-    id: 222,
-    name: '서양도서',
-    descendants: [],
-  },
-  {
-    id: 125,
-    name: '일본도서',
-    descendants: [
-      {
-        id: 126,
-        name: '잡지',
-        descendants: [],
-      },
-    ],
-  },
-];
+import useCategoryStore from '../../store/useCategoryStore';
+import { useLocation } from 'react-router-dom';
 
 function Header() {
-  const [categories, setCategories] = useState(categoriesExample);
+  const { categories, fetchCategories } = useCategoryStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const location = useLocation();
 
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+  
   useEffect(() => {
     setIsMenuOpen(false);
   }, [location]);

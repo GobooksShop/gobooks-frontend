@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import Pagination from '../../components/util/Pagination';
-import ProductCard from '../../components/product/ProductCard'
+import ProductCard from '../../components/product/ProductCard';
 import Sort from '../../components/util/Sort';
 import axios from 'axios';
+import useCategoryStore from '../../store/useCategoryStore';
 
 function ProductList() {
   const { categoryId } = useParams();
@@ -17,19 +18,41 @@ function ProductList() {
   const [totalPages, setTotalPages] = useState(0);
   const [sortBy, setSortBy] = useState('createdAt,desc');
 
+  const { categories, fetchCategories } = useCategoryStore();
+
+  useEffect(() => {
+    if (categories.length === 0) {
+      fetchCategories();
+    }
+  }, [categories, fetchCategories]);
+
+  const findCategoryById = (categories, id) => {
+    for (let cat of categories) {
+      if (cat.id === id) return cat;
+      if (cat.children) {
+        let found = findCategoryById(cat.children, id);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+
+  const category = findCategoryById(categories, Number(categoryId));
+  const categoryName = category ? category.name : '';
+
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
       setError('');
       try {
         const page = searchParams.get('page') || 0;
-        const size = searchParams.get('size') || 12; // Adjusted size to 12 to show 4x3 format
-        const sortBy = searchParams.get('sort') || 'createdAt,desc';
+        const size = searchParams.get('size') || 2; // Adjusted size to 12 to show 4x3 format
+        const sort = searchParams.get('sort') || 'createdAt,desc';
 
         const response = await axios.get(
-            `http://localhost:8080/api/products/category/${categoryId}?page=${page}&size=${size}&sortBy=${sortBy}`
+          `http://localhost:8080/api/products/category/${categoryId}/paged?page=${page}&size=${size}&sort=${sort}`,
         );
-        setProducts(response.data);
+        setProducts(response.data.content);
         setCurrentPage(response.data.number);
         setTotalPages(response.data.totalPages);
       } catch (error) {
@@ -52,13 +75,28 @@ function ProductList() {
     setSearchParams({ page: 0, sort: newSortBy });
   };
 
-  if (loading) return <Box display="flex" justifyContent="center"><CircularProgress /></Box>;
-  if (error) return <Typography variant="h6" color="error">{error}</Typography>;
-  if (products.length === 0) return <Typography variant="h6">해당 카테고리의 상품이 없습니다.</Typography>;
+  if (loading)
+    return (
+      <Box display="flex" justifyContent="center">
+        <CircularProgress />
+      </Box>
+    );
+  if (error)
+    return (
+      <Typography variant="h6" color="error">
+        {error}
+      </Typography>
+    );
+  if (products.length === 0)
+    return (
+      <Typography variant="h6">해당 카테고리의 상품이 없습니다.</Typography>
+    );
 
   return (
-    <Box className="tw-px-4 tw-mt-16">
-      <Typography variant="h4" gutterBottom>{categoryId} 상품 목록</Typography>
+    <Box className="tw-px-4 tw-mt-10">
+      <Typography variant="h4" gutterBottom>
+        {categoryName} 상품 목록
+      </Typography>
       <Box className="tw-flex tw-justify-between tw-mb-4">
         <Sort onSortChange={handleSortChange} />
         <Pagination
