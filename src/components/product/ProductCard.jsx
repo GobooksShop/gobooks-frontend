@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
 import './ProductCard.css';
-import noImage from "../../pages/productList/images/noimage.jpg"; // 기본 이미지 추가
 
+import { Card, CardContent, CardMedia, CircularProgress, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+
+import noImage from "./images/noimage.jpg"; // 기본 이미지 추가
 
 function ProductCard({ product }) {
   const [isLoading, setIsLoading] = useState(true);
@@ -9,33 +11,47 @@ function ProductCard({ product }) {
 
   useEffect(() => {
     const img = new Image();
-    img.src = `./images/${product.id}.jpg`; // 이미지 경로 설정
+    const imagePath = product.imageUrl || `./images/${product.id}.jpg`;
+    img.src = imagePath;
     img.onload = () => {
       setIsLoading(false);
       setImageUrl(img.src); // 이미지 로딩 성공 시 URL 업데이트
     };
     img.onerror = () => {
       setIsLoading(false);
-      // 이미지 로딩 실패 시 에러 처리 (선택 사항)
+      setImageUrl(noImage); // 로딩 실패 시 기본 이미지 사용
       console.error(`Failed to load image for product ${product.id}`);
     };
-  }, [product.id]); // product.id가 변경될 때마다 useEffect 실행
+  }, [product.id, product.imageUrl]);
+
+  const formattedPrice = product.price !== undefined ? product.price.toLocaleString() : 'N/A';
 
   return (
-      <div className="product-card">
-        {isLoading ? (
-            <div className="image-placeholder">Loading...</div> // 로딩 중 placeholder
-        ) : (
-            <img src={imageUrl} alt={product.name} /> // 로딩 완료 후 이미지 표시
-        )}
-        <h3>{product.name}</h3>
-        <p className="product-author-publisher">
-          {product.author} / {product.publisher}
-        </p> {/* 작가/출판사 정보 추가 */}
-        <p className="product-price">
-          {product.price.toLocaleString()}원</p>
-        {/* 숫자 3자리마다 쉼표 추가 */}
-      </div>
+    <Card className="product-card tw-p-4 tw-rounded-lg tw-shadow-md">
+      {isLoading ? (
+        <div className="image-placeholder tw-flex tw-items-center tw-justify-center tw-h-32">
+          <CircularProgress />
+        </div>
+      ) : (
+        <CardMedia
+          component="img"
+          className="tw-mb-4 tw-shadow-sm tw-object-cover tw-h-32 tw-w-full"
+          image={imageUrl}
+          alt={product.name || 'Product'}
+        />
+      )}
+      <CardContent>
+        <Typography variant="h6" component="h3" className="tw-font-bold tw-mb-2">
+          {product.name || 'Unnamed Product'}
+        </Typography>
+        <Typography variant="body2" color="textSecondary" className="product-author-publisher tw-mb-3">
+          {product.author || 'Unknown Author'} / {product.publisher || 'Unknown Publisher'}
+        </Typography>
+        <Typography variant="body1" component="p" className="product-price tw-font-bold">
+          {formattedPrice}원
+        </Typography>
+      </CardContent>
+    </Card>
   );
 }
 
