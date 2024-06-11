@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import DaumPostcode from 'react-daum-postcode';
 
 const deleveryMap = {
   name: '',
@@ -9,12 +10,17 @@ const deleveryMap = {
 
 const DeleveryInfo = () => {
   const [deleveryInfo, setDeleveryInfo] = useState({});
+  const [inputName, setInputName] = useState('');
 
-  const handleOnChangeName = () => {
+  const handleOnChangeName = (e) => {
+    setInputName(e.target.value); 
 
+
+
+    setInputName('');
   }
 
-  const handleOnChangeAddress = () => {
+  const handleOnChangeAddress = (e) => {
 
   }
   return (
