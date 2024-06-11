@@ -11,6 +11,11 @@ export const login = async (req) => {
   return response;
 };
 
+export const logout = async () => {
+  await httpClient.post('/auth/logout', {}, { withCredentials: true });
+  console.log('Logout success!');
+};
+
 export const refreshAccessToken = async () => {
   const response = await httpClient.post(
     '/auth/refresh',
@@ -19,7 +24,7 @@ export const refreshAccessToken = async () => {
   );
   const { accessToken } = response.data;
   setAccessTokenToHttpClient(accessToken); // 새로운 Access Token 설정
-  return accessToken;
+  return response;
 };
 
 export const getUserInfo = async (id) => {

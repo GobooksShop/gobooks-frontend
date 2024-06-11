@@ -1,4 +1,3 @@
-import axios from 'axios';
 import {
   Avatar,
   Box,
@@ -10,22 +9,24 @@ import {
   Typography,
 } from '@mui/material';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import useUserStore from '../../../store/useUserStore';
+import { logout } from '../../../api/authApi';
 
 export function UserMenu({ onOpen, onClose, anchorElUser }) {
   const { user, clearUser } = useUserStore((state) => ({
     user: state.user,
     clearUser: state.clearUser,
   }));
+
+  const navigate = useNavigate();
   
   const handleLogout = async () => {
     try {
       // 서버에 로그아웃 요청을 보냄
-      await axios.post('http://localhost:8080/api/auth/logout', {}, { withCredentials: true });
-  
+      logout();
       clearUser();
       localStorage.removeItem('accessToken');
       localStorage.removeItem('user'); // USER 정보 삭제 추가
@@ -33,6 +34,7 @@ export function UserMenu({ onOpen, onClose, anchorElUser }) {
       console.error('Logout failed:', error);
     } finally {
       onClose();
+      navigate('/');
     }
   };
 
