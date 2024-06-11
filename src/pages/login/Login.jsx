@@ -1,32 +1,24 @@
-import axios from 'axios';
 import React, { useState } from 'react';
 import { Container, Box, TextField, Button, Typography } from '@mui/material';
 import { PageContainer } from '../../components/PageContainer';
 import { useEffect } from 'react';
 import useUserStore from '../../store/useUserStore';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../../api/authApi';
 
 function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
   const navigate = useNavigate();
+  const store = useUserStore();
+  const setUser = useUserStore((state) => state.setUser);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post(
-        'http://localhost:8080/api/auth/login',
-        {
-          email,
-          password,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          withCredentials: true,
-        }
-      );
+      const response = await login(formData);
 
       // 로그인 후 처리 (예: 페이지 이동 등)
       if (response.status === 200) {
@@ -45,25 +37,13 @@ function Login() {
       console.error('로그인 실패:', error);
     }
   };
-  
-  const store = useUserStore();
-  const setUser = useUserStore((state) => state.setUser);
-
-  // const onClickLogin = () => {
-  //   setUser({
-  //     name: '고북스',
-  //     email: 'gobooks@gmail.com',
-  //     role: 'USER',
-  //   });
-  // };
 
   useEffect(() => {
     console.log(store);
   }, [store]);
+
   return (
     <PageContainer>
-      {/* <main className="min-h-[300px]">로그인 페이지</main> */}
-      {/* <Button onClick={onClickLogin}>테스트</Button> */}
       <Container component="main" maxWidth="xs">
         <Box
           sx={{
@@ -86,8 +66,8 @@ function Login() {
               name="email"
               autoComplete="email"
               autoFocus
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             />
             <TextField
               margin="normal"
@@ -98,8 +78,8 @@ function Login() {
               type="password"
               id="password"
               autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
             />
             <Button
               type="submit"

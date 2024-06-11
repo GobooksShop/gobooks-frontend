@@ -1,6 +1,5 @@
-import axios, { AxiosInstance } from 'axios';
-
-// import { refresh } from './authApi';
+import axios from 'axios';
+import { refreshAccessToken } from './authApi';
 
 export const httpClient = axios.create({
   // eslint-disable-next-line
@@ -14,30 +13,44 @@ export const httpClient = axios.create({
 });
 
 httpClient.interceptors.response.use(
+  (config) => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
+
+// Response interceptor to handle token refresh
+httpClient.interceptors.response.use(
   (response) => {
     return response;
   },
-  (error) => {
+  async (error) => {
     const originalRequest = error.config;
     const status = error.response?.status;
+
     if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      //   return refresh().then((res) => {
-      //     if (res.data.statusCode === 'OK') {
-      //       setAccessToken(httpClient, res.data.data.accessToken);
-      //       return httpClient(originalRequest);
-      //     }
-      //   });
+      try {
+        const newAccessToken = await refreshAccessToken();
+        localStorage.setItem('accessToken', newAccessToken);
+        originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+        return httpClient(originalRequest);
+      } catch (refreshError) {
+        console.error('Token refresh failed:', refreshError);
+        // 로그아웃 처리 등 추가적인 처리가 필요할 수 있음
+        return Promise.reject(refreshError);
+      }
     }
     return Promise.reject(error);
   },
 );
 
-export const setAccessToken = (axiosInstance, accessToken) => {
-  axiosInstance.defaults.headers.common['Authorization'] =
-    `Bearer ${accessToken}`;
-};
-
 export const setAccessTokenToHttpClient = (accessToken) => {
-  setAccessToken(httpClient, accessToken);
+  httpClient.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 };

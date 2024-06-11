@@ -1,8 +1,25 @@
-import axios from 'axios';
-import { httpClient } from './httpClient';
+import { httpClient, setAccessTokenToHttpClient } from './httpClient';
 
 export const signUp = (req) => {
   return httpClient.post('/users', req);
+};
+
+export const login = async (req) => {
+  const response = await httpClient.post('/auth/login', req);
+  const { accessToken } = response.data;
+  setAccessTokenToHttpClient(accessToken); // 로그인 시 Access Token을 설정
+  return response;
+};
+
+export const refreshAccessToken = async () => {
+  const response = await httpClient.post(
+    '/auth/refresh',
+    {},
+    { withCredentials: true },
+  );
+  const { accessToken } = response.data;
+  setAccessTokenToHttpClient(accessToken); // 새로운 Access Token 설정
+  return accessToken;
 };
 
 export const getUserInfo = async (id) => {
@@ -48,9 +65,5 @@ export const verifyCode = async (email, code) => {
 };
 
 export const checkEmail = (email) => {
-  return axios.get('http://localhost:8080/api/auth/check-email', { params: { email } });
+  return httpClient.get('/auth/check-email', { params: { email } });
 };
-
-// export const refresh = () => {
-//   return httpClient.post('/users/refresh');
-// };

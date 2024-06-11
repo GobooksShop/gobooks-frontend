@@ -1,8 +1,10 @@
 import { Button, Grid, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { deleteUser, getUserInfo, updateUserInfo } from '../../api/authApi';
-
 import { PageContainer } from '../../components/PageContainer';
+import { jwtDecode } from 'jwt-decode';
+
+
 
 function MyPage() {
   const [userInfo, setUserInfo] = useState({
@@ -12,15 +14,30 @@ function MyPage() {
     nickname: '',
   });
 
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
   const [errors, setErrors] = useState({});
   const [isEditing, setIsEditing] = useState(false);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     // Fetch user info for user with ID 1 when the component mounts
     const fetchUserInfo = async () => {
       try {
-        const response = await getUserInfo(1); // Assuming the ID of the user you want to fetch is 1
-        setUserInfo(response);
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+          const decodedToken = jwtDecode(token);
+          console.log('decodedToken:', decodedToken);
+          const userId = decodedToken.userID; // Adjust this according to your token structure
+          console.log('userId:', userId);
+          setUserId(userId);
+          const response = await getUserInfo(userId); // Use the extracted userID
+          setUserInfo(response);
+        } else {
+        console.error('No access token found');
+      }
       } catch (err) {
         console.error('사용자 정보 로딩 실패:', err);
       }
@@ -36,11 +53,31 @@ function MyPage() {
     });
   };
 
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    if (confirmPassword && e.target.value !== confirmPassword) {
+      setPasswordError('비밀번호가 일치하지 않습니다.');
+    } else {
+      setPasswordError('');
+    }
+  };
+
+  const handleConfirmPasswordChange = (e) => {
+    setConfirmPassword(e.target.value);
+    if (password && e.target.value !== password) {
+      setPasswordError('비밀번호가 일치하지 않습니다.');
+    } else {
+      setPasswordError('');
+    }
+  };
+
   const onClickUpdate = async () => {
     try {
-      const response = await updateUserInfo(1, userInfo); // Passing the ID explicitly
-      console.log('업데이트 성공:', response);
-      setIsEditing(false);
+      if(userId){
+        const response = await updateUserInfo(1, userInfo); // Passing the ID explicitly
+        console.log('업데이트 성공:', response);
+        setIsEditing(false);
+      }
     } catch (err) {
       console.error('업데이트 오류:', err);
       if (err.response && err.response.data) {
@@ -107,6 +144,34 @@ function MyPage() {
               disabled={!isEditing}
               style={{ marginBottom: '20px' }}
             />
+            {isEditing && (
+              <>
+                <TextField
+                  fullWidth
+                  label="비밀번호"
+                  variant="outlined"
+                  type="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  error={!!passwordError}
+                  helperText={passwordError}
+                  margin="normal"
+                  style={{ marginBottom: '20px' }}
+                />
+                <TextField
+                  fullWidth
+                  label="비밀번호 확인"
+                  variant="outlined"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={handleConfirmPasswordChange}
+                  error={!!passwordError}
+                  helperText={passwordError}
+                  margin="normal"
+                  style={{ marginBottom: '20px' }}
+                />
+              </>
+            )}
             <Button
               variant="contained"
               color="primary"
