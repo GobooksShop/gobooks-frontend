@@ -9,10 +9,7 @@ function App() {
   const theme = createTheme({
     palette: {
       primary: {
-        main: '#ABA5F3',
-        // light: will be calculated from palette.primary.main,
-        // dark: will be calculated from palette.primary.main,
-        // contrastText: will be calculated to contrast with palette.primary.main
+        main: '#fff',
       },
       secondary: {
         main: '#1cc7d0',

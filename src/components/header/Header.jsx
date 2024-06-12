@@ -41,19 +41,13 @@ function Header() {
 
   return (
     <>
-      <AppBar
-        className="tw-fixed tw-box-border tw-w-full tw-px-[20px]"
-        color=""
-      >
-        <Box
-          className="tw-flex tw-justify-between tw-items-center"
-          maxWidth="1536px"
-          sx={{ margin: '0 auto', width: '100%' }}
-        >
-          <Box className="tw-w-full tw-flex tw-items-center">
+      <AppBar className="tw-fixed tw-w-full tw-bg-white tw-shadow-md tw-z-50">
+        <Box className="tw-container tw-mx-auto tw-px-4 sm:tw-px-6 tw-py-2 tw-flex tw-justify-between tw-items-center">
+          <Box className="tw-flex tw-items-center">
+
             <Logo />
             <ClickAwayListener onClickAway={handleClickAway}>
-              <div className="tw-w-full">
+            <div className="tw-relative">
                 {categories && (
                   <CategoryMenu
                     categories={categories}

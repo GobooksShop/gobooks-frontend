@@ -69,11 +69,11 @@ const Depth2 = ({ category, selectedCategory, handleCategory }) => {
 
 export function CategoryMenu({ handleMenu, isMenuOpen }) {
   const [selectedDepth1, setSelectedDepth1] = useState();
-  const [selecetedDepth2, setSelectedDepth2] = useState(null);
+  const [selectedDepth2, setSelectedDepth2] = useState(null);
   const navigate = useNavigate();
   const { categories, fetchCategories } = useCategoryStore();
 
-  const handleSelecetedDepth2 = (category) => {
+  const handleSelectedDepth2 = (category) => {
     setSelectedDepth2(category);
   };
 
@@ -88,87 +88,79 @@ export function CategoryMenu({ handleMenu, isMenuOpen }) {
   return (
     <>
       {selectedDepth1 && (
-        <Box className={'tw-relative'} sx={{ flexGrow: 1 }}>
+        <Box className="tw-relative tw-w-full">
           <IconButton
             size="large"
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
+            aria-label="메뉴 열기/닫기"
             onClick={handleMenu}
-            sx={{
-              color: '#000000',
-            }}
+            className="tw-text-black focus:tw-outline-none"
           >
             {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
           </IconButton>
           {isMenuOpen && (
             <Box
-              className="tw-flex tw-absolute tw-w-full tw-p-[10px] tw-bottom-[-5px] tw-bg-white"
-              sx={{
-                border: '1px solid #000',
-                borderRadius: '20px',
-                transform: 'translateY(100%)',
-              }}
+              className="tw-absolute tw-top-full tw-left-0 tw-z-20 tw-mt-2 tw-rounded-lg tw-shadow-lg tw-bg-white tw-flex"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="menu-appbar"
+              style={{ width: '1200px' }}
             >
-              <Box sx={{ width: '170px' }}>
+              {/* 1단계 카테고리 */}
+              <Box className="tw-w-48 tw-mr-4 tw-p-4">
                 {categories.map((depth1) => (
-                  <Box
+                  <MenuItem
                     key={depth1.id}
                     onClick={() => {
                       if (depth1.children.length > 0) {
                         setSelectedDepth1(depth1);
+                        setSelectedDepth2(null);
                       } else {
                         navigate(`/${depth1.id}`);
                       }
                     }}
+                    className="tw-justify-between"
+                    sx={{
+                      width: '100%',
+                    }}
                   >
-                    <MenuItem>
-                      <Typography
-                        sx={{
-                          fontWeight: selectedDepth1.id === depth1.id && '700',
-                        }}
-                      >
-                        {depth1.name}
-                      </Typography>
-                      {selectedDepth1.id === depth1.id && (
-                        <ArrowForwardIosIcon
-                          sx={{
-                            width: '10px',
-                            height: '10px',
-                            ml: '5px',
-                          }}
-                        />
-                      )}
-                    </MenuItem>
-                  </Box>
+                    <Typography
+                      className={
+                        selectedDepth1?.id === depth1.id ? 'tw-font-bold' : ''
+                      }
+                    >
+                      {depth1.name}
+                    </Typography>
+                    {selectedDepth1?.id === depth1.id && (
+                      <ArrowForwardIosIcon className="tw-w-3 tw-h-3 tw-ml-2" />
+                    )}
+                  </MenuItem>
                 ))}
               </Box>
-              {selectedDepth1.children.length > 0 && (
-                <Box>
-                  <Link to={`/product/list/${selectedDepth1.id}`}>
-                    <Typography sx={{ fontWeight: 700 }}>
+
+              {/* 2단계 카테고리 */}
+              {selectedDepth1?.children.length > 0 && (
+                <Box className="tw-flex-1 tw-p-4">
+                  <Link
+                    to={`/product/list/${selectedDepth1.id}`}
+                    className="tw-block tw-mb-2"
+                  >
+                    <Typography className="tw-font-bold">
                       {selectedDepth1.name} 전체
                     </Typography>
                   </Link>
 
                   <Box
-                    sx={{
-                      marginTop: '15px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '5px',
-                    }}
+                    className="tw-flex tw-flex-col tw-gap-2 tw-mt-4"
+                    style={{ paddingBottom: '1rem' }}
                   >
-                    {selectedDepth1.children.map((categoryDepth2) => {
-                      return (
-                        <Depth2
-                          key={categoryDepth2.id}
-                          category={categoryDepth2}
-                          selectedCategory={selecetedDepth2}
-                          handleCategory={handleSelecetedDepth2}
-                        />
-                      );
-                    })}
+                    {selectedDepth1.children.map((categoryDepth2) => (
+                      <Depth2
+                        key={categoryDepth2.id}
+                        category={categoryDepth2}
+                        selectedCategory={selectedDepth2}
+                        handleCategory={handleSelectedDepth2}
+                      />
+                    ))}
                   </Box>
                 </Box>
               )}

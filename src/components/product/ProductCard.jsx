@@ -1,8 +1,14 @@
-
-import { Card, CardContent, CardMedia, CircularProgress, Typography } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  CircularProgress,
+  Skeleton,
+  Typography,
+} from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
-import noImage from "../../pages/productList/images/noimage.jpg"; // 기본 이미지 추가
+import noImage from '../../pages/productList/images/noimage.jpg'; // 기본 이미지 추가
 
 function ProductCard({ product }) {
   const [isLoading, setIsLoading] = useState(true);
@@ -23,30 +29,39 @@ function ProductCard({ product }) {
     };
   }, [product.id, product.imageUrl]);
 
-  const formattedPrice = product.price !== undefined ? product.price.toLocaleString() : 'N/A';
-
+  const formattedPrice =
+    product.fixedPrice !== undefined
+      ? product.fixedPrice.toLocaleString()
+      : 'N/A';
   return (
-    <Card className="product-card tw-p-4 tw-rounded-lg tw-shadow-md">
-      {isLoading ? (
-        <div className="image-placeholder tw-flex tw-items-center tw-justify-center tw-h-32">
-          <CircularProgress />
-        </div>
-      ) : (
-        <CardMedia
-          component="img"
-          className="tw-mb-4 tw-shadow-sm tw-object-cover tw-h-32 tw-w-full"
-          image={imageUrl}
-          alt={product.name || 'Product'}
-        />
-      )}
-      <CardContent>
-        <Typography variant="h6" component="h3" className="tw-font-bold tw-mb-2">
-          {product.name || 'Unnamed Product'}
+    <Card className="product-card tw-relative tw-rounded-lg tw-overflow-hidden tw-shadow-md hover:tw-shadow-lg tw-transition-shadow duration-200 tw-ease-in-out tw-bg-white">
+      <div className="tw-relative tw-pb-[142%]">
+        {' '}
+        {/* 책 표지 비율 유지 */}
+        {isLoading ? (
+          <Skeleton variant="rectangular" width="100%" height="100%" />
+        ) : (
+          <CardMedia
+            component="img"
+            className="tw-absolute tw-top-0 tw-left-0 tw-object-cover tw-h-full tw-w-full"
+            image={imageUrl}
+            alt={product.title || 'Product'}
+          />
+        )}
+      </div>
+      <CardContent className="tw-p-4">
+        <Typography
+          variant="h6"
+          component="div"
+          className="tw-mb-2 tw-line-clamp-2"
+        >
+          {product.title || 'Unnamed Product'}
         </Typography>
-        <Typography variant="body2" color="textSecondary" className="product-author-publisher tw-mb-3">
-          {product.author || 'Unknown Author'} / {product.publisher || 'Unknown Publisher'}
+        <Typography variant="body2" color="textSecondary" className="tw-mb-2">
+          {product.author || 'Unknown Author'} /{' '}
+          {product.publisher || 'Unknown Publisher'}
         </Typography>
-        <Typography variant="body1" component="p" className="product-price tw-font-bold">
+        <Typography variant="h6" component="div" className="tw-font-bold">
           {formattedPrice}원
         </Typography>
       </CardContent>

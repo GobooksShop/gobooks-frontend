@@ -46,7 +46,7 @@ function ProductList() {
       setError('');
       try {
         const page = searchParams.get('page') || 0;
-        const size = searchParams.get('size') || 2; // Adjusted size to 12 to show 4x3 format
+        const size = searchParams.get('size') || 12;
         const sort = searchParams.get('sort') || 'createdAt,desc';
 
         const response = await axios.get(
@@ -93,24 +93,45 @@ function ProductList() {
     );
 
   return (
-    <Box className="tw-px-4 tw-mt-10">
-      <Typography variant="h4" gutterBottom>
-        {categoryName} 상품 목록
+    <Box className="tw-px-4 sm:tw-px-8 tw-py-10 sm:tw-py-16 tw-max-w-screen-xl tw-mx-auto">
+      <Typography
+        variant="h4"
+        component="h1"
+        className="tw-mb-6 tw-text-center"
+      >
+        {categoryName}
       </Typography>
-      <Box className="tw-flex tw-justify-between tw-mb-4">
-        <Sort onSortChange={handleSortChange} />
+      <Box className="tw-flex tw-justify-between tw-items-center tw-mb-6 sm:tw-mb-10">
         <Pagination
+          className="tw-mt-6 sm:tw-mt-10"
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={handlePageChange}
         />
+        <Sort onSortChange={handleSortChange} />
       </Box>
-      <Box className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-4 tw-gap-4">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </Box>
+      {loading ? (
+        <Box className="tw-flex tw-justify-center tw-items-center tw-h-64">
+          <CircularProgress />
+        </Box>
+      ) : error ? (
+        <Typography variant="h6" color="error">
+          {error}
+        </Typography>
+      ) : products.length === 0 ? (
+        <Typography variant="h6" className="tw-text-center">
+          해당 카테고리의 상품이 없습니다.
+        </Typography>
+      ) : (
+        <Box className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-4 tw-gap-4 sm:tw-gap-6 md:tw-gap-8 py-8">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </Box>
+      )}
+
       <Pagination
+        className="tw-mt-6 sm:tw-mt-10"
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={handlePageChange}
