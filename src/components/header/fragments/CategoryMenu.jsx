@@ -86,80 +86,88 @@ export function CategoryMenu({ handleMenu, isMenuOpen }) {
   }, [categories]);
 
   return (
-      <>
-        {selectedDepth1 && (
-            <Box className="tw-relative tw-w-full">
-              <IconButton
-                  size="large"
-                  aria-label="메뉴 열기/닫기"
-                  onClick={handleMenu}
-                  className="tw-text-black focus:tw-outline-none"
-              >
-                {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
-              </IconButton>
-              {isMenuOpen && (
-                  <Box
-                      className="tw-absolute tw-top-full tw-left-0 tw-z-20 tw-mt-2 tw-rounded-lg tw-shadow-lg tw-bg-white tw-flex"
-                      role="menu"
-                      aria-orientation="vertical"
-                      aria-labelledby="menu-appbar"
-                      style={{width:'1200px'}}
+    <>
+      {selectedDepth1 && (
+        <Box className="tw-relative tw-w-full">
+          <IconButton
+            size="large"
+            aria-label="메뉴 열기/닫기"
+            onClick={handleMenu}
+            className="tw-text-black focus:tw-outline-none"
+          >
+            {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
+          </IconButton>
+          {isMenuOpen && (
+            <Box
+              className="tw-absolute tw-top-full tw-left-0 tw-z-20 tw-mt-2 tw-rounded-lg tw-shadow-lg tw-bg-white tw-flex"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="menu-appbar"
+              style={{ width: '1200px' }}
+            >
+              {/* 1단계 카테고리 */}
+              <Box className="tw-w-48 tw-mr-4 tw-p-4">
+                {categories.map((depth1) => (
+                  <MenuItem
+                    key={depth1.id}
+                    onClick={() => {
+                      if (depth1.children.length > 0) {
+                        setSelectedDepth1(depth1);
+                        setSelectedDepth2(null);
+                      } else {
+                        navigate(`/${depth1.id}`);
+                      }
+                    }}
+                    className="tw-justify-between"
+                    sx={{
+                      width: '100%',
+                    }}
                   >
-                    {/* 1단계 카테고리 */}
-                    <Box className="tw-w-48 tw-mr-4 tw-p-4">
-                      {categories.map((depth1) => (
-                          <MenuItem
-                              key={depth1.id}
-                              onClick={() => {
-                                if (depth1.children.length > 0) {
-                                  setSelectedDepth1(depth1);
-                                  setSelectedDepth2(null)
-                                } else {
-                                  navigate(`/${depth1.id}`);
-                                }
-                              }}
-                              className="tw-justify-between"
-                              sx={{
-                                width: '100%',
-                              }}
-                          >
-                            <Typography
-                                className={selectedDepth1?.id === depth1.id ? 'tw-font-bold' : ''}
-                            >
-                              {depth1.name}
-                            </Typography>
-                            {selectedDepth1?.id === depth1.id && (
-                                <ArrowForwardIosIcon className="tw-w-3 tw-h-3 tw-ml-2" />
-                            )}
-                          </MenuItem>
-                      ))}
-                    </Box>
-
-                    {/* 2단계 카테고리 */}
-                    {selectedDepth1?.children.length > 0 && (
-                        <Box className="tw-flex-1 tw-p-4">
-                          <Link to={`/product/list/${selectedDepth1.id}`} className="tw-block tw-mb-2">
-                            <Typography className="tw-font-bold">
-                              {selectedDepth1.name} 전체
-                            </Typography>
-                          </Link>
-
-                          <Box className="tw-flex tw-flex-col tw-gap-2 tw-mt-4" style={{ paddingBottom: '1rem' }}>
-                            {selectedDepth1.children.map((categoryDepth2) => (
-                                <Depth2
-                                    key={categoryDepth2.id}
-                                    category={categoryDepth2}
-                                    selectedCategory={selectedDepth2}
-                                    handleCategory={handleSelectedDepth2}
-                                />
-                            ))}
-                          </Box>
-                        </Box>
+                    <Typography
+                      className={
+                        selectedDepth1?.id === depth1.id ? 'tw-font-bold' : ''
+                      }
+                    >
+                      {depth1.name}
+                    </Typography>
+                    {selectedDepth1?.id === depth1.id && (
+                      <ArrowForwardIosIcon className="tw-w-3 tw-h-3 tw-ml-2" />
                     )}
+                  </MenuItem>
+                ))}
+              </Box>
+
+              {/* 2단계 카테고리 */}
+              {selectedDepth1?.children.length > 0 && (
+                <Box className="tw-flex-1 tw-p-4">
+                  <Link
+                    to={`/product/list/${selectedDepth1.id}`}
+                    className="tw-block tw-mb-2"
+                  >
+                    <Typography className="tw-font-bold">
+                      {selectedDepth1.name} 전체
+                    </Typography>
+                  </Link>
+
+                  <Box
+                    className="tw-flex tw-flex-col tw-gap-2 tw-mt-4"
+                    style={{ paddingBottom: '1rem' }}
+                  >
+                    {selectedDepth1.children.map((categoryDepth2) => (
+                      <Depth2
+                        key={categoryDepth2.id}
+                        category={categoryDepth2}
+                        selectedCategory={selectedDepth2}
+                        handleCategory={handleSelectedDepth2}
+                      />
+                    ))}
                   </Box>
+                </Box>
               )}
             </Box>
-        )}
-      </>
+          )}
+        </Box>
+      )}
+    </>
   );
 }
