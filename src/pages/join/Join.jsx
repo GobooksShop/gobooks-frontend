@@ -27,6 +27,7 @@ function Join() {
     email: '',
     password: '',
     nickname: '',
+    confirmPassword: '',
   });
 
   const [errors, setErrors] = useState({});
@@ -44,7 +45,7 @@ function Join() {
   const [agreedModalOpen, setAgreedModalOpen] = useState(false);
   const [timer, setTimer] = useState(0);
   const [resendAvailable, setResendAvailable] = useState(false);
-  const [progress, setProgress] = useState(100); // Starts at 100%
+  const [progress, setProgress] = useState(100);
 
   const validateForm = useCallback(() => {
     return (
@@ -115,9 +116,9 @@ function Join() {
       } else if (!emailPattern.test(value)) {
         error = '올바른 이메일 형식이 아닙니다.';
       }
-      setIsEmailUnique(false); // Reset email uniqueness check
-      setEmailButtonDisabled(false); // Reset email button disabled state
-    } else if (name === 'password') {
+      setIsEmailUnique(false);
+      setEmailButtonDisabled(false);
+    } else if (name === 'password' || name === 'confirmPassword') {
       const passwordPattern =
         /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,32}$/;
       if (!value) {
@@ -125,6 +126,9 @@ function Join() {
       } else if (!passwordPattern.test(value)) {
         error =
           '패스워드는 영문, 숫자, 특수문자(!@#$%^&*) 조합으로 입력해야 합니다.';
+      }
+      if (name === 'confirmPassword' && formData.password !== value) {
+        error = '비밀번호가 일치하지 않습니다.';
       }
     } else if (name === 'nickname') {
       if (!value) {
@@ -199,7 +203,7 @@ function Join() {
       interval = setInterval(() => {
         setTimer((prevTimer) => {
           const newTimer = prevTimer - 1;
-          setProgress((newTimer / 600) * 100); // Calculate the progress
+          setProgress((newTimer / 600) * 100);
           return newTimer;
         });
       }, 1000);
@@ -216,7 +220,7 @@ function Join() {
       await sendVerificationCode(formData.email);
       setCodeSent(true);
       setSendCodeButtonDisabled(true);
-      setTimer(600); // Reset the timer to 10 minutes (600 seconds)
+      setTimer(600);
       setResendAvailable(false);
       alert('Verification code resent to your email.');
     } catch (error) {
@@ -384,6 +388,19 @@ function Join() {
               type="password"
               error={!!errors.password}
               helperText={errors.password}
+              margin="normal"
+              style={{ marginBottom: '20px' }}
+            />
+            <TextField
+              fullWidth
+              label="비밀번호 확인"
+              variant="outlined"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+              type="password"
+              error={!!errors.confirmPassword}
+              helperText={errors.confirmPassword}
               margin="normal"
               style={{ marginBottom: '20px' }}
             />
