@@ -9,7 +9,6 @@ const CartItems = (props) => {
   const [cartItems, setCartItems] = useState([]);
   const [selectAll, setSelectAll] = useState(true);
   const store = useCartOrderStore();
-  console.log("props" + props.isOrders);
   useEffect(() => {
     //todo 더미 데이터로 테스트했습니다. 상품 쪽 반영 되면 수정되어야할 코드 입니다.
     const fetchData = async () => {

@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import {getCartData} from '../../api/cart/cart';
 import CartInfo from '../../components/cart/CartInfo';
 import DeleveryInfo from '../../components/order/DeleveryInfo';
-import PaymentInfo from '../../components/payment/PaymentInfo';
 const Order = () => {
   const [cartItems, setCartItems] = useState([]);
 
@@ -13,10 +12,6 @@ const Order = () => {
     setCartItems(data);
     console.log(cartItems);
   }, []);
-
-  useEffect(() => {
-    console.log("cartItems이 변경되었습니다:", cartItems);
-  }, [cartItems]);
 
   return (
     <PageContainer>
@@ -36,7 +31,6 @@ const Order = () => {
         <div className="main content tw-col-span-9">
           <CartItems cartList={cartItems} isOrders={true}/>
           <DeleveryInfo />
-          <PaymentInfo />
         </div>
         <CartInfo isOrders={true}/>
       </div>
