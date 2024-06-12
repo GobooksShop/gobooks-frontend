@@ -90,10 +90,8 @@ const useCartOrderStore = create((set) => ({
    */
   updateTotalAmount: () => set((state) => {
     const selectedItems = state.cartItems.filter(item => item.isSelected);
-    console.dir(selectedItems);
     const totalAmount = selectedItems.reduce((previousValue, currentValue) => previousValue + (currentValue.quantity * currentValue.price), 0);
     const discountAmount = totalAmount * 0.1;
-    console.dir(totalAmount);
     return { ...state, totalAmount: totalAmount - discountAmount , discountAmount};
   }),
 
