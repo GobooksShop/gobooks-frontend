@@ -40,12 +40,12 @@ httpClient.interceptors.response.use(
       try {
         const setUser = useUserStore((state) => state.setUser);
         const response = await refreshAccessToken();
-        const { newAccessToken, name, email, role } = response.data;
+        const { newAccessToken, userId, name, email, role } = response.data;
         console.log('response.data:' + response.data);
         // Access Token을 로컬 스토리지에 저장
         localStorage.setItem('accessToken', newAccessToken);
         // Zustand 상태 업데이트
-        setUser({ name, email, role });
+        setUser({ userId, name, email, role });
         originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
         return httpClient(originalRequest);
       } catch (refreshError) {

@@ -2,8 +2,6 @@ import { Button, Grid, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { deleteUser, getUserInfo, updateUserInfo } from '../../api/authApi';
 import { PageContainer } from '../../components/PageContainer';
-import { jwtDecode } from 'jwt-decode';
-
 
 
 function MyPage() {
@@ -20,30 +18,23 @@ function MyPage() {
 
   const [errors, setErrors] = useState({});
   const [isEditing, setIsEditing] = useState(false);
-  const [userId, setUserId] = useState(null);
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     // Fetch user info for user with ID 1 when the component mounts
     const fetchUserInfo = async () => {
       try {
-        const token = localStorage.getItem('accessToken');
-        if (token) {
-          const decodedToken = jwtDecode(token);
-          console.log('decodedToken:', decodedToken);
-          const userId = decodedToken.userID; // Adjust this according to your token structure
-          console.log('userId:', userId);
-          setUserId(userId);
-          const response = await getUserInfo(userId); // Use the extracted userID
-          setUserInfo(response);
-        } else {
-        console.error('No access token found');
-      }
+        
+        const response = await getUserInfo(userId); // Use the extracted userID
+        setUserInfo(response);
       } catch (err) {
         console.error('사용자 정보 로딩 실패:', err);
       }
     };
-    fetchUserInfo();
-  }, []);
+    if (userId) {
+      fetchUserInfo();
+    }
+  }, [userId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -75,7 +66,7 @@ function MyPage() {
     try {
       if(userId){
         const response = await updateUserInfo(1, userInfo); // Passing the ID explicitly
-        console.log('업데이트 성공:', response);
+        console.log('유저 정보 업데이트 성공:', response);
         setIsEditing(false);
       }
     } catch (err) {

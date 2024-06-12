@@ -24,12 +24,12 @@ function Login() {
       if (response.status === 200) {
         console.log('로그인 성공');
         // 필요한 경우 추가 처리
-        const { accessToken, name, email, role } = response.data;
+        const { accessToken, userId, name, email, role } = response.data;
         console.log('response.data:' + response.data);
         // Access Token을 로컬 스토리지에 저장
         localStorage.setItem('accessToken', accessToken);
         // Zustand 상태 업데이트
-        setUser({ name, email, role });
+        setUser({ userId, name, email, role });
         // 홈 페이지로 이동
         navigate('/');
       }
