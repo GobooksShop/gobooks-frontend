@@ -67,7 +67,7 @@ function Category() {
 
   const deleteCategoryWithConfirmation = async (id) => {
     const confirmDelete = window.confirm(
-      '이 카테고리를 삭제하시겠습니까? 모든 자식 카테고리도 함께 삭제됩니다.',
+      '이 카테고리를 삭제하시겠습니까? 모든 하위 카테고리도 함께 삭제됩니다.',
     );
     if (confirmDelete) {
       await deleteCategoryAndChildren(id);
@@ -163,7 +163,7 @@ function Category() {
               setEditCategoryName(category.name);
               setEditParentId(category.parentId || '');
             }}
-            sx={{ marginRight: '5px', padding: '8px 16px' }}
+            sx={{ marginRight: '5px', padding: '3px 3px' }}
           >
             수정
           </Button>
@@ -171,9 +171,9 @@ function Category() {
             variant="outlined"
             color="error"
             onClick={() => deleteCategoryWithConfirmation(category.id)}
-            sx={{ marginRight: '10px', padding: '8px 16px' }}
+            sx={{ marginRight: '5px', padding: '3px 3px' }}
           >
-            Delete
+            삭제
           </Button>
           {category.children && category.children.length > 0 && (
             <IconButton onClick={() => handleToggleCategory(category.id)}>
@@ -196,9 +196,9 @@ function Category() {
   if (error) return <Typography color="error">{error.message}</Typography>;
 
   return (
-    <PageContainer>
+    <PageContainer >
       <main className="min-h-[300px]">
-        <Typography variant="h4" gutterBottom>
+        <Typography variant="h4" gutterBottom >
           카테고리 관리 페이지
         </Typography>
         <div className="tw-mb-4 tw-flex tw-items-center">
