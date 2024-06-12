@@ -1,69 +1,76 @@
-import { AppBar, Container, Toolbar, Typography } from '@mui/material';
-import { CategoryMenuMobile, CategoryMenuPC } from './fragments/CategoryMenu';
-import { LogoMobile, LogoPC } from './fragments/Logo';
+import { AppBar, Box, ClickAwayListener, Toolbar } from '@mui/material';
+import { useEffect, useState } from 'react';
 
+import { CategoryMenu } from './fragments/CategoryMenu';
+import { Logo } from './fragments/Logo';
 import { UserMenu } from './fragments/UserMenu';
-import { useState } from 'react';
-
-const categoriesExample = [
-  {
-    id: 123,
-    name: '소설',
-  },
-  {
-    id: 124,
-    name: '에세이',
-  },
-  {
-    id: 125,
-    name: '비문학',
-  },
-];
+import useCategoryStore from '../../store/useCategoryStore';
+import { useLocation } from 'react-router-dom';
 
 function Header() {
-  const [categories, setCategories] = useState(categoriesExample);
-  const [anchorElNav, setAnchorElNav] = useState(null);
+  const { categories, fetchCategories } = useCategoryStore();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const location = useLocation();
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+  
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location]);
+
+  const handleMenu = (event) => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   const handleOpenProfileMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
   const handleCloseProfileMenu = () => {
     setAnchorElUser(null);
   };
 
+  const handleClickAway = () => {
+    if (isMenuOpen) {
+      setIsMenuOpen(false);
+    }
+  };
+
   return (
     <>
-      <AppBar position="fixed" color="">
-        <Container maxWidth="xl">
+      {/*<AppBar*/}
+      {/*  className="tw-fixed tw-box-border tw-w-full tw-px-[20px]"*/}
+      {/*  color=""*/}
+      {/*>*/}
+      <AppBar className="tw-fixed tw-w-full tw-bg-white tw-shadow-md tw-z-50">
+        <Box className="tw-container tw-mx-auto tw-px-4 sm:tw-px-6 tw-py-2 tw-flex tw-justify-between tw-items-center">
+          <Box className="tw-flex tw-items-center">
+            <Logo />
+            <ClickAwayListener onClickAway={handleClickAway}>
+              <div className="tw-relative">
+                {categories && (
+                  <CategoryMenu
+                    categories={categories}
+                    handleMenu={handleMenu}
+                    isMenuOpen={isMenuOpen}
+                  />
+                )}
+              </div>
+            </ClickAwayListener>
+          </Box>
           <Toolbar disableGutters>
-            <LogoPC />
-            <CategoryMenuMobile
-              categories={categories}
-              onOpen={handleOpenNavMenu}
-              onClose={handleCloseNavMenu}
-              anchorElNav={anchorElNav}
-            />
-            <LogoMobile />
-            <CategoryMenuPC categories={categories} />
             <UserMenu
               onOpen={handleOpenProfileMenu}
               onClose={handleCloseProfileMenu}
               anchorElUser={anchorElUser}
             />
           </Toolbar>
-        </Container>
+        </Box>
       </AppBar>
-      <div className="h-[70px] w-full" />
+      <div className="tw-h-[70px] tw-w-full" />
     </>
   );
 }

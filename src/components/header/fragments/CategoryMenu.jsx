@@ -1,75 +1,165 @@
-import {
-  Box,
-  Button,
-  IconButton,
-  Menu,
-  MenuItem,
-  Typography,
-} from '@mui/material';
+import { Box, IconButton, MenuItem, Typography } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
-import { Link } from 'react-router-dom';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import CloseIcon from '@mui/icons-material/Close';
+import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 import MenuIcon from '@mui/icons-material/Menu';
+import useCategoryStore from '../../../store/useCategoryStore';
 
-export function CategoryMenuMobile({
-  categories,
-  onOpen,
-  onClose,
-  anchorElNav,
-}) {
+const Depth3 = ({ category }) => {
   return (
-    <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-      <IconButton
-        size="large"
-        aria-label="account of current user"
-        aria-controls="menu-appbar"
-        aria-haspopup="true"
-        onClick={onOpen}
+    <Link to={`/product/list/${category.id}`}>
+      <Typography key={category.id} sx={{ color: '#767676' }}>
+        {category.name}
+      </Typography>
+    </Link>
+  );
+};
+
+const Depth2 = ({ category, selectedCategory, handleCategory }) => {
+  return (
+    <Box>
+      <Box
         sx={{
-          color: '#000000',
+          width: '130px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
         }}
       >
-        <MenuIcon />
-      </IconButton>
-      <Menu
-        id="menu-appbar"
-        anchorEl={anchorElNav}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        keepMounted
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        open={Boolean(anchorElNav)}
-        onClose={onClose}
-        sx={{
-          display: { xs: 'block', md: 'none' },
-        }}
-      >
-        {categories.map((category) => (
-          <MenuItem key={category.id} onClick={onClose}>
-            <Link key={category.id} to={`/product/list/${category.id}`}>
-              <Typography textAlign="center">{category.name}</Typography>
-            </Link>
-          </MenuItem>
-        ))}
-      </Menu>
+        <Link to={`/product/list/${category.id}`}>
+          <Typography>{category.name} </Typography>
+        </Link>
+        {category.children.length > 0 && (
+          <>
+            {selectedCategory?.id === category.id ? (
+              <IndeterminateCheckBoxIcon
+                className="tw-cursor-pointer"
+                onClick={() => handleCategory()}
+              />
+            ) : (
+              <AddBoxIcon
+                className="tw-cursor-pointer"
+                onClick={() => handleCategory(category)}
+              />
+            )}
+          </>
+        )}
+      </Box>
+      {selectedCategory?.id === category.id && (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4px',
+            marginTop: '5px',
+          }}
+        >
+          {category.children.map((categoryDepth3) => (
+            <Depth3 key={categoryDepth3.id} category={categoryDepth3} />
+          ))}
+        </Box>
+      )}
     </Box>
   );
-}
+};
 
-export function CategoryMenuPC({ categories }) {
+export function CategoryMenu({ handleMenu, isMenuOpen }) {
+  const [selectedDepth1, setSelectedDepth1] = useState();
+  const [selectedDepth2, setSelectedDepth2] = useState(null);
+  const navigate = useNavigate();
+  const { categories, fetchCategories } = useCategoryStore();
+
+  const handleSelectedDepth2 = (category) => {
+    setSelectedDepth2(category);
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
+  useEffect(() => {
+    setSelectedDepth1(categories[0]);
+  }, [categories]);
+
   return (
-    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-      {categories.map((category) => (
-        <Link key={category.id} to={`/product/list/${category.id}`}>
-          <Button sx={{ my: 2, display: 'block', color: '#000' }}>
-            {category.name}
-          </Button>
-        </Link>
-      ))}
-    </Box>
+      <>
+        {selectedDepth1 && (
+            <Box className="tw-relative tw-w-full">
+              <IconButton
+                  size="large"
+                  aria-label="메뉴 열기/닫기"
+                  onClick={handleMenu}
+                  className="tw-text-black focus:tw-outline-none"
+              >
+                {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
+              </IconButton>
+              {isMenuOpen && (
+                  <Box
+                      className="tw-absolute tw-top-full tw-left-0 tw-z-20 tw-mt-2 tw-rounded-lg tw-shadow-lg tw-bg-white tw-flex"
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="menu-appbar"
+                      style={{width:'1200px'}}
+                  >
+                    {/* 1단계 카테고리 */}
+                    <Box className="tw-w-48 tw-mr-4 tw-p-4">
+                      {categories.map((depth1) => (
+                          <MenuItem
+                              key={depth1.id}
+                              onClick={() => {
+                                if (depth1.children.length > 0) {
+                                  setSelectedDepth1(depth1);
+                                  setSelectedDepth2(null)
+                                } else {
+                                  navigate(`/${depth1.id}`);
+                                }
+                              }}
+                              className="tw-justify-between"
+                              sx={{
+                                width: '100%',
+                              }}
+                          >
+                            <Typography
+                                className={selectedDepth1?.id === depth1.id ? 'tw-font-bold' : ''}
+                            >
+                              {depth1.name}
+                            </Typography>
+                            {selectedDepth1?.id === depth1.id && (
+                                <ArrowForwardIosIcon className="tw-w-3 tw-h-3 tw-ml-2" />
+                            )}
+                          </MenuItem>
+                      ))}
+                    </Box>
+
+                    {/* 2단계 카테고리 */}
+                    {selectedDepth1?.children.length > 0 && (
+                        <Box className="tw-flex-1 tw-p-4">
+                          <Link to={`/product/list/${selectedDepth1.id}`} className="tw-block tw-mb-2">
+                            <Typography className="tw-font-bold">
+                              {selectedDepth1.name} 전체
+                            </Typography>
+                          </Link>
+
+                          <Box className="tw-flex tw-flex-col tw-gap-2 tw-mt-4" style={{ paddingBottom: '1rem' }}>
+                            {selectedDepth1.children.map((categoryDepth2) => (
+                                <Depth2
+                                    key={categoryDepth2.id}
+                                    category={categoryDepth2}
+                                    selectedCategory={selectedDepth2}
+                                    handleCategory={handleSelectedDepth2}
+                                />
+                            ))}
+                          </Box>
+                        </Box>
+                    )}
+                  </Box>
+              )}
+            </Box>
+        )}
+      </>
   );
 }
