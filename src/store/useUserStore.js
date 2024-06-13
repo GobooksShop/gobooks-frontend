@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import commonStore from './commonStore';
 
 const useUserStore = create(
   persist(
@@ -16,13 +17,7 @@ const useUserStore = create(
     }),
     {
       name: 'userStore',
-      storage: typeof window !== 'undefined' ? localStorage : undefined,
-      serialize: (state) => {
-        return JSON.stringify(state);
-      },
-      deserialize: (str) => {
-        return JSON.parse(str);
-      },
+      storage: commonStore,
     },
   ),
 );
