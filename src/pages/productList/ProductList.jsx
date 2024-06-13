@@ -47,10 +47,10 @@ function ProductList() {
       try {
         const page = searchParams.get('page') || 0;
         const size = searchParams.get('size') || 12;
-        // const sort = searchParams.get('sort') || 'createdAt,desc';
+        const sort = searchParams.get('sort') || 'createdAt,desc';
 
         const response = await axios.get(
-          `http://localhost:8080/api/products/category/${categoryId}/paged?page=${page}&size=${size}`,
+          `http://localhost:8080/api/products/category/${categoryId}/paged?page=${page}&size=${size}&sort=${sort}`,
         );
         setProducts(response.data.content);
         setCurrentPage(response.data.number);
@@ -75,22 +75,6 @@ function ProductList() {
     setSearchParams({ page: 0, sort: newSortBy });
   };
 
-  let content;
-  if (loading) {
-    content = <Box display="flex" justifyContent="center"><CircularProgress /></Box>;
-  } else if (error) {
-    content = <Typography variant="h6" color="error">{error}</Typography>;
-  } else if (products.length === 0) {
-    content = <Typography variant="h6" className="tw-text-center">해당 카테고리의 상품이 없습니다.</Typography>;
-  } else {
-    content = (
-        <Box className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-4 tw-gap-4 sm:tw-gap-6 md:tw-gap-8 py-8">
-          {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-          ))}
-        </Box>
-    );
-  }
 
   return (
     <Box className="tw-px-4 sm:tw-px-8 tw-py-10 sm:tw-py-16 tw-max-w-screen-xl tw-mx-auto">
@@ -123,7 +107,7 @@ function ProductList() {
           해당 카테고리의 상품이 없습니다.
         </Typography>
       ) : (
-        <Box className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-4 tw-gap-4 sm:tw-gap-6 md:tw-gap-8 py-8">
+        <Box className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-4 tw-gap-3 sm:tw-gap-4 md:tw-gap-5 py-8">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
