@@ -10,7 +10,11 @@ module.exports = {
     fontFamily: {
       pre: ['Pretendard'],
     },
-    extend: {},
+    extend: {
+      gridTemplateRows: {
+        'table-layout': 'repeat(6, minmax(0, 40px))'
+      }
+    },
   },
   plugins: [],
 };

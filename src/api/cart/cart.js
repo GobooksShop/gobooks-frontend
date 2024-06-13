@@ -1,3 +1,14 @@
+import { httpClient } from '../httpClient';
+
+export const getProduct = async (productIdList) => {
+  const productList = [];
+  for (const productId of productIdList) {
+    const response = await httpClient.get(`/products/${productId}`)
+    productList.push(response.data);
+  }
+  return productList;
+};
+
 export const getCartData = (cartItems) => {
     const cartData = [
       { "product_id": 1,
