@@ -47,10 +47,10 @@ function ProductList() {
       try {
         const page = searchParams.get('page') || 0;
         const size = searchParams.get('size') || 12;
-        const sort = searchParams.get('sort') || 'createdAt,desc';
+        // const sort = searchParams.get('sort') || 'createdAt,desc';
 
         const response = await axios.get(
-          `http://localhost:8080/api/products/category/${categoryId}/paged?page=${page}&size=${size}&sort=${sort}`,
+          `http://localhost:8080/api/products/category/${categoryId}/paged?page=${page}&size=${size}`,
         );
         setProducts(response.data.content);
         setCurrentPage(response.data.number);
