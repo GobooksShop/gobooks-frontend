@@ -2,12 +2,14 @@ import CustomButton from '../ui/CustomButton';
 import { useEffect, useState } from 'react';
 import Payment from '../payment/Payment';
 import useCartOrderStore from '../../store/useCartOrderStore';
+import { useNavigate } from 'react-router-dom';
 
 const CartInfo = (props) => {
   const [isFixed, setIsFixed] = useState(false);
   const totalAmount = useCartOrderStore((state) => state.totalAmount);
   const discountAmount = useCartOrderStore((state) => state.discountAmount);
   const updateTotalAmount = useCartOrderStore((state) => state.updateTotalAmount);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,6 +29,7 @@ const CartInfo = (props) => {
 
   const handleOrderClick = () => {
     updateTotalAmount();
+    navigate("/order");
   }
 
   return (
