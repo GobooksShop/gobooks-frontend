@@ -8,7 +8,7 @@ import Main from './pages/main/Main';
 import MyPage from './pages/myPage/MyPage';
 import Order from './pages/order/Order';
 import Product from './pages/manager/product/Product';
-import ProductDetail from './pages/productDetail/ProductDetail';
+import ProductDetailPage from './pages/productDetail/ProductDetailPage';
 import ProductList from './pages/productList/ProductList';
 
 const Router = () => {
@@ -18,8 +18,8 @@ const Router = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/join" element={<Join />} />
       <Route path="/order" element={<Order />} />
-      <Route path="/product/list/:categoryId" element={<ProductList />} />
-      <Route path="/product/detail/:id" element={<ProductDetail />} />
+      <Route path="/category/:categoryId" element={<ProductList />} />
+      <Route path="/product/detail/:id" element={<ProductDetailPage />} />
       <Route path="/product/management" element={<Product />} />
       <Route path="/category/management" element={<Category />} />
       <Route path="/cart" element={<Cart />} />
@@ -27,4 +27,5 @@ const Router = () => {
     </Routes>
   );
 };
+
 export default Router;
