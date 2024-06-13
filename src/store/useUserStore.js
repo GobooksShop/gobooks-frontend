@@ -16,7 +16,7 @@ const useUserStore = create(
     }),
     {
       name: 'userStore',
-      storage: () => localStorage,
+      storage: typeof window !== 'undefined' ? localStorage : undefined,
     },
   ),
 );
