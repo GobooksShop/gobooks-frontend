@@ -35,6 +35,7 @@ function Category() {
   const [editCategoryName, setEditCategoryName] = useState('');
   const [editParentId, setEditParentId] = useState('');
   const [expandedCategories, setExpandedCategories] = useState({});
+  const [isInputValid, setIsInputValid] = useState(false);  // 유효성 검사
 
   useEffect(() => {
     fetchCategories();
@@ -48,11 +49,17 @@ function Category() {
   };
 
   const handleCreateCategory = async () => {
-    await addCategory({ name: newCategoryName, parentId: newParentId || null });
-    fetchCategories(); // Re-fetch categories to update state
-    setNewCategoryName('');
-    setNewParentId('');
+    if (isInputValid) {
+      await addCategory({ name: newCategoryName, parentId: newParentId || null });
+      fetchCategories(); // Re-fetch categories to update state
+      setNewCategoryName('');
+      setNewParentId('');
+    }
   };
+
+  useEffect(() => {
+    setIsInputValid(newCategoryName.trim() !== '');
+  }, [newCategoryName]);
 
   const handleUpdateCategory = async () => {
     await updateCategory(editCategory, {
@@ -85,26 +92,21 @@ function Category() {
     await deleteCategory(id);
   };
 
-  const renderCategoryOptions = (category, level = 0) =>
-    [
-      <MenuItem
-        key={category.id}
-        value={category.id}
-        sx={{ marginLeft: `${level * 20}px` }}
-      >
-        {category.name}
-      </MenuItem>,
-      category.children &&
-        category.children.map((child) =>
-          renderCategoryOptions(child, level + 1),
-        ),
-    ].flat();
+  const renderCategoryOptions = (category, level = 0) => (
+      <React.Fragment key={category.id}>
+        <MenuItem value={category.id} sx={{ ml: level * 4 }}>
+          {category.name}
+        </MenuItem>
+        {category.children &&
+            category.children.map((child) => renderCategoryOptions(child, level + 1))}
+      </React.Fragment>
+  );
 
   const renderCategory = (category, level = 0) => (
-    <Box
-      key={category.id}
-      sx={{ marginLeft: `${level * 20}px`, marginBottom: '10px' }}
-    >
+      <Box
+          key={category.id}
+          sx={{ ml: level * 4, mb: 2, border: '1px solid lightgray', p: 2, borderRadius: 1 }}
+      >
       {editCategory === category.id ? (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <TextField
@@ -186,9 +188,11 @@ function Category() {
           )}
         </Box>
       )}
-      {expandedCategories[category.id] &&
-        category.children &&
-        category.children.map((child) => renderCategory(child, level + 1))}
+        {expandedCategories[category.id] && category.children && (
+            <ul className="list-none space-y-2">
+              {category.children.map((child) => renderCategory(child, level + 1))}
+            </ul>
+        )}
     </Box>
   );
 
@@ -226,16 +230,21 @@ function Category() {
               {categories.map((category) => renderCategoryOptions(category))}
             </Select>
           </FormControl>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleCreateCategory}
-            sx={{ padding: '3px 3px' }}
-          >
-            생성
-          </Button>
+          <Box sx={{ display: 'flex', alignItems: 'stretch' }}>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={handleCreateCategory}
+                disabled={!isInputValid}
+                // sx={{ padding: '3px 3px' }}
+            >
+              생성
+            </Button>
+          </Box>
         </div>
-        {categories.map((category) => renderCategory(category))}
+        <ul className="list-none">
+          {categories.map((category) => renderCategory(category))}
+        </ul>
       </main>
     </PageContainer>
   );
