@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import CartProductCounter from './CartProductCounter';
-import { getCartData, getProduct } from '../../api/cart/cart';
+import { getProduct } from '../../api/cart/cart';
 import useCartOrderStore from '../../store/useCartOrderStore';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
@@ -10,16 +10,15 @@ const CartItems = (props) => {
   const [selectAll, setSelectAll] = useState(true);
   const store = useCartOrderStore();
   useEffect(() => {
-    //todo 더미 데이터로 테스트했습니다. 상품 쪽 반영 되면 수정되어야할 코드 입니다.
     const fetchData = async () => {
 
-      const storedCartItems = JSON.parse(localStorage.getItem('cart-storage')).state.cartItems || [];
-      console.log(storedCartItems);
-      if(!storedCartItems){
+      const storeData = JSON.parse(localStorage.getItem('cart-storage')).state || [];
+      console.log(storeData);
+      if(!storeData){
         console.error('로컬 스토리지에서 cart-storage 데이터를 가져올 수 없습니다.');
         return;
       }
-
+      const storedCartItems = storeData.cartItems;
       const productList =storedCartItems.map((item) => item.productId);
       const data = await getProduct(productList)
 
@@ -49,7 +48,7 @@ const CartItems = (props) => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('cart-storage', JSON.stringify({ state: { cartItems } }));
+    // localStorage.setItem('cart-storage', JSON.stringify({ state: { cartItems } }));
     const allSelected = cartItems.every(item => item.isSelected);
     setSelectAll(allSelected);
 
@@ -97,7 +96,6 @@ const CartItems = (props) => {
       price,
       isSelected,
     })));
-    // 선택된 제품들의 총 금액을 계산하여 totalAmount 상태를 갱신
     store.updateTotalAmount();
   };
 
