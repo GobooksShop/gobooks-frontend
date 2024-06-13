@@ -16,7 +16,7 @@ function ProductList() {
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [sortBy, setSortBy] = useState('createdAt,desc');
+  const [sortBy, setSortBy] = useState('created_at,desc');
 
   const { categories, fetchCategories } = useCategoryStore();
 
@@ -75,22 +75,22 @@ function ProductList() {
     setSearchParams({ page: 0, sort: newSortBy });
   };
 
-  if (loading)
-    return (
-      <Box display="flex" justifyContent="center">
-        <CircularProgress />
-      </Box>
+  let content;
+  if (loading) {
+    content = <Box display="flex" justifyContent="center"><CircularProgress /></Box>;
+  } else if (error) {
+    content = <Typography variant="h6" color="error">{error}</Typography>;
+  } else if (products.length === 0) {
+    content = <Typography variant="h6" className="tw-text-center">해당 카테고리의 상품이 없습니다.</Typography>;
+  } else {
+    content = (
+        <Box className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-4 tw-gap-4 sm:tw-gap-6 md:tw-gap-8 py-8">
+          {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+          ))}
+        </Box>
     );
-  if (error)
-    return (
-      <Typography variant="h6" color="error">
-        {error}
-      </Typography>
-    );
-  if (products.length === 0)
-    return (
-      <Typography variant="h6">해당 카테고리의 상품이 없습니다.</Typography>
-    );
+  }
 
   return (
     <Box className="tw-px-4 sm:tw-px-8 tw-py-10 sm:tw-py-16 tw-max-w-screen-xl tw-mx-auto">
