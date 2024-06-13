@@ -95,7 +95,7 @@ function Category() {
       [
         <MenuItem
             key={category.id}
-            value={category.id}
+            value={String(category.id)}
             sx={{ marginLeft: `${level * 20}px` }}
         >
           {category.name}
