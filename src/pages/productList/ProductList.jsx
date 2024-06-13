@@ -1,12 +1,14 @@
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Box, CircularProgress, Typography, Breadcrumbs } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, Link } from 'react-router-dom';
 
 import Pagination from '../../components/util/Pagination';
 import ProductCard from '../../components/product/ProductCard';
 import Sort from '../../components/util/Sort';
 import axios from 'axios';
 import useCategoryStore from '../../store/useCategoryStore';
+import HomeIcon from '@mui/icons-material/Home';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 function ProductList() {
   const { categoryId } = useParams();
@@ -17,6 +19,7 @@ function ProductList() {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [sortBy, setSortBy] = useState('created_at,desc');
+  const [breadcrumbs, setBreadcrumbs] = useState([]);
 
   const { categories, fetchCategories } = useCategoryStore();
 
@@ -47,10 +50,10 @@ function ProductList() {
       try {
         const page = searchParams.get('page') || 0;
         const size = searchParams.get('size') || 12;
-        // const sort = searchParams.get('sort') || 'createdAt,desc';
+        const sort = searchParams.get('sort') || 'createdAt,desc';
 
         const response = await axios.get(
-          `http://localhost:8080/api/products/category/${categoryId}/paged?page=${page}&size=${size}`,
+          `http://localhost:8080/api/products/category/${categoryId}/paged?page=${page}&size=${size}&sort=${sort}`,
         );
         setProducts(response.data.content);
         setCurrentPage(response.data.number);
@@ -75,25 +78,38 @@ function ProductList() {
     setSearchParams({ page: 0, sort: newSortBy });
   };
 
-  let content;
-  if (loading) {
-    content = <Box display="flex" justifyContent="center"><CircularProgress /></Box>;
-  } else if (error) {
-    content = <Typography variant="h6" color="error">{error}</Typography>;
-  } else if (products.length === 0) {
-    content = <Typography variant="h6" className="tw-text-center">해당 카테고리의 상품이 없습니다.</Typography>;
-  } else {
-    content = (
-        <Box className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-4 tw-gap-4 sm:tw-gap-6 md:tw-gap-8 py-8">
-          {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-          ))}
-        </Box>
-    );
-  }
+  useEffect(() => {
+    fetch(`http://localhost:8080/api/categories/${categoryId}/breadcrumbs`)
+    .then(res => res.json())
+    .then(data => setBreadcrumbs(data));
+  }, [categoryId]);
 
   return (
     <Box className="tw-px-4 sm:tw-px-8 tw-py-10 sm:tw-py-16 tw-max-w-screen-xl tw-mx-auto">
+      <Breadcrumbs aria-label="breadcrumb" separator=">"
+                   sx={{ marginBottom: '5px' }}
+      >
+        <Link
+            underline="hover"
+            color="inherit"
+            to="/"
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center'}}>
+            <HomeIcon sx={{ mr: 1, fontSize: '1rem' }} />
+            HOME
+          </Box>
+        </Link>
+        {breadcrumbs.map((crumb, index) => (
+            <Link
+                key={crumb.id}
+                underline="hover"
+                color={crumb.id === parseInt(categoryId, 10) ? 'primary' : 'inherit'} // 현재 카테고리 확인
+                to={`/product/list/${crumb.id}`}
+            >
+              {crumb.name}
+            </Link>
+        ))}
+      </Breadcrumbs>
       <Typography
         variant="h4"
         component="h1"
@@ -123,7 +139,7 @@ function ProductList() {
           해당 카테고리의 상품이 없습니다.
         </Typography>
       ) : (
-        <Box className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-4 tw-gap-4 sm:tw-gap-6 md:tw-gap-8 py-8">
+        <Box className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-4 tw-gap-3 sm:tw-gap-4 md:tw-gap-5 py-8">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

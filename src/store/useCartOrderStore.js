@@ -8,6 +8,7 @@ import { persist } from 'zustand/middleware';
  * @property {number} price - 각 제품의 가격
  * @property {boolean} isSelected - 선택 여부를 나타내는 플래그
  */
+//todo TotalCount에 문제가 조금 있음. 프로그램이 돌아가는데 문제가 있는 이슈를 아니라서 나중에 수정함.
 const useCartOrderStore = create(
   persist(
     (set) => ({
@@ -128,6 +129,10 @@ const useCartOrderStore = create(
     {
       name: 'cart-storage',
       getStorage: () => localStorage,
+      merge: (persistedState, currentState) => ({
+        ...currentState,
+        ...persistedState,
+      }),
     },
   ),
 );

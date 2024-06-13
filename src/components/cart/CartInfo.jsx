@@ -46,7 +46,7 @@ const CartInfo = (props) => {
                 <div>할인 금액</div>
               </div>
               <div className="tw-flex tw-flex-col tw-items-end tw-gap-3">
-                <div>{totalAmount}원</div>
+                <div>{totalAmount+discountAmount}원</div>
                 <div>0원</div>
                 <div>{-discountAmount}원</div>
               </div>
