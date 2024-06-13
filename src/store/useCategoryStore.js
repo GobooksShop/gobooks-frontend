@@ -9,7 +9,7 @@ const useCategoryStore = create((set) => ({
   fetchCategories: async () => {
     set({ isLoading: true });
     try {
-      const response = await axios.get('http://localhost:8080/api/categories');
+      const response = await axios.get('http://localhost:8080/api/categories/hierarchy');
       set({ categories: response.data, isLoading: false });
     } catch (error) {
       console.error('Failed to fetch categories:', error);
