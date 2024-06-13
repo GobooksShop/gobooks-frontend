@@ -13,6 +13,7 @@ import {
   IconButton
 } from '@mui/material';
 import { PageContainer } from '../../components/PageContainer';
+import FloatingButton, { FoatingButton } from '../../components/util/FloatingButton';
 
 function BookCarousel({ books }) {
   const [currentPage, setCurrentPage] = useState(0);
@@ -286,6 +287,7 @@ function Main() {
           <BookCarousel books={steadySellers}/>
         </section>
       </div>
+        <FloatingButton />
       </PageContainer>
   );
 }
