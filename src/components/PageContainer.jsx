@@ -9,6 +9,7 @@ export function PageContainer({ children }) {
         maxWidth: '1536px',
         padding: '24px',
         boxSizing: 'border-box',
+        minHeight: '500px',
       }}
     >
       {children}
