@@ -1,4 +1,3 @@
-// productApi.js
 import { httpClient } from '../httpClient';
 
 export const fetchProductsByCategory = async (categoryId) => {
