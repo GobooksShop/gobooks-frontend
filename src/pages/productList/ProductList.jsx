@@ -8,7 +8,7 @@ import Sort from '../../components/util/Sort';
 import axios from 'axios';
 import useCategoryStore from '../../store/useCategoryStore';
 import HomeIcon from '@mui/icons-material/Home';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 function ProductList() {
   const { categoryId } = useParams();
@@ -86,7 +86,7 @@ function ProductList() {
 
   return (
     <Box className="tw-px-4 sm:tw-px-8 tw-py-10 sm:tw-py-16 tw-max-w-screen-xl tw-mx-auto">
-      <Breadcrumbs aria-label="breadcrumb" separator=">"
+      <Breadcrumbs aria-label="breadcrumb" separator={<ArrowForwardIosIcon fontSize='1rem'/>}
                    sx={{ marginBottom: '5px' }}
       >
         <Link

@@ -37,12 +37,14 @@ const Depth2 = ({ category, selectedCategory, handleCategory }) => {
           <>
             {selectedCategory?.id === category.id ? (
               <IndeterminateCheckBoxIcon
-                className="tw-cursor-pointer"
+                  sx={{ color: 'grey.300' }}
+                  className="tw-cursor-pointer"
                 onClick={() => handleCategory()}
               />
             ) : (
               <AddBoxIcon
-                className="tw-cursor-pointer"
+                  sx={{ color: 'grey.300' }}
+                  className="tw-cursor-pointer"
                 onClick={() => handleCategory(category)}
               />
             )}
@@ -121,6 +123,7 @@ export function CategoryMenu({ handleMenu, isMenuOpen }) {
                     className="tw-justify-between"
                     sx={{
                       width: '100%',
+                      color: selectedDepth1?.id === depth1.id ? 'primary.main' : 'inherit',
                     }}
                   >
                     <Typography
@@ -131,7 +134,7 @@ export function CategoryMenu({ handleMenu, isMenuOpen }) {
                       {depth1.name}
                     </Typography>
                     {selectedDepth1?.id === depth1.id && (
-                      <ArrowForwardIosIcon className="tw-w-3 tw-h-3 tw-ml-2" />
+                        <ArrowForwardIosIcon sx={{ ml: 1, fontSize: '1rem' }} />
                     )}
                   </MenuItem>
                 ))}
@@ -139,13 +142,18 @@ export function CategoryMenu({ handleMenu, isMenuOpen }) {
 
               {/* 2단계 카테고리 */}
               {selectedDepth1?.children.length > 0 && (
-                <Box className="tw-flex-1 tw-p-4">
+                <Box className="tw-flex-1 tw-py-5">
                   <Link
                     to={`/product/list/${selectedDepth1.id}`}
                     className="tw-block tw-mb-2"
                   >
-                    <Typography className="tw-font-bold">
+                    <Typography variant="h6" component="h2"
+                                sx={{
+                                  fontWeight: 'bold',
+                                  display: 'flex',
+                                  alignItems: 'center' }}>
                       {selectedDepth1.name} 전체
+                      <ArrowForwardIosIcon sx={{ ml: 1, fontSize: '1rem' }} />
                     </Typography>
                   </Link>
 
