@@ -91,11 +91,7 @@ const useCartOrderStore = create(
         totalAmount: 0,
         discountAmount: 0
       }),
-      /**
-       * 카트에서 주문하기 버튼 눌렀을 때, merchantId 제발급을 위해서 초기화 합니다.
-       *
-       */
-      resetMerchantId: () => set({ merchantId: '' }),
+
       /**
        * totalAmount 토탈 금액을 계산합니다.
        *

@@ -1,106 +1,111 @@
-import React, { useState, useEffect } from 'react';
+import { Button, Card, CardContent, Grid, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const ProductDetail = ({ product, onSave, onClose }) => {
-    const [productDetails, setProductDetails] = useState({
-        id: '',
-        name: '',
-        description: '',
-        price: '',
-        discount: ''
-    });
+import axios from 'axios';
+import useCartOrderStore from '../../store/useCartOrderStore';
 
-    useEffect(() => {
-        if (product) {
-            setProductDetails(product);
-        }
-    }, [product]);
+const ProductDetailPage = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [product, setProduct] = useState(null);
+  const [isLoading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const addCart = useCartOrderStore((state) => state.addCart);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setProductDetails({
-            ...productDetails,
-            [name]: value
-        });
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/api/products/${id}`,
+        );
+        setProduct(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to fetch product', error);
+        setError(error);
+        setLoading(false);
+      }
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        onSave(productDetails);
-    };
+    fetchProduct();
+  }, [id]);
 
-    return (
-        <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6">
-            <h2 className="text-2xl font-bold mb-4">{product ? 'Edit Product' : 'Add Product'}</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700">
-                        Name:
-                        <input
-                            type="text"
-                            name="name"
-                            value={productDetails.name}
-                            onChange={handleChange}
-                            required
-                            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </label>
-                </div>
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700">
-                        Description:
-                        <input
-                            type="text"
-                            name="description"
-                            value={productDetails.description}
-                            onChange={handleChange}
-                            required
-                            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </label>
-                </div>
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700">
-                        Price:
-                        <input
-                            type="number"
-                            name="price"
-                            value={productDetails.price}
-                            onChange={handleChange}
-                            required
-                            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </label>
-                </div>
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700">
-                        Discount:
-                        <input
-                            type="text"
-                            name="discount"
-                            value={productDetails.discount}
-                            onChange={handleChange}
-                            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </label>
-                </div>
-                <div className="flex justify-end">
-                    <button
-                        type="submit"
-                        className="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                    >
-                        Save
-                    </button>
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        className="ml-4 px-4 py-2 bg-red-500 text-white rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                    >
-                        Cancel
-                    </button>
-                </div>
-            </form>
-        </div>
-    );
+  const handleAddToCart = () => {
+    if (product) {
+      addCart(product.id, 1, product.fixedPrice);
+    }
+  };
+
+  const handleBuyNow = () => {
+    navigate(`/order`, { state: { productId: id, buyNow: true } });
+  };
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error loading the product.</p>;
+  if (!product) return <p>No product found</p>;
+
+  return (
+    <Card className="max-w-4xl mx-auto my-8 shadow-md">
+      <Grid container spacing={2}>
+        <Grid item md={6}>
+          {product.pictureUrl && (
+            <img
+              src={product.pictureUrl}
+              alt={product.title}
+              style={{ width: '400px', height: '500px' }}
+            />
+          )}
+        </Grid>
+        <Grid
+          item
+          md={6}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-around',
+          }}
+        >
+          <CardContent>
+            <Typography variant="h5" gutterBottom>
+              {product.title}
+            </Typography>
+            <Typography variant="subtitle1" gutterBottom>
+              Price: ${product.fixedPrice}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" gutterBottom>
+              Author: {product.author}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" gutterBottom>
+              ISBN: {product.isbn}
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              Description: {product.content}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Published: {product.publicationYear}
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddToCart}
+              style={{ marginTop: 20 }}
+            >
+              장바구니에 추가
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleBuyNow}
+              style={{ marginTop: 10 }}
+            >
+              구매하기
+            </Button>
+          </CardContent>
+        </Grid>
+      </Grid>
+    </Card>
+  );
 };
 
-export default ProductDetail;
+export default ProductDetailPage;
