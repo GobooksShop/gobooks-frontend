@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   FormControl,
   Grid,
@@ -6,6 +7,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  Typography,
 } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import React, { useEffect, useState } from 'react';
@@ -27,12 +29,7 @@ const ProductAdd = () => {
     status: '',
     stockQuantity: '',
     pictureUrl: '',
-    categoryId: '', // Add categoryId to product details
-  });
-  const [selectedCategories, setSelectedCategories] = useState({
-    level1: '',
-    level2: '',
-    level3: '',
+    categoryIds: [],
   });
 
   useEffect(() => {
@@ -48,25 +45,9 @@ const ProductAdd = () => {
     setProductDetails((prev) => ({ ...prev, publicationYear: value }));
   };
 
-  const handleCategoryChange = (level, value) => {
-    const updatedSelectedCategories = { ...selectedCategories, [level]: value };
-    setSelectedCategories(updatedSelectedCategories);
-
-    if (level === 'level1') {
-      setSelectedCategories((prev) => ({ ...prev, level2: '', level3: '' }));
-    } else if (level === 'level2') {
-      setSelectedCategories((prev) => ({ ...prev, level3: '' }));
-    }
-
-    if (
-      level === 'level3' ||
-      (level === 'level2' &&
-        !categories.find((cat) => cat.id === value)?.children?.length)
-    ) {
-      setProductDetails((prev) => ({ ...prev, categoryId: value }));
-    } else {
-      setProductDetails((prev) => ({ ...prev, categoryId: '' }));
-    }
+  const handleCategoryChange = (event) => {
+    const { value } = event.target;
+    setProductDetails((prev) => ({ ...prev, categoryIds: value }));
   };
 
   const handleSubmit = async (event) => {
@@ -90,91 +71,55 @@ const ProductAdd = () => {
       status: '',
       stockQuantity: '',
       pictureUrl: '',
-      categoryId: '', // Reset categoryId
-    });
-    setSelectedCategories({
-      level1: '',
-      level2: '',
-      level3: '',
+      categoryIds: [],
     });
   };
 
-  const getCategoryOptions = (parentCategoryId) => {
-    if (!parentCategoryId) {
-      return categories;
+  const renderCategoryOptions = (category, level = 0) => {
+    let options = [
+      <MenuItem
+        key={category.id}
+        value={category.id.toString()}
+        style={{ paddingLeft: level * 20 }}
+      >
+        {category.name}
+      </MenuItem>,
+    ];
+
+    if (category.children) {
+      category.children.forEach((child) => {
+        options = options.concat(renderCategoryOptions(child, level + 1));
+      });
     }
-    const parentCategory = categories.find(
-      (cat) => cat.id === parentCategoryId,
-    );
-    return parentCategory ? parentCategory.children : [];
+
+    return options;
   };
 
   return (
     <div className="tw-container tw-mx-auto tw-p-4 tw-pt-8 tw-max-w-4xl">
       <form onSubmit={handleSubmit} className="tw-space-y-4">
         <Grid container spacing={2}>
-          <Grid item xs={4}>
-            <FormControl fullWidth variant="outlined">
-              <InputLabel>Category Level 1</InputLabel>
-              <Select
-                value={selectedCategories.level1}
-                onChange={(e) => handleCategoryChange('level1', e.target.value)}
-                label="Category Level 1"
-              >
-                {categories.map((category) => (
-                  <MenuItem key={category.id} value={category.id}>
-                    {category.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          {selectedCategories.level1 && (
-            <Grid item xs={4}>
+          <Grid item xs={6}>
+            <Box display="flex" alignItems="center">
               <FormControl fullWidth variant="outlined">
-                <InputLabel>Category Level 2</InputLabel>
+                <InputLabel>Categories</InputLabel>
                 <Select
-                  value={selectedCategories.level2}
-                  onChange={(e) =>
-                    handleCategoryChange('level2', e.target.value)
-                  }
-                  label="Category Level 2"
+                  multiple
+                  value={productDetails.categoryIds}
+                  onChange={handleCategoryChange}
+                  label="Categories"
+                  renderValue={(selected) => selected.join(', ')}
                 >
-                  {getCategoryOptions(selectedCategories.level1).map(
-                    (category) => (
-                      <MenuItem key={category.id} value={category.id}>
-                        {category.name}
-                      </MenuItem>
-                    ),
+                  {categories.flatMap((category) =>
+                    renderCategoryOptions(category),
                   )}
                 </Select>
               </FormControl>
-            </Grid>
-          )}
-          {selectedCategories.level2 &&
-            getCategoryOptions(selectedCategories.level2).length > 0 && (
-              <Grid item xs={4}>
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel>Category Level 3</InputLabel>
-                  <Select
-                    value={selectedCategories.level3}
-                    onChange={(e) =>
-                      handleCategoryChange('level3', e.target.value)
-                    }
-                    label="Category Level 3"
-                  >
-                    consol.log(level2);
-                    {getCategoryOptions(selectedCategories.level2).map(
-                      (category) => (
-                        <MenuItem key={category.id} value={category.id}>
-                          {category.name}
-                        </MenuItem>
-                      ),
-                    )}
-                  </Select>
-                </FormControl>
-              </Grid>
-            )}
+              <Typography variant="body1" style={{ marginLeft: '10px' }}>
+                Selected: {productDetails.categoryIds.join(', ')}
+              </Typography>
+            </Box>
+          </Grid>
         </Grid>
         <TextField
           label="Title"
