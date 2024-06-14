@@ -6,9 +6,10 @@ export const fetchProductsByCategory = async (categoryId) => {
 
 export const addOrUpdateProduct = async (product) => {
   const method = product.id ? 'put' : 'post';
-  const url = product.id ? `/admin/products/${product.id}` : '/admin/products';
+  const url = product.id ? `/products/${product.id}` : '/products';
   return await httpClient[method](url, product);
 };
+
 
 export const deleteProduct = async (id) => {
   return await httpClient.delete(`/admin/products/${id}`);
