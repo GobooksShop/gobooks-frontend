@@ -113,20 +113,6 @@ function AdBanner({ images }) {
         {images.map((image, index) => (
             <Box key={index} sx={{ position: 'relative'}}>
               <img src={image} alt={`Ad ${index + 1}`} style={{ width: '100%', borderRadius: 10 }} />
-              <Typography
-                  variant="body2"
-                  sx={{
-                    position: 'absolute',
-                    bottom: 10,
-                    right: 10,
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    color: 'white',
-                    padding: '4px 8px',
-                    borderRadius: '4px',
-                  }}
-              >
-                {index + 1} / {images.length}
-              </Typography>
             </Box>
         ))}
       </Carousel>
