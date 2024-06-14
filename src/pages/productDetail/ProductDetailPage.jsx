@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Card, CardContent, Typography, Button } from '@mui/material';
-import useCartOrderStore from '../../store/useCartOrderStore'; // 상태 관리 스토어 가져오기
+import { Card, CardContent, Grid, Typography, Button } from '@mui/material';
+import useCartOrderStore from '../../store/useCartOrderStore';
 
 const ProductDetailPage = () => {
     const { id } = useParams();
@@ -10,7 +10,7 @@ const ProductDetailPage = () => {
     const [product, setProduct] = useState(null);
     const [isLoading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const addCart = useCartOrderStore((state) => state.addCart); // 장바구니 추가 함수 가져오기
+    const addCart = useCartOrderStore((state) => state.addCart);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -30,12 +30,12 @@ const ProductDetailPage = () => {
 
     const handleAddToCart = () => {
         if (product) {
-            addCart(product.id, 1, product.fixedPrice); // 제품 ID, 수량, 가격을 장바구니에 추가
+            addCart(product.id, 1, product.fixedPrice);
         }
     };
 
     const handleBuyNow = () => {
-        navigate(`/order`, { state: { productId: id, buyNow: true } }); // 구매 페이지로 이동, 상품 ID 전달
+        navigate(`/order`, { state: { productId: id, buyNow: true } });
     };
 
     if (isLoading) return <p>Loading...</p>;
@@ -43,38 +43,50 @@ const ProductDetailPage = () => {
     if (!product) return <p>No product found</p>;
 
     return (
-        <Card className="max-w-lg mx-auto my-8 shadow-md overflow-hidden md:max-w-2xl">
-            <CardContent>
-                <Typography variant="h5" component="div">{product.title}</Typography>
-                <Typography color="text.secondary">
-                    Author: {product.author}
-                </Typography>
-                <Typography variant="body2">
-                    ISBN: {product.isbn}<br />
-                    Year: {product.publicationYear}<br />
-                    Price: ${product.fixedPrice}<br />
-                    Description: {product.content}
-                </Typography>
-                {product.pictureUrl && (
-                    <img src={product.pictureUrl} alt={product.title} style={{ width: "200px" , height: "200px"}} />
-                )}
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleAddToCart}
-                    style={{ marginTop: 20 }}
-                >
-                    장바구니에 추가
-                </Button>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleBuyNow}
-                    style={{ marginTop: 20, marginLeft: 10 }}
-                >
-                    구매하기
-                </Button>
-            </CardContent>
+        <Card className="max-w-4xl mx-auto my-8 shadow-md">
+            <Grid container spacing={2}>
+                <Grid item md={6}>
+                    {product.pictureUrl && (
+                        <img src={product.pictureUrl} alt={product.title} style={{ width: "400px", height: "500px" }} />
+                    )}
+                </Grid>
+                <Grid item md={6} style={{ display: "flex", flexDirection: "column", justifyContent: "space-around" }}>
+                    <CardContent>
+                        <Typography variant="h5" gutterBottom>{product.title}</Typography>
+                        <Typography variant="subtitle1" gutterBottom>
+                            Price: ${product.fixedPrice}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary" gutterBottom>
+                            Author: {product.author}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary" gutterBottom>
+                            ISBN: {product.isbn}
+                        </Typography>
+                        <Typography variant="body2" gutterBottom>
+                            Description: {product.content}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                            Published: {product.publicationYear}
+                        </Typography>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleAddToCart}
+                            style={{ marginTop: 20 }}
+                        >
+                            장바구니에 추가
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={handleBuyNow}
+                            style={{ marginTop: 10 }}
+                        >
+                            구매하기
+                        </Button>
+                    </CardContent>
+                </Grid>
+            </Grid>
         </Card>
     );
 };

@@ -7,13 +7,8 @@ import Login from './pages/login/Login';
 import Main from './pages/main/Main';
 import MyPage from './pages/myPage/MyPage';
 import Order from './pages/order/Order';
-// <<<<<<< HEAD
-// import Product from './pages/manager/product/ProductAdd';
-// import ProductDetail from './pages/productDetail/ProductDetail';
-// =======
 import Product from './pages/manager/product/ProductAdd';
 import ProductDetailPage from './pages/productDetail/ProductDetailPage';
-// >>>>>>> feature-product
 import ProductList from './pages/productList/ProductList';
 
 const Router = () => {

@@ -1,104 +1,79 @@
-import * as Yup from 'yup';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import {
+  Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField
+} from '@mui/material';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import useCategoryStore from '../../../store/useCategoryListStore'; // 수정 필요한 부분에 주의하세요 (예: useCategoryStore 경로)
+import useProductStore from '../../../store/useProductStore'; // 상태 관리 스토어 경로 확인
 
-import { ErrorMessage, Field, Form, Formik } from 'formik';
+const ProductEdit = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { categories, fetchCategories } = useCategoryStore();
+  const { updateProduct, fetchProductDetails } = useProductyStore(); // 오타 수정 필요
 
-import React from 'react';
-
-const AddProductForm = () => {
-  const initialValues = {
+  const [productDetails, setProductDetails] = useState({
     title: '',
     author: '',
     isbn: '',
     content: '',
     fixedPrice: '',
-    publicationYear: '',
+    publicationYear: null,
     status: '',
     stockQuantity: '',
     pictureUrl: '',
-    categoryIds: []
-  };
-
-  const validationSchema = Yup.object().shape({
-    title: Yup.string().required('Title is required'),
-    author: Yup.string().required('Author is required'),
-    isbn: Yup.string().required('ISBN is required'),
-    content: Yup.string().required('Content is required'),
-    fixedPrice: Yup.number().required('Fixed price is required').positive('Price must be positive'),
-    publicationYear: Yup.date().required('Publication year is required'),
-    status: Yup.string().required('Status is required'),
-    stockQuantity: Yup.number().min(0, 'Stock quantity cannot be negative'),
-    pictureUrl: Yup.string().url('Enter a valid URL'),
-    categoryIds: Yup.array().of(Yup.number()).min(1, 'At least one category is required')
+    categoryId: ''
   });
 
-  const handleSubmit = (values, { setSubmitting }) => {
-    console.log('Form data', values);
-    setSubmitting(false);
-    // POST the values to your server endpoint using an API client like Axios
+  useEffect(() => {
+    fetchCategories(); // 카테고리 정보 가져오기
+    fetchProductDetails(id).then(data => { // 상품 상세 정보 가져오기
+      setProductDetails(data);
+    });
+  }, [fetchCategories, fetchProductDetails, id]);
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setProductDetails(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleCategoryChange = (event) => {
+    setProductDetails(prev => ({ ...prev, categoryId: event.target.value }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    await updateProduct(id, productDetails);
+    navigate('/product-list'); // 수정 후 상품 목록 페이지로 리디렉션
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-    >
-      {({ isSubmitting }) => (
-        <Form>
-          <h2>Add New Product</h2>
-          <label htmlFor="title">Title:</label>
-          <Field name="title" type="text" />
-          <ErrorMessage name="title" component="div" />
-
-          <label htmlFor="author">Author:</label>
-          <Field name="author" type="text" />
-          <ErrorMessage name="author" component="div" />
-
-          <label htmlFor="isbn">ISBN:</label>
-          <Field name="isbn" type="text" />
-          <ErrorMessage name="isbn" component="div" />
-
-          <label htmlFor="content">Content:</label>
-          <Field name="content" as="textarea" />
-          <ErrorMessage name="content" component="div" />
-
-          <label htmlFor="fixedPrice">Fixed Price:</label>
-          <Field name="fixedPrice" type="number" />
-          <ErrorMessage name="fixedPrice" component="div" />
-
-          <label htmlFor="publicationYear">Publication Year:</label>
-          <Field name="publicationYear" type="date" />
-          <ErrorMessage name="publicationYear" component="div" />
-
-          <label htmlFor="status">Status:</label>
-          <Field name="status" as="select">
-            <option value="">Select Status</option>
-            <option value="AVAILABLE">AVAILABLE</option>
-            <option value="UNAVAILABLE">UNAVAILABLE</option>
-          </Field>
-          <ErrorMessage name="status" component="div" />
-
-          <label htmlFor="stockQuantity">Stock Quantity:</label>
-          <Field name="stockQuantity" type="number" />
-          <ErrorMessage name="stockQuantity" component="div" />
-
-          <label htmlFor="pictureUrl">Picture URL:</label>
-          <Field name="pictureUrl" type="text" />
-          <ErrorMessage name="pictureUrl" component="div" />
-
-          <label htmlFor="categoryIds">Category IDs:</label>
-          <Field name="categoryIds" as="select" multiple>
-            {/* Dynamically populate category options here */}
-          </Field>
-          <ErrorMessage name="categoryIds" component="div" />
-
-          <button type="submit" disabled={isSubmitting}>
-            Submit
-          </button>
-        </Form>
-      )}
-    </Formik>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <form onSubmit={handleSubmit}>
+        <Grid container spacing={2}>
+          {/* 폼 필드 배치 */}
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Title"
+              name="title"
+              fullWidth
+              variant="outlined"
+              value={productDetails.title}
+              onChange={handleInputChange}
+            />
+          </Grid>
+          {/* 추가 필드 구성 */}
+          {/* DatePicker와 Select 컴포넌트는 기존 로직 참조 */}
+        </Grid>
+        <Button type="submit" variant="contained" color="primary">
+          Update Product
+        </Button>
+      </form>
+    </LocalizationProvider>
   );
 };
 
-export default AddProductForm;
+export default ProductEdit;
