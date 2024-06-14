@@ -8,7 +8,7 @@ import Main from './pages/main/Main';
 import MyPage from './pages/myPage/MyPage';
 import Order from './pages/order/Order';
 import Product from './pages/manager/product/Product';
-import ProductDetailPage from './pages/productDetail/ProductDetailPage';
+import ProductDetail from './pages/productDetail/ProductDetail';
 import ProductList from './pages/productList/ProductList';
 
 const Router = () => {

@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -10,8 +11,6 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { PageContainer } from '../../../components/PageContainer';
@@ -35,6 +34,7 @@ function Category() {
   const [editCategoryName, setEditCategoryName] = useState('');
   const [editParentId, setEditParentId] = useState('');
   const [expandedCategories, setExpandedCategories] = useState({});
+  const [isInputValid, setIsInputValid] = useState(false);  // 유효성 검사
 
   useEffect(() => {
     fetchCategories();
@@ -48,11 +48,17 @@ function Category() {
   };
 
   const handleCreateCategory = async () => {
-    await addCategory({ name: newCategoryName, parentId: newParentId || null });
-    fetchCategories(); // Re-fetch categories to update state
-    setNewCategoryName('');
-    setNewParentId('');
+    if (isInputValid) {
+      await addCategory({ name: newCategoryName, parentId: newParentId || null });
+      fetchCategories(); // Re-fetch categories to update state
+      setNewCategoryName('');
+      setNewParentId('');
+    }
   };
+
+  useEffect(() => {
+    setIsInputValid(newCategoryName.trim() !== '');
+  }, [newCategoryName]);
 
   const handleUpdateCategory = async () => {
     await updateCategory(editCategory, {
@@ -67,7 +73,7 @@ function Category() {
 
   const deleteCategoryWithConfirmation = async (id) => {
     const confirmDelete = window.confirm(
-      '이 카테고리를 삭제하시겠습니까? 모든 하위 카테고리도 함께 삭제됩니다.',
+        '이 카테고리를 삭제하시겠습니까? 모든 하위 카테고리도 함께 삭제됩니다.',
     );
     if (confirmDelete) {
       await deleteCategoryAndChildren(id);
@@ -86,158 +92,189 @@ function Category() {
   };
 
   const renderCategoryOptions = (category, level = 0) =>
-    [
-      <MenuItem
-        key={category.id}
-        value={category.id}
-        sx={{ marginLeft: `${level * 20}px` }}
-      >
-        {category.name}
-      </MenuItem>,
-      category.children &&
+      [
+        <MenuItem
+            key={category.id}
+            value={String(category.id)}
+            sx={{ marginLeft: `${level * 20}px` }}
+        >
+          {category.name}
+        </MenuItem>,
+        category.children &&
         category.children.map((child) =>
-          renderCategoryOptions(child, level + 1),
+            renderCategoryOptions(child, level + 1),
         ),
-    ].flat();
+      ].flat();
+
 
   const renderCategory = (category, level = 0) => (
-    <Box
-      key={category.id}
-      sx={{ marginLeft: `${level * 20}px`, marginBottom: '10px' }}
-    >
-      {editCategory === category.id ? (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <TextField
-            label="Category Name"
-            variant="outlined"
-            value={editCategoryName}
-            onChange={(e) => setEditCategoryName(e.target.value)}
-            className="mr-2"
-            sx={{ marginRight: '10px' }}
-          />
-          <FormControl variant="outlined" className="min-w-[120px] mr-2">
-            <InputLabel>Parent Category</InputLabel>
-            <Select
-              value={editParentId}
-              onChange={(e) => setEditParentId(e.target.value)}
-              label="Parent Category"
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              {categories.map((rootCategory) =>
-                renderCategoryOptions(rootCategory),
+      <Box
+          key={category.id}
+          sx={{ ml: level * 6, my: 2, border: '1px solid lightgray',
+            px: 4, py: 2,
+            borderRadius: 1 }}
+      >
+        {editCategory === category.id ? (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <TextField
+                  label="Category Name"
+                  variant="outlined"
+                  value={editCategoryName}
+                  onChange={(e) => setEditCategoryName(e.target.value)}
+                  className="mr-2"
+                  sx={{ marginRight: '10px' }}
+              />
+              <FormControl variant="outlined" className="min-w-[120px] mr-2 ">
+                <InputLabel>Parent Category</InputLabel>
+                <Select
+                    value={editParentId}
+                    onChange={(e) => setEditParentId(e.target.value)}
+                    label="Parent Category"
+                    sx={{ width: 200, marginRight: '10px' }}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  {categories.map((rootCategory) =>
+                      renderCategoryOptions(rootCategory),
+                  )}
+                </Select>
+              </FormControl>
+              <Box className="tw-ml-auto">
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleUpdateCategory}
+                    sx={{ marginLeft: '10px', padding: '8px 16px' }}
+                >
+                  저장
+                </Button>
+                <Button
+                    variant="outlined"
+                    onClick={() => setEditCategory(null)}
+                    sx={{ marginLeft: '10px', padding: '8px 16px' }}
+                >
+                  취소
+                </Button>
+              </Box>
+            </Box>
+        ) : (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Typography
+                  variant="body1"
+                  className="mr-2"
+                  sx={{ marginRight: '50px' }}
+              >
+                {category.name}
+              </Typography>
+              <Box className="tw-ml-auto">
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => {
+                      setEditCategory(category.id);
+                      setEditCategoryName(category.name);
+                      setEditParentId(category.parentId || '');
+                    }}
+                    sx={{ marginRight: '10px', padding: '8px 16px' }}
+                >
+                  수정
+                </Button>
+                <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={() => deleteCategoryWithConfirmation(category.id)}
+                    sx={{ marginRight: '10px', padding: '8px 16px' }}
+                >
+                  삭제
+                </Button>
+              </Box>
+              {category.children && category.children.length > 0 && (
+                  <IconButton onClick={() => handleToggleCategory(category.id)}>
+                    {expandedCategories[category.id] ? (
+                        <ExpandLessIcon />
+                    ) : (
+                        <ExpandMoreIcon />
+                    )}
+                  </IconButton>
               )}
-            </Select>
-          </FormControl>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleUpdateCategory}
-            sx={{ marginRight: '10px', padding: '8px 16px' }}
-          >
-            Save
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() => setEditCategory(null)}
-            sx={{ marginRight: '10px', padding: '8px 16px' }}
-          >
-            Cancel
-          </Button>
-        </Box>
-      ) : (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography
-            variant="body1"
-            className="mr-2"
-            sx={{ marginRight: '10px' }}
-          >
-            {category.name}
-          </Typography>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={() => {
-              setEditCategory(category.id);
-              setEditCategoryName(category.name);
-              setEditParentId(category.parentId || '');
-            }}
-            sx={{ marginRight: '5px', padding: '3px 3px' }}
-          >
-            수정
-          </Button>
-          <Button
-            variant="outlined"
-            color="error"
-            onClick={() => deleteCategoryWithConfirmation(category.id)}
-            sx={{ marginRight: '5px', padding: '3px 3px' }}
-          >
-            삭제
-          </Button>
-          {category.children && category.children.length > 0 && (
-            <IconButton onClick={() => handleToggleCategory(category.id)}>
-              {expandedCategories[category.id] ? (
-                <ExpandLessIcon />
-              ) : (
-                <ExpandMoreIcon />
-              )}
-            </IconButton>
-          )}
-        </Box>
-      )}
-      {expandedCategories[category.id] &&
-        category.children &&
-        category.children.map((child) => renderCategory(child, level + 1))}
-    </Box>
+            </Box>
+        )}
+        {expandedCategories[category.id] && category.children && (
+            <ul className="list-none space-y-2">
+              {category.children.map((child) => renderCategory(child, level + 1))}
+            </ul>
+        )}
+      </Box>
   );
 
   if (isLoading) return <CircularProgress />;
   if (error) return <Typography color="error">{error.message}</Typography>;
 
   return (
-    <PageContainer >
-      <main className="min-h-[300px]">
-        <Typography variant="h4" gutterBottom >
-          카테고리 관리 페이지
-        </Typography>
-        <div className="tw-mb-4 tw-flex tw-items-center">
-          <TextField
-            label="카테고리 이름을 입력하세요."
-            variant="outlined"
-            value={newCategoryName}
-            onChange={(e) => setNewCategoryName(e.target.value)}
-            className="tw-mr-2"
-            sx={{ marginRight: '10px' }}
-          />
-          <FormControl
-            variant="outlined"
-            sx={{ minWidth: 200, width: 200, marginRight: 2 }}
-          >
-            <InputLabel>카테고리 선택</InputLabel>
-            <Select
-              value={newParentId}
-              onChange={(e) => setNewParentId(e.target.value)}
-              label="Parent Category"
+      <PageContainer >
+        <main className="min-h-[300px]">
+          <Typography variant="h4" gutterBottom
+                      className="tw-text-center tw-my-4 tw-p-10">
+            카테고리 관리 페이지
+          </Typography>
+          <Box className="tw-border tw-mb-4 tw-flex tw-flex-wrap">
+            <Typography variant="h6" gutterBottom
+                        sx={{ marginBottom: 2, flex: '0 0 100%' }}
             >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              {categories.map((category) => renderCategoryOptions(category))}
-            </Select>
-          </FormControl>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleCreateCategory}
-            sx={{ padding: '3px 3px' }}
+              카테고리 추가
+            </Typography>
+            <div className="tw-flex tw-items-center tw-w-full">
+              <TextField
+                  label="카테고리 이름을 입력하세요."
+                  variant="outlined"
+                  value={newCategoryName}
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                  className="tw-mr-2"
+                  sx={{ flex: '1 1 auto', marginRight: '10px' }}
+              />
+              <FormControl
+                  variant="outlined"
+                  sx={{ flex: '1 1 auto', marginRight: 2 }}
+              >
+                <InputLabel>
+                  카테고리 선택
+                </InputLabel>
+                <Select
+                    value={newParentId}
+                    onChange={(e) => setNewParentId(e.target.value)}
+                    label="Parent Category"
+                    sx={{ width: '100%' }}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  {categories.map(
+                      (category) => renderCategoryOptions(category))}
+                </Select>
+              </FormControl>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleCreateCategory}
+                    disabled={!newCategoryName}
+                    sx={{ flex: '0 0 150px', alignSelf: 'stretch' }}
+                >
+                  생성
+                </Button>
+            </div>
+          </Box>
+
+          <Typography variant="h6" gutterBottom
+                      sx={{ marginTop: 5, marginBottom: 2}}
           >
-            생성
-          </Button>
-        </div>
-        {categories.map((category) => renderCategory(category))}
-      </main>
-    </PageContainer>
+            카테고리 수정/삭제
+          </Typography>
+          <ul className="list-none">
+            {categories.map((category) => renderCategory(category))}
+          </ul>
+        </main>
+      </PageContainer>
   );
 }
 

@@ -1,41 +1,162 @@
-import { useState } from 'react';
-import DaumPostcode from 'react-daum-postcode';
+import React, { useState } from 'react';
+import { useDaumPostcodePopup } from 'react-daum-postcode';
 
-const deleveryMap = {
-  name: '',
-  address: '',
-  phoneNumber: '',
-  landlinePhoneNumber: '',
-};
+import CustomButton from '../ui/CustomButton';
 
 const DeleveryInfo = () => {
-  const [deleveryInfo, setDeleveryInfo] = useState({});
-  const [inputName, setInputName] = useState('');
 
-  const handleOnChangeName = (e) => {
-    setInputName(e.target.value); 
+  const open = useDaumPostcodePopup("//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js");
+
+  const handleComplete = (data) => {
+    let fullAddress = '';
+    let addressType = '';
+
+    // 주소 타입에 따라 처리: R이면 도로명주소, J면 지번주소
+    if (data.addressType === 'R') {
+      fullAddress = data.roadAddress;
+      addressType = 'roadAddress';
+    } else if (data.addressType === 'J') {
+      fullAddress = data.jibunAddress;
+      addressType = 'jibunAddress';
+    }
+
+    // 추가 정보(건물명 등)가 있으면 추가
+    if (data.bname !== '') {
+      fullAddress += ` ${data.bname}`;
+    }
+    if (data.buildingName !== '') {
+      fullAddress += ` ${data.buildingName}`;
+    }
 
 
+    setDeleveryInfo({
+      ...deleveryInfo,
+      zipcode: data.zonecode,
+      [addressType]: fullAddress,
+    });
+  };
 
-    setInputName('');
-  }
+  const handleClick = () => {
+    open({ onComplete: handleComplete });
+  };
 
-  const handleOnChangeAddress = (e) => {
+  const [deleveryInfo, setDeleveryInfo] = useState({
+    name: '',
+    zipcode: '', // address를 zipcode로 변경
+    roadAddress: '',
+    jibunAddress: '',
+    realAddress: '',
+    phoneNumber: '',
+    landlinePhoneNumber: '',
+  });
 
-  }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setDeleveryInfo((prevInfo) => ({
+      ...prevInfo,
+      [name]: value,
+    }));
+  };
+
   return (
-    <div>
-      <header>
-        <h1>배송주소</h1>
+    <div className="tw-w-full">
+      <header className="title tw-h-24 tw-flex tw-items-center">
+        <h1 className="tw-font-semibold tw-text-2xl">배송주소</h1>
       </header>
-      <div className="tw-flex">
-        <div className="md:tw-w-52 tw-flex tw-flex-col">
-          <label htmlFor="name">이름</label>
-          <label>2</label>
+      <div className="tw-grid tw-grid-cols-6 tw-gap-5 tw-grid-rows-table-layout tw-border-solid tw-border tw-border-gray-500/50 tw-rounded tw-px-5 tw-py-4">
+        <div className="tw-row-span-1 tw-col-span-2 tw-flex tw-items-center">
+          <label htmlFor="name" className="tw-block tw-w-40 tw-pl-8">이름</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            className="tw-h-6 tw-bg-gray-50 tw-outline-none tw-border tw-border-solid tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 focus:tw-border-2 tw-block tw-w-full tw-p-2"
+            placeholder="이름"
+            required
+            value={deleveryInfo.name}
+            onChange={handleChange}
+          />
         </div>
-        <div className="md:tw-w-auto">
-          <div><input id="name" type="text" onChange={handleOnChangeName}/></div>
-          <div><input id="name" type="text" onChange={handleOnChangeAddress}/></div>
+        <div className="tw-row-start-2 tw-row-span-1 tw-col-span-2 tw-flex tw-items-center">
+          <label htmlFor="address" className="tw-block tw-w-40 tw-pl-8">배송주소</label>
+          <input
+            type="text"
+            id="address"
+            name="zipcode"
+            className="tw-h-6 tw-bg-gray-50 tw-outline-none tw-border tw-border-solid tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 focus:tw-border-2 tw-block tw-w-full tw-p-2"
+            placeholder="배송주소"
+            required
+            value={deleveryInfo.zipcode}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="tw-row-start-2 tw-row-span-1 tw-start-col-2">
+          <CustomButton onClick={handleClick} text="검색" size="large" />
+        </div>
+        <div className="tw-pl-24 tw-row-start-3 tw-row-span-1 tw-col-span-4 tw-flex tw-items-center">
+          <label htmlFor="roadAddress" className="tw-block tw-w-40 tw-pl-8">도로명 주소</label>
+          <input
+            type="text"
+            id="roadAddress"
+            name="roadAddress"
+            className="tw-h-6 tw-bg-gray-50 tw-outline-none tw-border tw-border-solid tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 focus:tw-border-2 tw-block tw-w-full tw-p-2"
+            placeholder="도로명 주소"
+            required
+            value={deleveryInfo.roadAddress}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="tw-pl-24 tw-row-start-4 tw-row-span-1 tw-col-span-4 tw-flex tw-items-center">
+          <label htmlFor="jibunAddress" className="tw-block tw-w-40 tw-pl-8">지번 주소</label>
+          <input
+            type="text"
+            id="jibunAddress"
+            name="jibunAddress"
+            className="tw-h-6 tw-bg-gray-50 tw-outline-none tw-border tw-border-solid tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 focus:tw-border-2 tw-block tw-w-full tw-p-2"
+            placeholder="지번 주소"
+            required
+            value={deleveryInfo.jibunAddress}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="tw-pl-24 tw-row-start-5 tw-row-span-1 tw-col-span-4 tw-flex tw-items-center">
+          <label htmlFor="realAddress" className="tw-block tw-w-40 tw-pl-8">실제 주소</label>
+          <input
+            type="text"
+            id="realAddress"
+            name="realAddress"
+            className="tw-h-6 tw-bg-gray-50 tw-outline-none tw-border tw-border-solid tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 focus:tw-border-2 tw-block tw-w-full tw-p-2"
+            placeholder="실제 주소"
+            required
+            value={deleveryInfo.realAddress}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="tw-row-start-6 tw-row-span-1 tw-col-span-2 tw-flex tw-items-center">
+          <label htmlFor="phoneNumber" className="tw-block tw-w-40 tw-pl-8">휴대폰</label>
+          <input
+            type="text"
+            id="phoneNumber"
+            name="phoneNumber"
+            className="tw-h-6 tw-bg-gray-50 tw-outline-none tw-border tw-border-solid tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 focus:tw-border-2 tw-block tw-w-full tw-p-2"
+            placeholder="휴대폰"
+            required
+            value={deleveryInfo.phoneNumber}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="tw-row-start-7 tw-row-span-1 tw-col-span-2 tw-flex tw-items-center">
+          <label htmlFor="landlinePhoneNumber" className="tw-block tw-w-40 tw-pl-8">일반전화</label>
+          <input
+            type="text"
+            id="landlinePhoneNumber"
+            name="landlinePhoneNumber"
+            className="tw-h-6 tw-bg-gray-50 tw-outline-none tw-border tw-border-solid tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 focus:tw-border-2 tw-block tw-w-full tw-p-2"
+            placeholder="일반전화"
+            required
+            value={deleveryInfo.landlinePhoneNumber}
+            onChange={handleChange}
+          />
         </div>
       </div>
     </div>

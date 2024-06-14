@@ -2,12 +2,14 @@ import CustomButton from '../ui/CustomButton';
 import { useEffect, useState } from 'react';
 import Payment from '../payment/Payment';
 import useCartOrderStore from '../../store/useCartOrderStore';
+import { useNavigate } from 'react-router-dom';
 
 const CartInfo = (props) => {
   const [isFixed, setIsFixed] = useState(false);
   const totalAmount = useCartOrderStore((state) => state.totalAmount);
   const discountAmount = useCartOrderStore((state) => state.discountAmount);
   const updateTotalAmount = useCartOrderStore((state) => state.updateTotalAmount);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,6 +29,7 @@ const CartInfo = (props) => {
 
   const handleOrderClick = () => {
     updateTotalAmount();
+    navigate("/order");
   }
 
   return (
@@ -43,7 +46,7 @@ const CartInfo = (props) => {
                 <div>할인 금액</div>
               </div>
               <div className="tw-flex tw-flex-col tw-items-end tw-gap-3">
-                <div>{totalAmount}원</div>
+                <div>{totalAmount+discountAmount}원</div>
                 <div>0원</div>
                 <div>{-discountAmount}원</div>
               </div>

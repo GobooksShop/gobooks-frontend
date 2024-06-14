@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { refreshAccessToken } from './authApi';
 import useUserStore from '../store/useUserStore';
 
 export const httpClient = axios.create({
@@ -11,9 +10,10 @@ export const httpClient = axios.create({
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
     'Content-Type': 'application/json',
   },
+  // timeout: 5000, // 기본 백엔드 서버에 요청시 5초안에 무응답이면 에러 발생.
 });
 
-httpClient.interceptors.response.use(
+httpClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('accessToken');
     if (token) {
@@ -26,7 +26,6 @@ httpClient.interceptors.response.use(
   },
 );
 
-// Response interceptor to handle token refresh
 httpClient.interceptors.response.use(
   (response) => {
     return response;
@@ -34,26 +33,23 @@ httpClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     const status = error.response?.status;
+    const response = error.response;
+    const Authorization = error.Authorization;
+    console.log('response.Authorization:' + response.data);
+    console.log('response.Authorization2:' + Authorization);
 
     if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        const setUser = useUserStore((state) => state.setUser);
-        const response = await refreshAccessToken();
-        const { newAccessToken, userId, name, email, role } = response.data;
-        console.log('response.data:' + response.data);
-        // Access Token을 로컬 스토리지에 저장
+        const { newAccessToken } = response.Authorization;
         localStorage.setItem('accessToken', newAccessToken);
-        // Zustand 상태 업데이트
-        setUser({ userId, name, email, role });
         originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+        setAccessTokenToHttpClient(newAccessToken);
         return httpClient(originalRequest);
       } catch (refreshError) {
         console.error('Token refresh failed:', refreshError);
         // 로그아웃 처리 등 추가적인 처리가 필요할 수 있음
         return Promise.reject(refreshError);
-      } finally {
-        navigator('/');
       }
     }
     return Promise.reject(error);

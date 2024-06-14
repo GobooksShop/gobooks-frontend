@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import CartProductCounter from './CartProductCounter';
-import { getCartData } from '../../api/cart/cart';
+import { getProduct } from '../../api/cart/cart';
 import useCartOrderStore from '../../store/useCartOrderStore';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
@@ -10,20 +10,45 @@ const CartItems = (props) => {
   const [selectAll, setSelectAll] = useState(true);
   const store = useCartOrderStore();
   useEffect(() => {
-    //todo 더미 데이터로 테스트했습니다. 상품 쪽 반영 되면 수정되어야할 코드 입니다.
     const fetchData = async () => {
-      const data = getCartData();
-      store.resetCart();
-      setCartItems(data);
-      data.forEach(item => {
-        store.addCart(item.product_id, item.quantity, item.price);
-      });
+
+      const storeData = JSON.parse(localStorage.getItem('cart-storage')).state || [];
+      console.log(storeData);
+      if(!storeData){
+        console.error('로컬 스토리지에서 cart-storage 데이터를 가져올 수 없습니다.');
+        return;
+      }
+      const storedCartItems = storeData.cartItems;
+      const productList =storedCartItems.map((item) => item.productId);
+      const data = await getProduct(productList)
+
+      const cartData = [];
+      console.log(data);
+
+      for(const item of data){
+        console.log(storedCartItems)
+        const storedItem = storedCartItems.find(cartItem => cartItem.productId === item.id);
+        const cartDatas = {
+          "productId" : item.id,
+          "product_name" : item.title,
+          "quantity": storedItem.quantity,
+          "price" : item.fixedPrice,
+          "isSelected": true,
+          "amount": item.fixedPrice * storedItem.quantity,
+          "img_url" : "https://contents.kyobobook.co.kr/sih/fit-in/300x0/pdt/9791192987675.jpg"
+        }
+        cartData.push(cartDatas);
+      }
+
+      console.log(cartData);
+      setCartItems(cartData);
       store.updateTotalAmount();
     };
     fetchData();
   }, []);
 
   useEffect(() => {
+    // localStorage.setItem('cart-storage', JSON.stringify({ state: { cartItems } }));
     const allSelected = cartItems.every(item => item.isSelected);
     setSelectAll(allSelected);
 
@@ -34,8 +59,8 @@ const CartItems = (props) => {
     setSelectAll(newSelectAll);
     const updatedItems = cartItems.map(item => ({ ...item, isSelected: newSelectAll }));
     setCartItems(updatedItems);
-    store.updateCartItems(updatedItems.map(({ product_id, quantity, price, isSelected }) => ({
-      productId: product_id,
+    store.updateCartItems(updatedItems.map(({ productId, quantity, price, isSelected }) => ({
+      productId: productId,
       quantity,
       price,
       isSelected,
@@ -47,8 +72,8 @@ const CartItems = (props) => {
     const newCartItems = [...cartItems];
     newCartItems[index].isSelected = !newCartItems[index].isSelected;
     setCartItems(newCartItems);
-    store.updateCartItems(newCartItems.map(({ product_id, quantity, price, isSelected }) => ({
-      productId: product_id,
+    store.updateCartItems(newCartItems.map(({ productId, quantity, price, isSelected }) => ({
+      productId: productId,
       quantity,
       price,
       isSelected,
@@ -65,13 +90,12 @@ const CartItems = (props) => {
       amount: newCount * updatedItems[index].price,
     };
     setCartItems(updatedItems);
-    store.updateCartItems(updatedItems.map(({ product_id, quantity, price, isSelected }) => ({
-      productId: product_id,
+    store.updateCartItems(updatedItems.map(({ productId, quantity, price, isSelected }) => ({
+      productId: productId,
       quantity,
       price,
       isSelected,
     })));
-    // 선택된 제품들의 총 금액을 계산하여 totalAmount 상태를 갱신
     store.updateTotalAmount();
   };
 
@@ -79,8 +103,8 @@ const CartItems = (props) => {
   const handleDeleteSelected = () => {
     const updatedItems = cartItems.filter(item => !item.isSelected);
     setCartItems(updatedItems);
-    store.updateCartItems(updatedItems.map(({ product_id, quantity, price, isSelected }) => ({
-      productId: product_id,
+    store.updateCartItems(updatedItems.map(({ productId, quantity, price, isSelected }) => ({
+      productId: productId,
       quantity,
       price,
       isSelected,
@@ -91,8 +115,8 @@ const CartItems = (props) => {
   const handleDeleteItem = (index) => {
     const newCartItems = cartItems.filter((_, i) => i !== index);
     setCartItems(newCartItems);
-    store.updateCartItems(newCartItems.map(({ product_id, quantity, price, isSelected }) => ({
-      productId: product_id,
+    store.updateCartItems(newCartItems.map(({ productId, quantity, price, isSelected }) => ({
+      productId: productId,
       quantity,
       price,
       isSelected,
@@ -118,7 +142,7 @@ const CartItems = (props) => {
       <div className="grid-table-wrap tw-px-2 tw-border-0 tw-border-b tw-border-solid tw-border-gray-400/35">
         <ul className="tw-px-2">
           {cartItems.map((item, index) => (
-            <li key={item.product_id + index}
+            <li key={item.product_id + index + crypto.randomUUID()}
                 className="tw-flex md:tw-items-center md:tw-gap-10 md:tw-h-36 tw-border-0 tw-border-b tw-border-solid tw-border-gray-400/35">
               {props.isOrders ? <></> :<input
                 type="checkbox"

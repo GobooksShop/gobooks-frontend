@@ -34,8 +34,18 @@ function ProductCard({ product }) {
       ? product.fixedPrice.toLocaleString()
       : 'N/A';
   return (
-    <Card className="product-card tw-relative tw-rounded-lg tw-overflow-hidden tw-shadow-md hover:tw-shadow-lg tw-transition-shadow duration-200 tw-ease-in-out tw-bg-white">
-      <div className="tw-relative tw-pb-[142%]">
+      <Card
+          sx={{
+            borderRadius: '8px',
+            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+            transition: 'box-shadow 0.3s ease',
+            '&:hover': {
+              boxShadow: '0px 0px 8px #ABA5F3',
+            },
+            height: '100%'
+          }}
+      >
+        <div className="tw-relative tw-pb-[142%]">
         {' '}
         {/* 책 표지 비율 유지 */}
         {isLoading ? (
@@ -43,6 +53,10 @@ function ProductCard({ product }) {
         ) : (
           <CardMedia
             component="img"
+            sx={{
+              height: 250,
+              objectFit: 'cover',
+            }}
             className="tw-absolute tw-top-0 tw-left-0 tw-object-cover tw-h-full tw-w-full"
             image={imageUrl}
             alt={product.title || 'Product'}
