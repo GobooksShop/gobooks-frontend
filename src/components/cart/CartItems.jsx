@@ -24,20 +24,39 @@ const CartItems = (props) => {
 
       const cartData = [];
       console.log(data);
+      if(props.isOrders){
+        const selectedOrderItems = storedCartItems.filter(item => item.isSelected);
+        for(const orderItem of selectedOrderItems){
+          const productData = data.find(item => item.id === orderItem.productId);
+          console.log(productData);
+          const cartDatas = {
+            "productId" : productData.id,
+            "product_name" : productData.title,
+            "quantity": orderItem.quantity,
+            "price" : productData.fixedPrice,
+            "isSelected": orderItem.isSelected,
+            "amount": productData.fixedPrice * orderItem.quantity,
+            "img_url" : "https://contents.kyobobook.co.kr/sih/fit-in/300x0/pdt/9791192987675.jpg"
+          }
+          cartData.push(cartDatas);
 
-      for(const item of data){
-        console.log(storedCartItems)
-        const storedItem = storedCartItems.find(cartItem => cartItem.productId === item.id);
-        const cartDatas = {
-          "productId" : item.id,
-          "product_name" : item.title,
-          "quantity": storedItem.quantity,
-          "price" : item.fixedPrice,
-          "isSelected": true,
-          "amount": item.fixedPrice * storedItem.quantity,
-          "img_url" : "https://contents.kyobobook.co.kr/sih/fit-in/300x0/pdt/9791192987675.jpg"
         }
-        cartData.push(cartDatas);
+
+      }else{
+        for(const item of data){
+          console.log(storedCartItems)
+          const storedItem = storedCartItems.find(cartItem => cartItem.productId === item.id);
+          const cartDatas = {
+            "productId" : item.id,
+            "product_name" : item.title,
+            "quantity": storedItem.quantity,
+            "price" : item.fixedPrice,
+            "isSelected": storedItem.isSelected,
+            "amount": item.fixedPrice * storedItem.quantity,
+            "img_url" : "https://contents.kyobobook.co.kr/sih/fit-in/300x0/pdt/9791192987675.jpg"
+          }
+          cartData.push(cartDatas);
+        }
       }
 
       console.log(cartData);
