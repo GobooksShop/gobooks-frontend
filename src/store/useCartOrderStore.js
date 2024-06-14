@@ -42,29 +42,24 @@ const useCartOrderStore = create(
        * @param {number} quantity - 상품의 갯수
        * @param {number} price - 각 고유한 상품의 가격
        */
-      addCart: (productId, quantity, price) =>
-        set((state) => {
-          const existItem = state.cartItems.find(
-            (item) => item.productId === productId,
-          );
+      addCart: (productId, quantity, price) => set((state) => {
+        const existItem = state.cartItems.find(item => item.productId === productId);
 
-          if (existItem) {
-            const updatedItems = state.cartItems.map((item) =>
-              item.productId === productId
-                ? { ...item, quantity: item.quantity + quantity, price }
-                : item,
-            );
-            return {
-              cartItems: updatedItems,
-              totalCount: state.totalCount + quantity,
-            };
-          }
-          const newCartItem = { productId, quantity, price, isSelected: true };
+        if (existItem) {
+          const updatedItems = state.cartItems.map(item => item.productId === productId ?
+            { ...item, quantity: item.quantity + quantity, price, } : item);
           return {
-            cartItems: [...state.cartItems, newCartItem],
+            cartItems: updatedItems,
             totalCount: state.totalCount + quantity,
           };
-        }),
+        }
+        const newCartItem = { productId, quantity, price, isSelected: true };
+        return {
+          cartItems: [...state.cartItems, newCartItem],
+          totalCount: state.totalCount + quantity,
+        };
+
+      }),
       /**
        * 카트 항목을 업데이트합니다.
        *
@@ -76,55 +71,42 @@ const useCartOrderStore = create(
        *
        * @param {number} productId - 유니크한 productId값.
        */
-      deleteCart: (productId) =>
-        set((state) => {
-          const updatedCartItems = state.cartItems.filter(
-            (item) => item.productId !== productId,
-          );
-          const removedItem = state.cartItems.find(
-            (item) => item.productId === productId,
-          );
-          const updatedTotalCount =
-            state.totalCount - (removedItem ? removedItem.quantity : 0);
+      deleteCart: (productId) => set((state) => {
+        const updatedCartItems = state.cartItems.filter(item => item.productId !== productId);
+        const removedItem = state.cartItems.find(item => item.productId === productId);
+        const updatedTotalCount = state.totalCount - (removedItem ? removedItem.quantity : 0);
 
-          return {
-            cartItems: updatedCartItems,
-            totalCount: updatedTotalCount,
-          };
-        }),
+        return {
+          cartItems: updatedCartItems,
+          totalCount: updatedTotalCount,
+        };
+      }),
       /**
        * cartStore를 초기화 합니다.
        *
        */
-      resetCart: () =>
-        set({
-          cartItems: [],
-          totalCount: 0,
-          totalAmount: 0,
-          discountAmount: 0,
-        }),
-
+      resetCart: () => set({
+        cartItems: [],
+        totalCount: 0,
+        totalAmount: 0,
+        discountAmount: 0
+      }),
+      /**
+       * 카트에서 주문하기 버튼 눌렀을 때, merchantId 제발급을 위해서 초기화 합니다.
+       *
+       */
+      resetMerchantId: () => set({ merchantId: '' }),
       /**
        * totalAmount 토탈 금액을 계산합니다.
        *
        */
-      updateTotalAmount: () =>
-        set((state) => {
-          const selectedItems = state.cartItems.filter(
-            (item) => item.isSelected,
-          );
-          const totalAmount = selectedItems.reduce(
-            (previousValue, currentValue) =>
-              previousValue + currentValue.quantity * currentValue.price,
-            0,
-          );
-          const discountAmount = totalAmount * 0.1;
-          return {
-            ...state,
-            totalAmount: totalAmount - discountAmount,
-            discountAmount,
-          };
-        }),
+      updateTotalAmount: () => set((state) => {
+        const selectedItems = state.cartItems.filter(item => item.isSelected);
+        const totalAmount = selectedItems.reduce((previousValue, currentValue) => previousValue + (currentValue.quantity * currentValue.price), 0);
+        const discountAmount = totalAmount * 0.1;
+        return { ...state, totalAmount: totalAmount - discountAmount, discountAmount };
+      }),
+
     }),
     {
       name: 'cart-storage',
@@ -133,8 +115,8 @@ const useCartOrderStore = create(
         ...currentState,
         ...persistedState,
       }),
-    },
-  ),
+    }
+  )
 );
 
 export default useCartOrderStore;

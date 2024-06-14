@@ -5,7 +5,7 @@ export const getProduct = async (productId) => {
   return response.data;
 };
 
-export const saveOrder = async (email) => {
-  const response = await httpClient.post('/auth/send-code', { email });
+export const saveOrder = async (createOrderRequestData) => {
+  const response = await httpClient.post('/orders', { email });
   return response.data;
 };

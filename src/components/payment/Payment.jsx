@@ -18,7 +18,7 @@ const Payment = () => {
 
   useEffect(() => {
     if (!merchantId) return;
-
+    // 결제 선 검증 이전에 Order데이터 merchantId로 가져와서 검증합니다.
     const fetchData = async () => {
       //사전 검증 로직의 merchantUid는 어느 시점에서 만드는게 맞는거지?
       //주문하기 버튼 누르는 순간 저장 되는게 맞는건가?
@@ -37,7 +37,16 @@ const Payment = () => {
 
   }
 
+  const validateCustomer = () => {
+
+  }
+
   const handlePayment = async () => {
+    //작업 이전에 배송지 정보가 등록 됩니다.
+    if(!validateCustomer){
+      alert("배송지 정보를 다시 입력해주세요.");
+      return ;
+    }
     const { IMP } = window;
     IMP.init('imp76410462')
     IMP.request_pay(
