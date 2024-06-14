@@ -49,7 +49,6 @@ const handleFetchUserInfo = async (userId) => {
     console.log(userInfo);
   } catch (error) {
     console.error('Failed to fetch user info:', error);
-    // Handle the error appropriately in the UI
   }
 };
 

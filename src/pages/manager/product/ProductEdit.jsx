@@ -34,7 +34,6 @@ const AddProductForm = () => {
   const handleSubmit = (values, { setSubmitting }) => {
     console.log('Form data', values);
     setSubmitting(false);
-    // POST the values to your server endpoint using an API client like Axios
   };
 
   return (
