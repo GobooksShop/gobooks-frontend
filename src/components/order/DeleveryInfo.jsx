@@ -10,20 +10,18 @@ const DeleveryInfo = () => {
   const handleComplete = (data) => {
     let fullAddress = '';
     let addressType = '';
-
+    console.log(data);
+    console.log("render몇번?")
     // 주소 타입에 따라 처리: R이면 도로명주소, J면 지번주소
-    if (data.addressType === 'R') {
+    if (data.userSelectedType === 'R') {
       fullAddress = data.roadAddress;
       addressType = 'roadAddress';
-    } else if (data.addressType === 'J') {
+    } else if (data.userSelectedType === 'J') {
       fullAddress = data.jibunAddress;
       addressType = 'jibunAddress';
     }
 
-    // 추가 정보(건물명 등)가 있으면 추가
-    if (data.bname !== '') {
-      fullAddress += ` ${data.bname}`;
-    }
+    // bname = 동, buildingName 건물명
     if (data.buildingName !== '') {
       fullAddress += ` ${data.buildingName}`;
     }
@@ -37,6 +35,11 @@ const DeleveryInfo = () => {
   };
 
   const handleClick = () => {
+    setDeleveryInfo({
+      zipcode: '',
+      roadAddress: '',
+      jibunAddress: ''
+    });
     open({ onComplete: handleComplete });
   };
 
@@ -78,20 +81,20 @@ const DeleveryInfo = () => {
           />
         </div>
         <div className="tw-row-start-2 tw-row-span-1 tw-col-span-2 tw-flex tw-items-center">
-          <label htmlFor="address" className="tw-block tw-w-40 tw-pl-8">배송주소</label>
+          <label htmlFor="zipcode" className="tw-block tw-w-40 tw-pl-8">우편 번호</label>
           <input
             type="text"
-            id="address"
+            id="zipcode"
             name="zipcode"
             className="tw-h-6 tw-bg-gray-50 tw-outline-none tw-border tw-border-solid tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 focus:tw-border-2 tw-block tw-w-full tw-p-2"
-            placeholder="배송주소"
+            placeholder="우편 번호"
             required
             value={deleveryInfo.zipcode}
             onChange={handleChange}
           />
         </div>
         <div className="tw-row-start-2 tw-row-span-1 tw-start-col-2">
-          <CustomButton onClick={handleClick} text="검색" size="large" />
+          <CustomButton onClick={handleClick} text="주소 찾기" size="large" />
         </div>
         <div className="tw-pl-24 tw-row-start-3 tw-row-span-1 tw-col-span-4 tw-flex tw-items-center">
           <label htmlFor="roadAddress" className="tw-block tw-w-40 tw-pl-8">도로명 주소</label>

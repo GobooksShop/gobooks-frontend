@@ -2,8 +2,16 @@ import { PageContainer } from '../../components/PageContainer';
 import CartItems from '../../components/cart/CartItems';
 import CartInfo from '../../components/cart/CartInfo';
 import DeleveryInfo from '../../components/order/DeleveryInfo';
+import {  useEffect } from 'react';
+import useCartOrderStore from '../../store/useCartOrderStore';
 function Order() {
 
+  const {cartItems} = useCartOrderStore(state => state);
+  useEffect(() => {
+      //주문 등록이 됩니다. merchantId 및 totalPrice, productId 등록
+
+
+  }, []);
   return (
     <PageContainer>
       {/*todo 메뉴 관련 컴포넌트를 나눠야 합니다.*/}
