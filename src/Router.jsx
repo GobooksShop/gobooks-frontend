@@ -6,16 +6,20 @@ import Join from './pages/join/Join';
 import Login from './pages/login/Login';
 import Main from './pages/main/Main';
 import MyPage from './pages/myPage/MyPage';
+import OAuth2RedirectHandler from './pages/login/fragments/Oauth2RedirectHandler';
 import Order from './pages/order/Order';
 import Product from './pages/manager/product/ProductAdd';
 import ProductDetail from './pages/productDetail/ProductDetail';
 import ProductList from './pages/productList/ProductList';
+import SocialLogin from './pages/login/fragments/SocialLogin';
 
 const Router = () => {
   return (
     <Routes>
       <Route path="/" element={<Main />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
+      <Route path="/oauth2/login" element={<SocialLogin />} />
       <Route path="/join" element={<Join />} />
       <Route path="/order" element={<Order />} />
       <Route path="/product/list/:categoryId" element={<ProductList />} />
