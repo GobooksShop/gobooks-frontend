@@ -1,4 +1,5 @@
-import axios from 'axios';
+import * as productApi from '../api/product/productApi';
+
 import { create } from 'zustand';
 
 const useProductStore = create((set) => ({
@@ -9,9 +10,7 @@ const useProductStore = create((set) => ({
   fetchProductsByCategory: async (categoryId) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.get(
-        `http://localhost:8080/api/products/category/${categoryId}`,
-      );
+      const response = await productApi.fetchProductsByCategory(categoryId);
       set({ products: response.data, isLoading: false });
     } catch (error) {
       console.error('Failed to fetch products by category:', error);
@@ -19,22 +18,16 @@ const useProductStore = create((set) => ({
     }
   },
 
-  addOrUpdateProduct: async (product) => {
+  addProduct: async (product) => {
     set({ isLoading: true });
-    const method = product.id ? 'put' : 'post';
-    const url = product.id
-      ? `http://localhost:8080/api/admin/products/${product.id}`
-      : 'http://localhost:8080/api/admin/products';
     try {
-      const response = await axios[method](url, product);
+      await productApi.addOrUpdateProduct(product);
       set((state) => ({
-        products: state.products.map((p) =>
-          p.id === product.id ? { ...p, ...product } : p,
-        ),
+        products: [...state.products, product],
         isLoading: false,
       }));
     } catch (error) {
-      console.error('Error adding or updating product:', error);
+      console.error('Error adding product:', error);
       set({ error: error.message, isLoading: false });
     }
   },
@@ -42,7 +35,7 @@ const useProductStore = create((set) => ({
   deleteProduct: async (id) => {
     set({ isLoading: true });
     try {
-      await axios.delete(`http://localhost:8080/api/admin/products/${id}`);
+      await productApi.deleteProduct(id);
       set((state) => ({
         products: state.products.filter((p) => p.id !== id),
         isLoading: false,
