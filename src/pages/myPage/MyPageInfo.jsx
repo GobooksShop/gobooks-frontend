@@ -171,7 +171,7 @@ function MyPageInfo() {
           sx={{ bgcolor: 'white', p: 4, borderRadius: 2, boxShadow: 3 }}
         >
           <Typography variant="h4" component="h1" textAlign="center" mb={2}>
-            마이페이지
+            회원정보
           </Typography>
           <form noValidate autoComplete="off">
             <TextField

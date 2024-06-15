@@ -9,6 +9,27 @@ export const getUserInfo = async (id) => {
   return response.data;
 };
 
+export const getUserAddress = async (id) => {
+  const response = await httpClient.get(`/users/address/${id}`);
+  return response.data;
+};
+
+export const saveUserAddress = async (id, address) => {
+  const response = await httpClient.post(`/users/address/${id}`, address);
+  return response.data;
+};
+
+export const updateUserAddress = async (id, address) => {
+  const response = await httpClient.put(`/users/address/${id}`, address);
+  return response.data;
+};
+
+export const deleteUserAddress = async (id, addressId) => {
+  const response = await httpClient.delete(
+    `/users/address/${id}/${addressId}`,
+  );
+  return response.data;
+};
 export const updateUserInfo = async (id, userInfo) => {
   const response = await httpClient.put(`/users/${id}`, userInfo);
   return response.data;
