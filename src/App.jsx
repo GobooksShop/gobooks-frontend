@@ -1,6 +1,6 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material';
 
+import { BrowserRouter } from 'react-router-dom';
 import Footer from './components/Footer';
 import Header from './components/header/Header';
 import Router from './Router';

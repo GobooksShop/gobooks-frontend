@@ -9,10 +9,9 @@ import MyPage from './pages/myPage/MyPage';
 import OAuth2RedirectHandler from './pages/login/fragments/Oauth2RedirectHandler';
 import Order from './pages/order/Order';
 import ProductAdd from './pages/manager/product/ProductAdd';
-import ProductEdit from './pages/manager/product/ProductEdit';
 import ProductDetail from './pages/productDetail/ProductDetail';
+import ProductEdit from './pages/manager/product/ProductEdit';
 import ProductList from './pages/productList/ProductList';
-import SocialLogin from './pages/login/fragments/SocialLogin';
 import UserManagement from './pages/manager/users/UserManagement';
 
 const Router = () => {
@@ -20,8 +19,7 @@ const Router = () => {
     <Routes>
       <Route path="/" element={<Main />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
-      <Route path="/oauth2/login" element={<SocialLogin />} />
+      <Route path="/login/oauth2/redirect" element={<OAuth2RedirectHandler />} />
       <Route path="/join" element={<Join />} />
       <Route path="/order" element={<Order />} />
       <Route path="/product/list/:categoryId" element={<ProductList />} />
