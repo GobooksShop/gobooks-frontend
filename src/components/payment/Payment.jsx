@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 const Payment = () => {
 
   const [merchantId, setMerchantId] = useState('');
-  console.log("payment")
   useEffect(() => {
     //todo 구현 브라우저에서 사용할때 변경해야함.
     const id = crypto.randomUUID();
