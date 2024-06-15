@@ -1,19 +1,20 @@
-import React, {useEffect, useState} from 'react';
-import Carousel from 'react-material-ui-carousel';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import {
-  Grid,
+  Box,
+  Button,
   Card,
   CardContent,
   CardMedia,
-  Typography,
-  Box,
-  Button,
-  IconButton
+  Grid,
+  IconButton,
+  Typography
 } from '@mui/material';
-import { PageContainer } from '../../components/PageContainer';
 import FloatingButton, { FoatingButton } from '../../components/util/FloatingButton';
+import React, {useEffect, useState} from 'react';
+
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import Carousel from 'react-material-ui-carousel';
+import { PageContainer } from '../../components/PageContainer';
 
 function BookCarousel({ books }) {
   const [currentPage, setCurrentPage] = useState(0);
@@ -194,10 +195,10 @@ function Main() {
   return (
       <PageContainer>
         <AdBanner images={adImages} />
-        <div className="container mx-auto py-10 ">
-        <section className="my-12">
+        <div className="tw-container tw-mx-auto tw-py-10 ">
+        <section className="tw-my-12">
           <h2
-              className="text-center font-bold"
+              className="tw-text-center tw-font-bold"
               style={{
                 fontSize: '2.5rem',
                 marginBottom: '1.5rem',
@@ -209,9 +210,9 @@ function Main() {
           <BookCarousel books={bestSellers} />
         </section>
 
-        <section className="mb-10">
+        <section className="tw-mb-10">
           <h2
-              className="text-center font-bold"
+              className="tw-text-center tw-font-bold"
               style={{
                 fontSize: '2.5rem',
                 marginBottom: '1.5rem',
@@ -222,9 +223,9 @@ function Main() {
           <BookCarousel books={newBooks}/>
         </section>
 
-        <section className="mb-10">
+        <section className="tw-mb-10">
           <h2
-              className="text-center font-bold"
+              className="tw-text-center tw-font-bold"
               style={{
                 fontSize: '2.5rem',
                 marginBottom: '1.5rem',
@@ -232,11 +233,11 @@ function Main() {
                 marginLeft: '3.5rem'
               }}
           > 오늘의 책</h2>
-          <div className="flex flex-col md:flex-row gap-4"
+          <div className="tw-flex tw-flex-col tw-md:flex-row tw-gap-4"
           style={{
             marginLeft: '50px'
           }}>
-            <div className="md:w-1/2">
+            <div className="tw-md:w-1/2">
               <Card key={todaysBook[0].id} sx={{width: 400, margin: 1}}>
                 <CardMedia
                     component="img"
@@ -254,7 +255,7 @@ function Main() {
                 </CardContent>
               </Card>
             </div>
-            <div className="md:w-1/2">
+            <div className="tw-md:w-1/2">
               {/* 오늘의 책 설명 */}
             </div>
           </div>
@@ -262,7 +263,7 @@ function Main() {
 
         <section>
           <h2
-              className="text-center font-bold"
+              className="tw-text-center tw-font-bold"
               style={{
                 fontSize: '2.5rem',
                 marginBottom: '1.5rem',

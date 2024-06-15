@@ -1,6 +1,7 @@
 import { Button, Card, CardContent, Grid, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+
 import useCartOrderStore from '../../store/useCartOrderStore';
 import useProductStore from '../../store/useProductStore';
 
@@ -44,7 +45,7 @@ const ProductDetail = () => {
   if (!product) return <p>No product found</p>;
 
   return (
-    <Card className="max-w-4xl mx-auto my-8 shadow-md">
+    <Card className="tw-max-w-4xl tw-mx-auto tw-my-8 tw-shadow-md">
       <Grid container spacing={2}>
         <Grid item md={6}>
           {product.pictureUrl && (

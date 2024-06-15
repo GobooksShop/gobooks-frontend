@@ -32,7 +32,7 @@ function App() {
   });
 
   return (
-    <div className="App font-pre">
+    <div className="tw-App tw-font-pre">
       <ThemeProvider theme={theme}>
         <DeliveryProvider>
         <BrowserRouter>
