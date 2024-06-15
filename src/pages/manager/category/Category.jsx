@@ -122,10 +122,10 @@ function Category() {
                   variant="outlined"
                   value={editCategoryName}
                   onChange={(e) => setEditCategoryName(e.target.value)}
-                  className="mr-2"
+                  className="tw-mr-2"
                   sx={{ marginRight: '10px' }}
               />
-              <FormControl variant="outlined" className="min-w-[120px] mr-2 ">
+              <FormControl variant="outlined" className="tw-min-w-[120px] tw-mr-2 ">
                 <InputLabel>Parent Category</InputLabel>
                 <Select
                     value={editParentId}
@@ -163,7 +163,7 @@ function Category() {
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Typography
                   variant="body1"
-                  className="mr-2"
+                  className="tw-mr-2"
                   sx={{ marginRight: '50px' }}
               >
                 {category.name}
@@ -202,7 +202,7 @@ function Category() {
             </Box>
         )}
         {expandedCategories[category.id] && category.children && (
-            <ul className="list-none space-y-2">
+            <ul className="tw-list-none tw-space-y-2">
               {category.children.map((child) => renderCategory(child, level + 1))}
             </ul>
         )}
@@ -214,7 +214,7 @@ function Category() {
 
   return (
       <PageContainer >
-        <main className="min-h-[300px]">
+        <main className="tw-min-h-[300px]">
           <Typography variant="h4" gutterBottom
                       className="tw-text-center tw-my-4 tw-p-10">
             카테고리 관리 페이지
@@ -271,7 +271,7 @@ function Category() {
           >
             카테고리 수정/삭제
           </Typography>
-          <ul className="list-none">
+          <ul className="tw-list-none">
             {categories.map((category) => renderCategory(category))}
           </ul>
         </main>
