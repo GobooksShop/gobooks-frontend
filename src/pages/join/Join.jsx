@@ -28,6 +28,8 @@ function Join() {
     password: '',
     nickname: '',
     confirmPassword: '',
+    termsAgreed: 0,
+    marketingAgreed: 0,
   });
 
   const [errors, setErrors] = useState({});
@@ -40,8 +42,6 @@ function Join() {
   const [codeChecked, setCodeChecked] = useState(false);
   const [emailButtonDisabled, setEmailButtonDisabled] = useState(false);
   const [sendCodeButtonDisabled, setSendCodeButtonDisabled] = useState(false);
-  const [termsAgreed, setTermsAgreed] = useState(false);
-  const [marketingAgreed, setMarketingAgreed] = useState(false);
   const [agreedModalOpen, setAgreedModalOpen] = useState(false);
   const [timer, setTimer] = useState(0);
   const [resendAvailable, setResendAvailable] = useState(false);
@@ -54,11 +54,10 @@ function Join() {
       formData.password &&
       formData.nickname &&
       isVerified &&
-      isEmailUnique &&
-      termsAgreed &&
+      formData.termsAgreed &&
       !Object.values(errors).some(Boolean)
     );
-  }, [formData, errors, isVerified, isEmailUnique, termsAgreed]);
+  }, [formData, errors, isVerified]);
 
   useEffect(() => {
     validateForm();
@@ -79,7 +78,7 @@ function Join() {
       await sendVerificationCode(formData.email);
       setCodeSent(true);
       setSendCodeButtonDisabled(true);
-      setTimer(600); // Start the timer for 10 minutes
+      setTimer(180);
       setResendAvailable(false);
       alert('Verification code sent to your email.');
     } catch (error) {
@@ -169,14 +168,16 @@ function Join() {
   };
 
   const handleTermsChange = (event) => {
-    setTermsAgreed(event.target.checked);
-    if (!event.target.checked) {
+    const { checked } = event.target;
+    setFormData((prev) => ({ ...prev, termsAgreed: checked }));
+    if (!checked) {
       setAgreedModalOpen(true);
     }
   };
 
   const handleMarketingChange = (event) => {
-    setMarketingAgreed(event.target.checked);
+    const { checked } = event.target;
+    setFormData((prev) => ({ ...prev, marketingAgreed: checked }));
   };
 
   const onClickJoin = async () => {
@@ -210,7 +211,7 @@ function Join() {
     } else if (timer === 0 && codeSent) {
       setResendAvailable(true);
       setSendCodeButtonDisabled(false);
-      setProgress(0); // Reset progress when the timer hits 0
+      setProgress(0);
     }
     return () => clearInterval(interval);
   }, [timer, codeSent]);
@@ -220,7 +221,7 @@ function Join() {
       await sendVerificationCode(formData.email);
       setCodeSent(true);
       setSendCodeButtonDisabled(true);
-      setTimer(600);
+      setTimer(180);
       setResendAvailable(false);
       alert('Verification code resent to your email.');
     } catch (error) {
@@ -427,8 +428,8 @@ function Join() {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={termsAgreed}
-                      onChange={(e) => setTermsAgreed(e.target.checked)}
+                      checked={formData.termsAgreed}
+                      onChange={handleTermsChange}
                     />
                   }
                   label={
@@ -445,8 +446,8 @@ function Join() {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={marketingAgreed}
-                    onChange={(e) => setMarketingAgreed(e.target.checked)}
+                    checked={formData.marketingAgreed}
+                    onChange={handleMarketingChange}
                   />
                 }
                 label="마케팅 정보 수신에 동의합니다. (선택)"

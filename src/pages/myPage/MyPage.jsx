@@ -1,8 +1,8 @@
 import { Button, Grid, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { deleteUser, getUserInfo, updateUserInfo } from '../../api/authApi';
-import { PageContainer } from '../../components/PageContainer';
 
+import { PageContainer } from '../../components/PageContainer';
 
 function MyPage() {
   const [userInfo, setUserInfo] = useState({
@@ -21,11 +21,10 @@ function MyPage() {
   const userId = localStorage.getItem('userId');
 
   useEffect(() => {
-    // Fetch user info for user with ID 1 when the component mounts
     const fetchUserInfo = async () => {
       try {
         
-        const response = await getUserInfo(userId); // Use the extracted userID
+        const response = await getUserInfo(userId);
         setUserInfo(response);
       } catch (err) {
         console.error('사용자 정보 로딩 실패:', err);
@@ -65,7 +64,7 @@ function MyPage() {
   const onClickUpdate = async () => {
     try {
       if(userId){
-        const response = await updateUserInfo(1, userInfo); // Passing the ID explicitly
+        const response = await updateUserInfo(1, userInfo);
         console.log('유저 정보 업데이트 성공:', response);
         setIsEditing(false);
       }
@@ -79,9 +78,8 @@ function MyPage() {
 
   const onClickDelete = async () => {
     try {
-      await deleteUser(1); // Passing the ID explicitly
+      await deleteUser(1);
       console.log('탈퇴 처리되었습니다.');
-      // Implement logout or redirect logic here
     } catch (err) {
       console.error('탈퇴 오류:', err);
     }

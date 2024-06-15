@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
-import { Container, Box, TextField, Button, Typography } from '@mui/material';
+import { Box, Button, Container, TextField, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+
 import { PageContainer } from '../../components/PageContainer';
-import { useEffect } from 'react';
-import useUserStore from '../../store/useUserStore';
-import { useNavigate } from 'react-router-dom';
+import SocialLogin from './fragments/SocialLogin';
 import { login } from '../../api/authApi';
+import { useNavigate } from 'react-router-dom';
+import useUserStore from '../../store/useUserStore';
 
 function Login() {
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
   });
   const navigate = useNavigate();
   const store = useUserStore();
@@ -56,7 +57,12 @@ function Login() {
           <Typography component="h1" variant="h5">
             로그인
           </Typography>
-          <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleSubmit}>
+          <Box
+            component="form"
+            noValidate
+            sx={{ mt: 1 }}
+            onSubmit={handleSubmit}
+          >
             <TextField
               margin="normal"
               required
@@ -67,7 +73,9 @@ function Login() {
               autoComplete="email"
               autoFocus
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
             />
             <TextField
               margin="normal"
@@ -79,7 +87,9 @@ function Login() {
               id="password"
               autoComplete="current-password"
               value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
             />
             <Button
               type="submit"
@@ -89,6 +99,15 @@ function Login() {
             >
               로그인
             </Button>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+              <SocialLogin />
+            </Box>
           </Box>
         </Box>
       </Container>

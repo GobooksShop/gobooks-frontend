@@ -1,14 +1,14 @@
-import { Box, CircularProgress, Typography, Breadcrumbs } from '@mui/material';
+import { Box, CircularProgress, Typography, Breadcrumbs, Pagination, Stack } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
 
-import Pagination from '../../components/util/Pagination';
+// import Pagination from '../../components/util/Pagination';
 import ProductCard from '../../components/product/ProductCard';
 import Sort from '../../components/util/Sort';
 import axios from 'axios';
 import useCategoryStore from '../../store/useCategoryStore';
 import HomeIcon from '@mui/icons-material/Home';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 function ProductList() {
   const { categoryId } = useParams();
@@ -86,7 +86,7 @@ function ProductList() {
 
   return (
     <Box className="tw-px-4 sm:tw-px-8 tw-py-10 sm:tw-py-16 tw-max-w-screen-xl tw-mx-auto">
-      <Breadcrumbs aria-label="breadcrumb" separator=">"
+      <Breadcrumbs aria-label="breadcrumb" separator={<ArrowForwardIosIcon fontSize='1rem'/>}
                    sx={{ marginBottom: '5px' }}
       >
         <Link
@@ -113,17 +113,24 @@ function ProductList() {
       <Typography
         variant="h4"
         component="h1"
-        className="tw-mb-6 tw-text-center"
+        className="tw-mb-6 tw-text-center tw-pt-4 tw-pb-10"
       >
         {categoryName}
       </Typography>
       <Box className="tw-flex tw-justify-between tw-items-center tw-mb-6 sm:tw-mb-10">
+        <Stack spacing={2} direction="row">
         <Pagination
-          className="tw-mt-6 sm:tw-mt-10"
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
+              className="tw-mt-6 sm:tw-mt-10"
+              count={totalPages}
+              page={currentPage + 1}
+              onChange={handlePageChange}
+              variant="outlined"
+              shape="rounded"
+              color="primary"
+              showFirstButton
+              showLastButton
+          />
+        </Stack>
         <Sort onSortChange={handleSortChange} />
       </Box>
       {loading ? (
@@ -146,12 +153,19 @@ function ProductList() {
         </Box>
       )}
 
-      <Pagination
-        className="tw-mt-6 sm:tw-mt-10"
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
+      <Stack spacing={2} className="tw-py-10" justifyContent="center" alignItems="center">
+        <Pagination
+            className="tw-mt-6 sm:tw-mt-10"
+            count={totalPages}
+            page={currentPage + 1}
+            onChange={handlePageChange}
+            variant="outlined"
+            shape="rounded"
+            color="primary"
+            showFirstButton
+            showLastButton
+        />
+      </Stack>
     </Box>
   );
 }

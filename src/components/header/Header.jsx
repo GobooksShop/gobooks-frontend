@@ -42,7 +42,13 @@ function Header() {
   return (
     <>
       <AppBar className="tw-fixed tw-w-full tw-bg-white tw-shadow-md tw-z-50">
-        <Box className="tw-container tw-mx-auto tw-px-4 sm:tw-px-6 tw-py-2 tw-flex tw-justify-between tw-items-center">
+        <Box
+            className="tw-container tw-mx-auto tw-px-4 sm:tw-px-6 tw-py-2 tw-flex tw-justify-between tw-items-center"
+            sx={{
+              width: { xs: '100%', sm: 'calc(100% - 120px)' },
+              mx: 'auto',
+            }}
+        >
           <Box className="tw-flex tw-items-center">
 
             <Logo />

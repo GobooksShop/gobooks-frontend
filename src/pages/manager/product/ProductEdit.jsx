@@ -28,6 +28,7 @@ const ProductEdit = () => {
     categoryId: ''
   });
 
+<<<<<<< HEAD
   useEffect(() => {
     fetchCategories(); // 카테고리 정보 가져오기
     fetchProductDetails(id).then(data => { // 상품 상세 정보 가져오기
@@ -48,6 +49,11 @@ const ProductEdit = () => {
     event.preventDefault();
     await updateProduct(id, productDetails);
     navigate('/product-list'); // 수정 후 상품 목록 페이지로 리디렉션
+=======
+  const handleSubmit = (values, { setSubmitting }) => {
+    console.log('Form data', values);
+    setSubmitting(false);
+>>>>>>> 5b88cc41b47a91cfbca23e503b2f1ab41f8d9642
   };
 
   return (

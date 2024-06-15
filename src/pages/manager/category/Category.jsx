@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -11,10 +10,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { PageContainer } from '../../../components/PageContainer';
-import useCategoryStore from '../../../store/useCategoryStore'; // Assuming this provides necessary methods
+import useCategoryStore from '../../../store/useCategoryStore';
 import { useNavigate } from 'react-router-dom';
 
 function Category() {
@@ -34,7 +35,7 @@ function Category() {
   const [editCategoryName, setEditCategoryName] = useState('');
   const [editParentId, setEditParentId] = useState('');
   const [expandedCategories, setExpandedCategories] = useState({});
-  const [isInputValid, setIsInputValid] = useState(false);  // 유효성 검사
+  const [isInputValid, setIsInputValid] = useState(false); 
 
   useEffect(() => {
     fetchCategories();
@@ -50,7 +51,7 @@ function Category() {
   const handleCreateCategory = async () => {
     if (isInputValid) {
       await addCategory({ name: newCategoryName, parentId: newParentId || null });
-      fetchCategories(); // Re-fetch categories to update state
+      fetchCategories(); 
       setNewCategoryName('');
       setNewParentId('');
     }
@@ -65,7 +66,7 @@ function Category() {
       name: editCategoryName,
       parentId: editParentId || null,
     });
-    fetchCategories(); // Re-fetch categories to update state
+    fetchCategories(); 
     setEditCategory(null);
     setEditCategoryName('');
     setEditParentId('');
@@ -77,7 +78,7 @@ function Category() {
     );
     if (confirmDelete) {
       await deleteCategoryAndChildren(id);
-      fetchCategories(); // Re-fetch categories to update state
+      fetchCategories();
     }
   };
 
