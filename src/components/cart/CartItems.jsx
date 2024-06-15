@@ -162,7 +162,7 @@ const CartItems = (props) => {
       <div className="grid-table-wrap tw-px-2 tw-border-0 tw-border-b tw-border-solid tw-border-gray-400/35">
         <ul className="tw-px-2">
           {cartItems.map((item, index) => (
-            <li key={item.product_id + index + crypto.randomUUID()}
+            <li key={item.productId + index + crypto.randomUUID()}
                 className="tw-flex md:tw-items-center md:tw-gap-10 md:tw-h-36 tw-border-0 tw-border-b tw-border-solid tw-border-gray-400/35">
               {props.isOrders ? <></> :<input
                 type="checkbox"
@@ -176,11 +176,12 @@ const CartItems = (props) => {
                   className="tw-max-w-32 tw-max-h-28 tw-w-full tw-h-auto"
                 />
               </div>
-              <div className="md:tw-w-96">
+              <div className="md:tw-w-96 tw-text-lg tw-font-normal">
                 <p>{item.product_name}</p>
-                <p>10% 40,000원 36,000원</p>
+                <p><span className="tw-text-blue-500">10% </span><span className="tw-line-through">{item.price}원</span> {item.price * 0.9}원</p>
               </div>
               <div className="md:tw-w-52">
+                <div className="tw-w-20 tw-flex tw-flex-col tw-items-center">
                 <span>{item.amount}원</span>
                 {props.isOrders ? <></> :
                 <CartProductCounter
@@ -191,6 +192,7 @@ const CartItems = (props) => {
                   onCountChange={handleCountChange}
                 />
                 }
+                </div>
               </div>
               <div className="md:tw-grow md:tw-basis-0">
                 <span><strong>3일 이내 배송</strong></span>
