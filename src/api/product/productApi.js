@@ -5,12 +5,17 @@ export const fetchProductsByCategory = async (categoryId) => {
 };
 
 export const addOrUpdateProduct = async (product) => {
-  const method = product.id ? 'put' : 'post';
-  const url = product.id ? `/products/${product.id}` : '/products';
-  return await httpClient[method](url, product);
+  if (product.id) {
+    return await httpClient.put(`/products/${product.id}`, product);
+  } else {
+    return await httpClient.post(`/products`, product);
+  }
 };
 
-
 export const deleteProduct = async (id) => {
-  return await httpClient.delete(`/admin/products/${id}`);
+  return await httpClient.delete(`/products/${id}`);
+};
+
+export const fetchProductDetails = async (id) => {
+  return await httpClient.get(`/products/${id}`);
 };

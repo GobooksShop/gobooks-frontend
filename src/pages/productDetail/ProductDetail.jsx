@@ -1,25 +1,23 @@
 import { Button, Card, CardContent, Grid, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-
-import axios from 'axios';
 import useCartOrderStore from '../../store/useCartOrderStore';
+import useProductStore from '../../store/useProductStore';
 
-const ProductDetailPage = () => {
+const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const addCart = useCartOrderStore((state) => state.addCart);
+  const { fetchProductDetails } = useProductStore();
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8080/api/products/${id}`,
-        );
-        setProduct(response.data);
+        const productData = await fetchProductDetails(id);
+        setProduct(productData);
         setLoading(false);
       } catch (error) {
         console.error('Failed to fetch product', error);
@@ -29,7 +27,7 @@ const ProductDetailPage = () => {
     };
 
     fetchProduct();
-  }, [id]);
+  }, [id, fetchProductDetails]);
 
   const handleAddToCart = () => {
     if (product) {
@@ -108,4 +106,4 @@ const ProductDetailPage = () => {
   );
 };
 
-export default ProductDetailPage;
+export default ProductDetail;

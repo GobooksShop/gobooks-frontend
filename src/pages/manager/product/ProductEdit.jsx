@@ -1,19 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import {
-  Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField
+  Box,
+  Button,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
 } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import useCategoryStore from '../../../store/useCategoryListStore'; // 수정 필요한 부분에 주의하세요 (예: useCategoryStore 경로)
-import useProductStore from '../../../store/useProductStore'; // 상태 관리 스토어 경로 확인
+import useCategoryStore from '../../../store/useCategoryStore';
+import useProductStore from '../../../store/useProductStore';
+import dayjs from 'dayjs';
 
 const ProductEdit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { categories, fetchCategories } = useCategoryStore();
-  const { updateProduct, fetchProductDetails } = useProductyStore(); // 오타 수정 필요
+  const { fetchProductDetails, updateProduct } = useProductStore();
 
   const [productDetails, setProductDetails] = useState({
     title: '',
@@ -25,60 +33,189 @@ const ProductEdit = () => {
     status: '',
     stockQuantity: '',
     pictureUrl: '',
-    categoryId: ''
+    categoryIds: [],
   });
 
-<<<<<<< HEAD
   useEffect(() => {
-    fetchCategories(); // 카테고리 정보 가져오기
-    fetchProductDetails(id).then(data => { // 상품 상세 정보 가져오기
-      setProductDetails(data);
+    fetchCategories();
+    fetchProductDetails(id).then((data) => {
+      setProductDetails({
+        ...data,
+        publicationYear: data.publicationYear ? dayjs(data.publicationYear) : null,
+        categoryIds: data.categoryIds || [],
+      });
     });
-  }, [fetchCategories, fetchProductDetails, id]);
+  }, [id, fetchCategories, fetchProductDetails]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setProductDetails(prev => ({ ...prev, [name]: value }));
+    setProductDetails((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleDateChange = (value) => {
+    setProductDetails((prev) => ({ ...prev, publicationYear: value }));
   };
 
   const handleCategoryChange = (event) => {
-    setProductDetails(prev => ({ ...prev, categoryId: event.target.value }));
+    const { value } = event.target;
+    setProductDetails((prev) => ({ ...prev, categoryIds: value }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await updateProduct(id, productDetails);
-    navigate('/product-list'); // 수정 후 상품 목록 페이지로 리디렉션
-=======
-  const handleSubmit = (values, { setSubmitting }) => {
-    console.log('Form data', values);
-    setSubmitting(false);
->>>>>>> 5b88cc41b47a91cfbca23e503b2f1ab41f8d9642
+    await updateProduct(id, {
+      ...productDetails,
+      fixedPrice: parseInt(productDetails.fixedPrice),
+      stockQuantity: parseInt(productDetails.stockQuantity),
+      publicationYear: productDetails.publicationYear
+        ? productDetails.publicationYear.toISOString()
+        : null,
+    });
+    navigate(`/product/detail/${id}`); // Redirect to the product detail page after updating
+  };
+
+  const renderCategoryOptions = (category, level = 0) => {
+    let options = [
+      <MenuItem
+        key={category.id}
+        value={category.id.toString()}
+        style={{ paddingLeft: level * 20 }}
+      >
+        {category.name}
+      </MenuItem>,
+    ];
+
+    if (category.children) {
+      category.children.forEach((child) => {
+        options = options.concat(renderCategoryOptions(child, level + 1));
+      });
+    }
+
+    return options;
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <form onSubmit={handleSubmit}>
+    <div className="tw-container tw-mx-auto tw-p-4 tw-pt-8 tw-max-w-4xl">
+      <Typography variant="h4" gutterBottom>
+        Edit Product
+      </Typography>
+      <form onSubmit={handleSubmit} className="tw-space-y-4">
         <Grid container spacing={2}>
-          {/* 폼 필드 배치 */}
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Title"
-              name="title"
-              fullWidth
-              variant="outlined"
-              value={productDetails.title}
-              onChange={handleInputChange}
-            />
+          <Grid item xs={12}>
+            <Box display="flex" alignItems="center">
+              <FormControl fullWidth variant="outlined">
+                <InputLabel>Categories</InputLabel>
+                <Select
+                  multiple
+                  value={productDetails.categoryIds}
+                  onChange={handleCategoryChange}
+                  label="Categories"
+                  renderValue={(selected) => selected.join(', ')}
+                >
+                  {categories.flatMap((category) =>
+                    renderCategoryOptions(category),
+                  )}
+                </Select>
+              </FormControl>
+              <Typography variant="body1" style={{ marginLeft: '10px' }}>
+                Selected: {productDetails.categoryIds.join(', ')}
+              </Typography>
+            </Box>
           </Grid>
-          {/* 추가 필드 구성 */}
-          {/* DatePicker와 Select 컴포넌트는 기존 로직 참조 */}
         </Grid>
+        <TextField
+          label="Title"
+          name="title"
+          variant="outlined"
+          fullWidth
+          value={productDetails.title}
+          onChange={handleInputChange}
+        />
+        <TextField
+          label="Author"
+          name="author"
+          variant="outlined"
+          fullWidth
+          value={productDetails.author}
+          onChange={handleInputChange}
+        />
+        <TextField
+          label="ISBN"
+          name="isbn"
+          variant="outlined"
+          fullWidth
+          value={productDetails.isbn}
+          onChange={handleInputChange}
+        />
+        <TextField
+          label="Content"
+          name="content"
+          variant="outlined"
+          multiline
+          rows={4}
+          fullWidth
+          value={productDetails.content}
+          onChange={handleInputChange}
+        />
+        <TextField
+          label="Fixed Price"
+          name="fixedPrice"
+          variant="outlined"
+          type="number"
+          fullWidth
+          value={productDetails.fixedPrice}
+          onChange={handleInputChange}
+        />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            label="Publication Year"
+            views={['year']}
+            value={productDetails.publicationYear}
+            onChange={handleDateChange}
+            renderInput={(params) => <TextField {...params} fullWidth />}
+          />
+        </LocalizationProvider>
+        <TextField
+          label="Status"
+          select
+          name="status"
+          value={productDetails.status}
+          onChange={handleInputChange}
+          fullWidth
+          variant="outlined"
+        >
+          <MenuItem value="AVAILABLE">Available</MenuItem>
+          <MenuItem value="UNAVAILABLE">Unavailable</MenuItem>
+        </TextField>
+        <TextField
+          label="Stock Quantity"
+          name="stockQuantity"
+          variant="outlined"
+          type="number"
+          fullWidth
+          value={productDetails.stockQuantity}
+          onChange={handleInputChange}
+        />
+        <TextField
+          label="Picture URL"
+          name="pictureUrl"
+          variant="outlined"
+          fullWidth
+          value={productDetails.pictureUrl}
+          onChange={handleInputChange}
+        />
+        {productDetails.pictureUrl && (
+          <img
+            src={productDetails.pictureUrl}
+            alt="Product Preview"
+            className="tw-mt-2 tw-rounded-lg tw-max-w-md"
+          />
+        )}
         <Button type="submit" variant="contained" color="primary">
           Update Product
         </Button>
       </form>
-    </LocalizationProvider>
+    </div>
   );
 };
 
