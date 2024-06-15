@@ -24,7 +24,7 @@ const Router = () => {
       <Route path="/oauth2/login" element={<SocialLogin />} />
       <Route path="/join" element={<Join />} />
       <Route path="/order" element={<Order />} />
-      <Route path="/category/:categoryId" element={<ProductList />} />
+      <Route path="/product/list/:categoryId" element={<ProductList />} />
       <Route path="/product/detail/:id" element={<ProductDetail />} />
       <Route path="/admin/product/add" element={<ProductAdd />} />
       <Route path="/admin/product/edit/:id" element={<ProductEdit />} />
