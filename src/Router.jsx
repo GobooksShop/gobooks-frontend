@@ -13,6 +13,7 @@ import ProductEdit from './pages/manager/product/ProductEdit';
 import ProductDetail from './pages/productDetail/ProductDetail';
 import ProductList from './pages/productList/ProductList';
 import SocialLogin from './pages/login/fragments/SocialLogin';
+import UserManagement from './pages/manager/users/UserManagement';
 
 const Router = () => {
   return (
@@ -25,9 +26,10 @@ const Router = () => {
       <Route path="/order" element={<Order />} />
       <Route path="/category/:categoryId" element={<ProductList />} />
       <Route path="/product/detail/:id" element={<ProductDetail />} />
-      <Route path="/product/management/add" element={<ProductAdd />} />
-      <Route path="/product/management/edit/:id" element={<ProductEdit />} />
-      <Route path="/category/management" element={<Category />} />
+      <Route path="/admin/product/add" element={<ProductAdd />} />
+      <Route path="/admin/product/edit/:id" element={<ProductEdit />} />
+      <Route path="/admin/users" element={<UserManagement/>} />
+      <Route path="/admin/category" element={<Category />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/myPage" element={<MyPage />} />
     </Routes>
