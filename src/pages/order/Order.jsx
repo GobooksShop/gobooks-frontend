@@ -10,10 +10,13 @@ import useUserStore from '../../store/useUserStore';
 function Order() {
 
   const { cartItems, setMerchantUid, merchantUid } = useCartOrderStore(state => state);
-  const {userId} = useUserStore(state => state);
+  const {userId} = useUserStore(state => state.user);
   useEffect(() => {
     //주문 등록이 됩니다. merchantId 및 totalPrice, productId 등록
+
     if(merchantUid === '') {
+      console.log("======================new===============================")
+      console.log(userId);
       const requestOrderItems = {
         userId:  userId,
         merchantUId: '',
