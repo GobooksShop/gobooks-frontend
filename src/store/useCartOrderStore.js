@@ -32,9 +32,13 @@ const useCartOrderStore = create(
        */
       discountAmount: 0,
       /**
-       * orderId
+       * 결제 주문 번호
        */
-      merchantId: '',
+      merchantUid: '',
+      /**
+       *
+       */
+      deliveryInfo: {},
       /**
        * 카트를 추가하는 경우
        *
@@ -92,10 +96,14 @@ const useCartOrderStore = create(
         discountAmount: 0
       }),
       /**
-       * 카트에서 주문하기 버튼 눌렀을 때, merchantId 제발급을 위해서 초기화 합니다.
+       * 카트에서 주문하기 버튼 눌렀을 때, merchantUId 제발급을 위해서 초기화 합니다.
        *
        */
-      resetMerchantId: () => set({ merchantId: '' }),
+      resetMerchantUId: () => set({ merchantUid: '' }),
+      /**
+       * merchantUid를 저장한다.
+       */
+      setMerchantUid: (merchantUid) => set({ merchantUid: merchantUid }),
       /**
        * totalAmount 토탈 금액을 계산합니다.
        *

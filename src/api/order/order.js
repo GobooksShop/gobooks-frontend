@@ -6,6 +6,6 @@ export const getProduct = async (productId) => {
 };
 
 export const saveOrder = async (createOrderRequestData) => {
-  const response = await httpClient.post('/orders', { email });
+  const response = await httpClient.post('/orders/create', createOrderRequestData);
   return response.data;
 };

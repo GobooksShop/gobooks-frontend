@@ -9,7 +9,7 @@ const CartInfo = (props) => {
   const [isFixed, setIsFixed] = useState(false);
   const {
     totalAmount,
-    resetMerchantId,
+    resetMerchantUId,
     discountAmount,
     updateTotalAmount,
     cartItems,
@@ -40,7 +40,6 @@ const CartInfo = (props) => {
       .filter((item) => item.isSelected)
       .map(({ productId, quantity, price }) => ({ productId, quantity, price }));
 
-    console.log(selectedCartItems);
     if (selectedCartItems.length === 0) {
       alert('최소 1개 이상의 상품의 체크 박스를 선택해주세요.');
       return;
@@ -48,13 +47,12 @@ const CartInfo = (props) => {
     const urlParams = new URLSearchParams();
     urlParams.append(`selectedCartItems`, JSON.stringify(selectedCartItems));
 
-    console.log(urlParams.toString());
 
     const response = varifyCartDatas(urlParams);
     response.then((response) => {
       if (response.status === 200) {
         //이미 발급된 merchantId()를 제거한다.
-        resetMerchantId();
+        resetMerchantUId();
         navigate('/order');
       } else {
         alert('데이터 검증이 실패했습니다. 조작된 데이터로 판명됐습니다.');
