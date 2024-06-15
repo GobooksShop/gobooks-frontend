@@ -1,66 +1,72 @@
 import CustomButton from '../ui/CustomButton';
 
 import { complete_payment, preparePayment } from '../../api/payment/payment';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import useUserStore from '../../store/useUserStore';
+import useCartOrderStore from '../../store/useCartOrderStore';
+import { DeliveryContext } from '../../App';
 
 const Payment = () => {
 
-  const [merchantId, setMerchantId] = useState('');
-  console.log("payment")
-  useEffect(() => {
-    //todo 구현 브라우저에서 사용할때 변경해야함.
-    const id = crypto.randomUUID();
-    const date = new Date();
-    const toDate = date.getFullYear() + (date.getMonth() + 1) + date.getDate();
-    setMerchantId(`gbs${toDate}_${id}`);
-  }, []);
-
+  const {merchantUid, totalAmount, discountAmount, setMerchantUid, resetMerchantUid} = useCartOrderStore(state => state);
+  const {userId, name, email, role } = useUserStore(state => state.user)
+  const {deliveryInfo} = useContext(DeliveryContext);
 
   useEffect(() => {
-    if (!merchantId) return;
-    // 결제 선 검증 이전에 Order데이터 merchantId로 가져와서 검증합니다.
+    if(merchantUid === "" || merchantUid == null){
+      return;
+    }
     const fetchData = async () => {
-      //사전 검증 로직의 merchantUid는 어느 시점에서 만드는게 맞는거지?
-      //주문하기 버튼 누르는 순간 저장 되는게 맞는건가?
-      //store로 전역 관리를 해야 하나?
       const prepareData = {
-        "merchantUid" : merchantId,
-        "amount" : 1000
+        "merchantUid": merchantUid,
+        "amount": totalAmount
       }
       await preparePayment(prepareData);
-    };
-
-    fetchData();
-  }, [merchantId]);
+    }
+    fetchData()
+      .then(data => {
+        setMerchantUid(data.merchantUid);
+      })
+      .catch(error => {console.warn('이미 존재하는 주문번호입니다.')
+      });
+  }, []);
 
   const validatePayment = () => {
 
   }
 
   const validateCustomer = () => {
+    //todo 결제까지 끝낸 이후에 추가하겠습니다.
+    console.log(JSON.stringify(deliveryInfo, null, 2));
+    console.log(deliveryInfo.name);
+    return true;
+  }
+
+  const paymentService = async () => {
 
   }
 
   const handlePayment = async () => {
     //작업 이전에 배송지 정보가 등록 됩니다.
-    if(!validateCustomer){
+    if(!validateCustomer()){
       alert("배송지 정보를 다시 입력해주세요.");
       return ;
     }
+
     const { IMP } = window;
     IMP.init('imp76410462')
     IMP.request_pay(
       {
         pg: "html5_inicis.INIpayTest",
         pay_method: "card",
-        merchant_uid: merchantId,
+        merchant_uid: merchantUid,
         name: "주문명:결제테스트",
-        amount: 1004,
-        buyer_email: "test@portone.io",
-        buyer_name: "구매자이름",
-        buyer_tel: "010-1234-5678",
-        buyer_addr: "서울특별시 강남구 삼성동",
-        buyer_postcode: "123-456",
+        amount: totalAmount,
+        buyer_email: email,
+        buyer_name: deliveryInfo.name,
+        buyer_tel: deliveryInfo.phoneNumber.length > 0 ? deliveryInfo.phoneNumber : deliveryInfo.landlinePhoneNumber,
+        buyer_addr: `${deliveryInfo.address} ${deliveryInfo.realAddress}`,
+        buyer_postcode: deliveryInfo.zonecode,
         m_redirect_url: "http://localhost:3000/orderDetails"
       },
       (response) => {
@@ -68,10 +74,21 @@ const Payment = () => {
         //* ...중략... *//
         if(response.success){
           console.log(response);
-          const requestData = {
-            "imp_uid" : response.imp_uid
+          const requestPaymentData = {
+            impUid: response.imp_uid,
+            merchantUid: merchantUid,
+            orderAddressUpdate: {
+              zipcode: deliveryInfo.zonecode,
+              address1: deliveryInfo.address,
+              address2: deliveryInfo.realAddress,
+              recipientName: deliveryInfo.name,
+              recipientPhone: deliveryInfo.phoneNumber,
+            }
           }
-          const data = complete_payment(requestData);
+
+
+
+          const data = complete_payment(requestPaymentData);
           console.log(data);
         }else{
           console.log(response);

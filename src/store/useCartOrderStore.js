@@ -36,10 +36,6 @@ const useCartOrderStore = create(
        */
       merchantUid: '',
       /**
-       *
-       */
-      deliveryInfo: {},
-      /**
        * 카트를 추가하는 경우
        *
        * @param {number} productId - 유니크한 상품 아이디

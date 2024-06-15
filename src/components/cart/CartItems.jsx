@@ -13,6 +13,7 @@ const CartItems = (props) => {
     const fetchData = async () => {
 
       const storeData = JSON.parse(localStorage.getItem('cart-storage')).state || [];
+      console.log("======================new===============================")
       console.log(storeData);
       if(!storeData){
         console.error('로컬 스토리지에서 cart-storage 데이터를 가져올 수 없습니다.');

@@ -4,7 +4,26 @@ import { BrowserRouter } from 'react-router-dom';
 import Footer from './components/Footer';
 import Header from './components/header/Header';
 import Router from './Router';
+import { createContext, useState } from 'react';
 
+export const DeliveryContext = createContext();
+
+const DeliveryProvider = ({ children }) => {
+  const [deliveryInfo, setDeliveryInfo] = useState({
+    name: '',
+    zipcode: '',
+    address: '',
+    realAddress: '',
+    phoneNumber: '',
+    landlinePhoneNumber: '',
+  });
+
+  return (
+    <DeliveryContext.Provider value={{ deliveryInfo, setDeliveryInfo }}>
+      {children}
+    </DeliveryContext.Provider>
+  );
+};
 function App() {
   const theme = createTheme({
     palette: {
@@ -22,11 +41,13 @@ function App() {
   return (
     <div className="tw-App tw-font-pre">
       <ThemeProvider theme={theme}>
+        <DeliveryProvider>
         <BrowserRouter>
           <Header />
           <Router />
           <Footer />
         </BrowserRouter>
+        </DeliveryProvider>
       </ThemeProvider>
     </div>
   );
