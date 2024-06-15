@@ -58,7 +58,7 @@ const DeleveryInfo = () => {
       </header>
       <div className="tw-grid tw-grid-cols-6 tw-gap-5 tw-grid-rows-table-layout tw-border-solid tw-border tw-border-gray-500/50 tw-rounded tw-px-5 tw-py-4">
         <div className="tw-row-span-1 tw-col-span-2 tw-flex tw-items-center">
-          <label htmlFor="name" className="tw-block tw-w-40 tw-pl-8">이름</label>
+          <label htmlFor="name" className="tw-block tw-w-40 tw-pl-8 tw-text-blue-500">이름</label>
           <input
             type="text"
             id="name"
@@ -71,7 +71,7 @@ const DeleveryInfo = () => {
           />
         </div>
         <div className="tw-row-start-2 tw-row-span-1 tw-col-span-2 tw-flex tw-items-center">
-          <label htmlFor="zipcode" className="tw-block tw-w-40 tw-pl-8">우편 번호</label>
+          <label htmlFor="zipcode" className="tw-block tw-w-40 tw-pl-8 tw-text-blue-500">우편 번호</label>
           <input
             type="text"
             id="zipcode"
@@ -115,7 +115,7 @@ const DeleveryInfo = () => {
           />
         </div>
         <div className="tw-row-start-5 tw-row-span-1 tw-col-span-2 tw-flex tw-items-center">
-          <label htmlFor="phoneNumber" className="tw-block tw-w-40 tw-pl-8">휴대폰</label>
+          <label htmlFor="phoneNumber" className="tw-block tw-w-40 tw-pl-8 tw-text-blue-500">휴대폰</label>
           <input
             type="text"
             id="phoneNumber"
@@ -128,7 +128,7 @@ const DeleveryInfo = () => {
           />
         </div>
         <div className="tw-row-start-6 tw-row-span-1 tw-col-span-2 tw-flex tw-items-center">
-          <label htmlFor="landlinePhoneNumber" className="tw-block tw-w-40 tw-pl-8">일반전화</label>
+          <label htmlFor="landlinePhoneNumber" className="tw-block tw-w-40 tw-pl-8 tw-text-blue-500">일반전화</label>
           <input
             type="text"
             id="landlinePhoneNumber"

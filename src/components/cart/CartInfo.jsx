@@ -80,7 +80,7 @@ const CartInfo = (props) => {
                 <div>{-discountAmount}원</div>
               </div>
             </div>
-            <div className="cartBottom tw-flex tw-justify-between tw-pt-3">
+            <div className="cartBottom tw-flex tw-justify-between tw-pt-3 tw-font-bold tw-text-lg">
               <div>총주문 금액</div>
               <div>{totalAmount}원</div>
             </div>
