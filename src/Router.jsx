@@ -5,7 +5,7 @@ import Category from './pages/manager/category/Category';
 import Join from './pages/join/Join';
 import Login from './pages/login/Login';
 import Main from './pages/main/Main';
-import MyPage from './pages/myPage/MyPage';
+import MyPagePanel from './pages/myPage/MyPagePanel';
 import OAuth2RedirectHandler from './pages/login/fragments/Oauth2RedirectHandler';
 import Order from './pages/order/Order';
 import ProductAdd from './pages/manager/product/ProductAdd';
@@ -29,7 +29,7 @@ const Router = () => {
       <Route path="/admin/users" element={<UserManagement/>} />
       <Route path="/admin/category" element={<Category />} />
       <Route path="/cart" element={<Cart />} />
-      <Route path="/myPage" element={<MyPage />} />
+      <Route path="/myPage" element={<MyPagePanel />} />
     </Routes>
   );
 };

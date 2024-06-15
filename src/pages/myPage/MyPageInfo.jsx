@@ -88,8 +88,8 @@ function MyPage() {
   return (
     <PageContainer>
       <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '100vh' }}>
-        <Grid item xs={12} sm={8} md={6} lg={4} className="bg-white p-8 rounded-lg shadow-lg">
-          <Typography variant="h4" component="h1" gutterBottom className="text-center">
+        <Grid item xs={12} sm={8} md={6} lg={4} className="tw-bg-white tw-p-8 tw-rounded-lg tw-shadow-lg">
+          <Typography variant="h4" component="h1" gutterBottom className="tw-text-center">
             마이페이지
           </Typography>
           <form noValidate autoComplete="off">

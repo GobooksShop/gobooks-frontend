@@ -28,8 +28,8 @@ function Join() {
     password: '',
     nickname: '',
     confirmPassword: '',
-    termsAgreed: 0,
-    marketingAgreed: 0,
+    termsAgreed: false,
+    marketingAgreed: false,
   });
 
   const [errors, setErrors] = useState({});
@@ -243,13 +243,13 @@ function Join() {
           sm={8}
           md={6}
           lg={4}
-          className="bg-white p-8 rounded-lg shadow-lg"
+          className="tw-bg-white tw-p-8 tw-rounded-lg tw-shadow-lg"
         >
           <Typography
             variant="h4"
             component="h1"
             gutterBottom
-            className="text-center"
+            className="tw-text-center"
           >
             회원가입
           </Typography>
