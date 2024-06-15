@@ -1,104 +1,220 @@
-import * as Yup from 'yup';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import {
+  Box,
+  Button,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import useCategoryStore from '../../../store/useCategoryStore';
+import useProductStore from '../../../store/useProductStore'; 
 
-import { ErrorMessage, Field, Form, Formik } from 'formik';
+const ProductEdit = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { categories, fetchCategories } = useCategoryStore();
+  const { updateProduct, fetchProductDetails } = useProductStore();
 
-import React from 'react';
-
-const AddProductForm = () => {
-  const initialValues = {
+  const [productDetails, setProductDetails] = useState({
     title: '',
     author: '',
     isbn: '',
     content: '',
     fixedPrice: '',
-    publicationYear: '',
+    publicationYear: null,
     status: '',
     stockQuantity: '',
     pictureUrl: '',
-    categoryIds: []
-  };
-
-  const validationSchema = Yup.object().shape({
-    title: Yup.string().required('Title is required'),
-    author: Yup.string().required('Author is required'),
-    isbn: Yup.string().required('ISBN is required'),
-    content: Yup.string().required('Content is required'),
-    fixedPrice: Yup.number().required('Fixed price is required').positive('Price must be positive'),
-    publicationYear: Yup.date().required('Publication year is required'),
-    status: Yup.string().required('Status is required'),
-    stockQuantity: Yup.number().min(0, 'Stock quantity cannot be negative'),
-    pictureUrl: Yup.string().url('Enter a valid URL'),
-    categoryIds: Yup.array().of(Yup.number()).min(1, 'At least one category is required')
+    categoryIds: [],
   });
 
-  const handleSubmit = (values, { setSubmitting }) => {
-    console.log('Form data', values);
-    setSubmitting(false);
-    // POST the values to your server endpoint using an API client like Axios
+  useEffect(() => {
+    fetchCategories();
+    fetchProductDetails(id).then((data) => {
+      setProductDetails({
+        ...data,
+        publicationYear: data.publicationYear ? AdapterDayjs(data.publicationYear) : null,
+      });
+    });
+  }, [id, fetchCategories, fetchProductDetails]);
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setProductDetails((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleDateChange = (value) => {
+    setProductDetails((prev) => ({ ...prev, publicationYear: value }));
+  };
+
+  const handleCategoryChange = (event) => {
+    const { value } = event.target;
+    setProductDetails((prev) => ({ ...prev, categoryIds: value }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    await updateProduct(id, {
+      ...productDetails,
+      fixedPrice: parseInt(productDetails.fixedPrice),
+      stockQuantity: parseInt(productDetails.stockQuantity),
+      publicationYear: productDetails.publicationYear
+        ? productDetails.publicationYear.toISOString()
+        : null,
+    });
+    navigate(`/product/detail/${id}`); // Redirect to the product detail page after updating
+  };
+
+  const renderCategoryOptions = (category, level = 0) => {
+    let options = [
+      <MenuItem
+        key={category.id}
+        value={category.id.toString()}
+        style={{ paddingLeft: level * 20 }}
+      >
+        {category.name}
+      </MenuItem>,
+    ];
+
+    if (category.children) {
+      category.children.forEach((child) => {
+        options = options.concat(renderCategoryOptions(child, level + 1));
+      });
+    }
+
+    return options;
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-    >
-      {({ isSubmitting }) => (
-        <Form>
-          <h2>Add New Product</h2>
-          <label htmlFor="title">Title:</label>
-          <Field name="title" type="text" />
-          <ErrorMessage name="title" component="div" />
-
-          <label htmlFor="author">Author:</label>
-          <Field name="author" type="text" />
-          <ErrorMessage name="author" component="div" />
-
-          <label htmlFor="isbn">ISBN:</label>
-          <Field name="isbn" type="text" />
-          <ErrorMessage name="isbn" component="div" />
-
-          <label htmlFor="content">Content:</label>
-          <Field name="content" as="textarea" />
-          <ErrorMessage name="content" component="div" />
-
-          <label htmlFor="fixedPrice">Fixed Price:</label>
-          <Field name="fixedPrice" type="number" />
-          <ErrorMessage name="fixedPrice" component="div" />
-
-          <label htmlFor="publicationYear">Publication Year:</label>
-          <Field name="publicationYear" type="date" />
-          <ErrorMessage name="publicationYear" component="div" />
-
-          <label htmlFor="status">Status:</label>
-          <Field name="status" as="select">
-            <option value="">Select Status</option>
-            <option value="AVAILABLE">AVAILABLE</option>
-            <option value="UNAVAILABLE">UNAVAILABLE</option>
-          </Field>
-          <ErrorMessage name="status" component="div" />
-
-          <label htmlFor="stockQuantity">Stock Quantity:</label>
-          <Field name="stockQuantity" type="number" />
-          <ErrorMessage name="stockQuantity" component="div" />
-
-          <label htmlFor="pictureUrl">Picture URL:</label>
-          <Field name="pictureUrl" type="text" />
-          <ErrorMessage name="pictureUrl" component="div" />
-
-          <label htmlFor="categoryIds">Category IDs:</label>
-          <Field name="categoryIds" as="select" multiple>
-            {/* Dynamically populate category options here */}
-          </Field>
-          <ErrorMessage name="categoryIds" component="div" />
-
-          <button type="submit" disabled={isSubmitting}>
-            Submit
-          </button>
-        </Form>
-      )}
-    </Formik>
+    <div className="tw-container tw-mx-auto tw-p-4 tw-pt-8 tw-max-w-4xl">
+      <Typography variant="h4" gutterBottom>
+        Edit Product
+      </Typography>
+      <form onSubmit={handleSubmit} className="tw-space-y-4">
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Box display="flex" alignItems="center">
+              <FormControl fullWidth variant="outlined">
+                <InputLabel>Categories</InputLabel>
+                <Select
+                  multiple
+                  value={productDetails.categoryIds}
+                  onChange={handleCategoryChange}
+                  label="Categories"
+                  renderValue={(selected) => selected.join(', ')}
+                >
+                  {categories.flatMap((category) =>
+                    renderCategoryOptions(category),
+                  )}
+                </Select>
+              </FormControl>
+              <Typography variant="body1" style={{ marginLeft: '10px' }}>
+                Selected: {productDetails.categoryIds.join(', ')}
+              </Typography>
+            </Box>
+          </Grid>
+        </Grid>
+        <TextField
+          label="Title"
+          name="title"
+          variant="outlined"
+          fullWidth
+          value={productDetails.title}
+          onChange={handleInputChange}
+        />
+        <TextField
+          label="Author"
+          name="author"
+          variant="outlined"
+          fullWidth
+          value={productDetails.author}
+          onChange={handleInputChange}
+        />
+        <TextField
+          label="ISBN"
+          name="isbn"
+          variant="outlined"
+          fullWidth
+          value={productDetails.isbn}
+          onChange={handleInputChange}
+        />
+        <TextField
+          label="Content"
+          name="content"
+          variant="outlined"
+          multiline
+          rows={4}
+          fullWidth
+          value={productDetails.content}
+          onChange={handleInputChange}
+        />
+        <TextField
+          label="Fixed Price"
+          name="fixedPrice"
+          variant="outlined"
+          type="number"
+          fullWidth
+          value={productDetails.fixedPrice}
+          onChange={handleInputChange}
+        />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            label="Publication Year"
+            views={['year']}
+            value={productDetails.publicationYear}
+            onChange={handleDateChange}
+            renderInput={(params) => <TextField {...params} fullWidth />}
+          />
+        </LocalizationProvider>
+        <TextField
+          label="Status"
+          select
+          name="status"
+          value={productDetails.status}
+          onChange={handleInputChange}
+          fullWidth
+          variant="outlined"
+        >
+          <MenuItem value="AVAILABLE">Available</MenuItem>
+          <MenuItem value="UNAVAILABLE">Unavailable</MenuItem>
+        </TextField>
+        <TextField
+          label="Stock Quantity"
+          name="stockQuantity"
+          variant="outlined"
+          type="number"
+          fullWidth
+          value={productDetails.stockQuantity}
+          onChange={handleInputChange}
+        />
+        <TextField
+          label="Picture URL"
+          name="pictureUrl"
+          variant="outlined"
+          fullWidth
+          value={productDetails.pictureUrl}
+          onChange={handleInputChange}
+        />
+        {productDetails.pictureUrl && (
+          <img
+            src={productDetails.pictureUrl}
+            alt="Product Preview"
+            className="tw-mt-2 tw-rounded-lg tw-max-w-md"
+          />
+        )}
+        <Button type="submit" variant="contained" color="primary">
+          Update Product
+        </Button>
+      </form>
+    </div>
   );
 };
 
-export default AddProductForm;
+export default ProductEdit;
