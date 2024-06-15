@@ -8,14 +8,9 @@ import Main from './pages/main/Main';
 import MyPage from './pages/myPage/MyPage';
 import OAuth2RedirectHandler from './pages/login/fragments/Oauth2RedirectHandler';
 import Order from './pages/order/Order';
-<<<<<<< HEAD
-import Product from './pages/manager/product/ProductAdd';
-import ProductDetailPage from './pages/productDetail/ProductDetailPage';
-=======
 import ProductAdd from './pages/manager/product/ProductAdd';
 import ProductEdit from './pages/manager/product/ProductEdit';
 import ProductDetail from './pages/productDetail/ProductDetail';
->>>>>>> feature-product
 import ProductList from './pages/productList/ProductList';
 import SocialLogin from './pages/login/fragments/SocialLogin';
 
