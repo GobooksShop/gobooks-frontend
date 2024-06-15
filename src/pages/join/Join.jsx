@@ -13,7 +13,7 @@ import {
   sendVerificationCode,
   signUp,
   verifyCode,
-} from '../../api/authApi';
+} from '../../api/user/userApi';
 
 import { LinearProgress } from '@mui/material';
 import { PageContainer } from '../../components/PageContainer';
