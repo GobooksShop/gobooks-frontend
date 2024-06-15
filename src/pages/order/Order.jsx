@@ -5,14 +5,17 @@ import DeleveryInfo from '../../components/order/DeleveryInfo';
 import { useEffect } from 'react';
 import useCartOrderStore from '../../store/useCartOrderStore';
 import { saveOrder } from '../../api/order/order';
+import useUserStore from '../../store/useUserStore';
 
 function Order() {
 
   const { cartItems, setMerchantUid, merchantUid } = useCartOrderStore(state => state);
+  const {userId} = useUserStore(state => state);
   useEffect(() => {
     //주문 등록이 됩니다. merchantId 및 totalPrice, productId 등록
     if(merchantUid === '') {
       const requestOrderItems = {
+        userId:  userId,
         merchantUId: '',
         orderItemRequests: [],
       };
