@@ -14,13 +14,14 @@ import {
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import useCategoryStore from '../../../store/useCategoryStore';
-import useProductStore from '../../../store/useProductStore'; 
+import useProductStore from '../../../store/useProductStore';
+import dayjs from 'dayjs';
 
 const ProductEdit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { categories, fetchCategories } = useCategoryStore();
-  const { updateProduct, fetchProductDetails } = useProductStore();
+  const { fetchProductDetails, updateProduct } = useProductStore();
 
   const [productDetails, setProductDetails] = useState({
     title: '',
@@ -40,7 +41,8 @@ const ProductEdit = () => {
     fetchProductDetails(id).then((data) => {
       setProductDetails({
         ...data,
-        publicationYear: data.publicationYear ? AdapterDayjs(data.publicationYear) : null,
+        publicationYear: data.publicationYear ? dayjs(data.publicationYear) : null,
+        categoryIds: data.categoryIds || [],
       });
     });
   }, [id, fetchCategories, fetchProductDetails]);
