@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useDaumPostcodePopup } from 'react-daum-postcode';
 
 import CustomButton from '../ui/CustomButton';
@@ -6,21 +6,15 @@ import { DeliveryContext } from '../../App';
 
 const DeleveryInfo = () => {
   const {deliveryInfo, setDeliveryInfo} = useContext(DeliveryContext);
-  setDeliveryInfo(deliveryInfo);
-  console.log(deliveryInfo);
-  const [deleveryInfo, setDeleveryInfo] = useState({
-    name: '',
-    zipcode: '', // address를 zipcode로 변경
-    address: '',
-    realAddress: '',
-    phoneNumber: '',
-    landlinePhoneNumber: '',
-  });
+
+  useEffect(() => {
+    setDeliveryInfo(deliveryInfo);
+  }, [deliveryInfo, setDeliveryInfo]);
+
   const open = useDaumPostcodePopup("//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js");
 
   const handleComplete = (data) => {
     let fullAddress = '';
-    console.log(data);
     // 주소 타입에 따라 처리: R이면 도로명주소, J면 지번주소
     if (data.userSelectedType === 'R') {
       fullAddress = data.roadAddress;
@@ -34,15 +28,15 @@ const DeleveryInfo = () => {
     }
 
 
-    setDeleveryInfo({
-      ...deleveryInfo,
+    setDeliveryInfo({
+      ...deliveryInfo,
       zipcode: data.zonecode,
       address: fullAddress,
     });
   };
 
   const handleClick = () => {
-    setDeleveryInfo({
+    setDeliveryInfo({
       zipcode: '',
       address: '',
     });
@@ -51,7 +45,7 @@ const DeleveryInfo = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setDeleveryInfo((prevInfo) => ({
+    setDeliveryInfo((prevInfo) => ({
       ...prevInfo,
       [name]: value,
     }));
@@ -72,7 +66,7 @@ const DeleveryInfo = () => {
             className="tw-h-6 tw-bg-gray-50 tw-outline-none tw-border tw-border-solid tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 focus:tw-border-2 tw-block tw-w-full tw-p-2"
             placeholder="이름"
             required
-            value={deleveryInfo.name}
+            value={deliveryInfo.name}
             onChange={handleChange}
           />
         </div>
@@ -85,8 +79,9 @@ const DeleveryInfo = () => {
             className="tw-h-6 tw-bg-gray-50 tw-outline-none tw-border tw-border-solid tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 focus:tw-border-2 tw-block tw-w-full tw-p-2"
             placeholder="우편 번호"
             required
-            value={deleveryInfo.zipcode}
+            value={deliveryInfo.zipcode}
             onChange={handleChange}
+            disabled
           />
         </div>
         <div className="tw-row-start-2 tw-row-span-1 tw-start-col-2">
@@ -101,8 +96,9 @@ const DeleveryInfo = () => {
             className="tw-h-6 tw-bg-gray-50 tw-outline-none tw-border tw-border-solid tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 focus:tw-border-2 tw-block tw-w-full tw-p-2"
             placeholder="주소"
             required
-            value={deleveryInfo.address}
+            value={deliveryInfo.address}
             onChange={handleChange}
+            disabled
           />
         </div>
         <div className="tw-pl-24 tw-row-start-4 tw-row-span-1 tw-col-span-4 tw-flex tw-items-center">
@@ -114,7 +110,7 @@ const DeleveryInfo = () => {
             className="tw-h-6 tw-bg-gray-50 tw-outline-none tw-border tw-border-solid tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 focus:tw-border-2 tw-block tw-w-full tw-p-2"
             placeholder="실제 주소"
             required
-            value={deleveryInfo.realAddress}
+            value={deliveryInfo.realAddress}
             onChange={handleChange}
           />
         </div>
@@ -127,7 +123,7 @@ const DeleveryInfo = () => {
             className="tw-h-6 tw-bg-gray-50 tw-outline-none tw-border tw-border-solid tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 focus:tw-border-2 tw-block tw-w-full tw-p-2"
             placeholder="휴대폰"
             required
-            value={deleveryInfo.phoneNumber}
+            value={deliveryInfo.phoneNumber}
             onChange={handleChange}
           />
         </div>
@@ -140,7 +136,7 @@ const DeleveryInfo = () => {
             className="tw-h-6 tw-bg-gray-50 tw-outline-none tw-border tw-border-solid tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 focus:tw-border-2 tw-block tw-w-full tw-p-2"
             placeholder="일반전화"
             required
-            value={deleveryInfo.landlinePhoneNumber}
+            value={deliveryInfo.landlinePhoneNumber}
             onChange={handleChange}
           />
         </div>

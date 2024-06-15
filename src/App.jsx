@@ -9,7 +9,14 @@ import { createContext, useState } from 'react';
 export const DeliveryContext = createContext();
 
 const DeliveryProvider = ({ children }) => {
-  const [deliveryInfo, setDeliveryInfo] = useState({});
+  const [deliveryInfo, setDeliveryInfo] = useState({
+    name: '',
+    zipcode: '',
+    address: '',
+    realAddress: '',
+    phoneNumber: '',
+    landlinePhoneNumber: '',
+  });
 
   return (
     <DeliveryContext.Provider value={{ deliveryInfo, setDeliveryInfo }}>
