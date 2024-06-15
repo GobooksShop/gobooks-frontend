@@ -1,9 +1,9 @@
 import { Box, Tab, Tabs } from '@mui/material';
 import React, { useState } from 'react';
 
-import MyPageAddress from './MyPageAddress'; // Component for address management
-import MyPageInfo from './MyPageInfo'; // Component for user profile information
-import MyPageOrder from './MyPageOrder'; // Component for order management
+import MyPageAddress from './MyPageAddress';
+import MyPageInfo from './MyPageInfo';
+import MyPageOrders from './MyPageOrders';
 
 function TabPanel(props) {
   const { children, value, index } = props;
@@ -55,7 +55,7 @@ export default function UserDashboard() {
         <MyPageAddress />
       </TabPanel>
       <TabPanel value={tabIndex} index={2}>
-        <MyPageOrder />
+        <MyPageOrders />
       </TabPanel>
     </Box>
   );

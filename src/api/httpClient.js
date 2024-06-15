@@ -1,5 +1,4 @@
 import axios from 'axios';
-import useUserStore from '../store/useUserStore';
 
 export const httpClient = axios.create({
   // eslint-disable-next-line
