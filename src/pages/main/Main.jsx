@@ -121,13 +121,12 @@ function AdBanner({ images }) {
 }
 
 function Main() {
-  //mock
   const adImages = [
-    'https://picsum.photos/id/1015/1200/400', // 예시 이미지
-    'https://picsum.photos/id/1016/1200/400',
-    'https://picsum.photos/id/1018/1200/400',
-    'https://picsum.photos/id/1019/1200/400',
-    'https://picsum.photos/id/1020/1200/400',
+    'https://i.imgur.com/p0opf31.jpg',
+    'https://i.imgur.com/YNrOP7z.jpg',
+    'https://i.imgur.com/BjZObZG.jpg',
+    'https://i.imgur.com/0bSoyfO.jpg',
+    'https://i.imgur.com/IDwQTwM.jpg',
   ];
 
   const [steadySellers] = useState([
