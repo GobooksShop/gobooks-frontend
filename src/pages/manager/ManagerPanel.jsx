@@ -1,9 +1,9 @@
 import { Box, Tab, Tabs } from '@mui/material';
 import React, { useState } from 'react';
 
-import MyPageAddress from './MyPageAddress';
-import MyPageInfo from './MyPageInfo';
-import MyPageOrders from './MyPageOrders';
+import Category from './category/Category';
+import ProductAdd from './product/ProductAdd';
+import ProductEdit from './product/ProductEdit';
 
 function TabPanel(props) {
   const { children, value, index } = props;
@@ -19,7 +19,7 @@ function TabPanel(props) {
   );
 }
 
-export default function UserDashboard() {
+export default function ManagerDashboard() {
   const [tabIndex, setTabIndex] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -42,30 +42,34 @@ export default function UserDashboard() {
       <Tabs
         value={tabIndex}
         onChange={handleChange}
-        aria-label="User Dashboard Tabs"
+        aria-label="Manager Dashboard Tabs"
         sx={{ marginBottom: '20px' }}
       >
         <Tab
-          label="회원 정보"
+          label="카테고리"
+          sx={{
+            fontSize: '1rem',
+            fontWeight: 'bold',
+            padding: '10px 20px',
+          }}
+        />
+        <Tab
+          label="상품 추가"
           sx={{ fontSize: '1rem', fontWeight: 'bold', padding: '10px 20px' }}
         />
         <Tab
-          label="주소 관리"
-          sx={{ fontSize: '1rem', fontWeight: 'bold', padding: '10px 20px' }}
-        />
-        <Tab
-          label="주문 관리"
+          label="상품 수정"
           sx={{ fontSize: '1rem', fontWeight: 'bold', padding: '10px 20px' }}
         />
       </Tabs>
       <TabPanel value={tabIndex} index={0}>
-        <MyPageInfo />
+        <Category />
       </TabPanel>
       <TabPanel value={tabIndex} index={1}>
-        <MyPageAddress />
+        <ProductAdd />
       </TabPanel>
       <TabPanel value={tabIndex} index={2}>
-        <MyPageOrders />
+        <ProductEdit />
       </TabPanel>
     </Box>
   );

@@ -102,12 +102,12 @@ const ProductAdd = () => {
           <Grid item xs={6}>
             <Box display="flex" alignItems="center">
               <FormControl fullWidth variant="outlined">
-                <InputLabel>Categories</InputLabel>
+                <InputLabel>카테고리</InputLabel>
                 <Select
                   multiple
                   value={productDetails.categoryIds}
                   onChange={handleCategoryChange}
-                  label="Categories"
+                  label="카테고리"
                   renderValue={(selected) => selected.join(', ')}
                 >
                   {categories.flatMap((category) =>
@@ -116,13 +116,13 @@ const ProductAdd = () => {
                 </Select>
               </FormControl>
               <Typography variant="body1" style={{ marginLeft: '10px' }}>
-                Selected: {productDetails.categoryIds.join(', ')}
+                선택됨: {productDetails.categoryIds.join(', ')}
               </Typography>
             </Box>
           </Grid>
         </Grid>
         <TextField
-          label="Title"
+          label="제목"
           name="title"
           variant="outlined"
           fullWidth
@@ -130,7 +130,7 @@ const ProductAdd = () => {
           onChange={handleInputChange}
         />
         <TextField
-          label="Author"
+          label="저자"
           name="author"
           variant="outlined"
           fullWidth
@@ -146,7 +146,7 @@ const ProductAdd = () => {
           onChange={handleInputChange}
         />
         <TextField
-          label="Content"
+          label="내용"
           name="content"
           variant="outlined"
           multiline
@@ -156,7 +156,7 @@ const ProductAdd = () => {
           onChange={handleInputChange}
         />
         <TextField
-          label="Fixed Price"
+          label="정가"
           name="fixedPrice"
           variant="outlined"
           type="number"
@@ -166,7 +166,7 @@ const ProductAdd = () => {
         />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
-            label="Publication Year"
+            label="출판 연도"
             views={['year']}
             value={productDetails.publicationYear}
             onChange={handleDateChange}
@@ -174,7 +174,7 @@ const ProductAdd = () => {
           />
         </LocalizationProvider>
         <TextField
-          label="Status"
+          label="상태"
           select
           name="status"
           value={productDetails.status}
@@ -182,11 +182,11 @@ const ProductAdd = () => {
           fullWidth
           variant="outlined"
         >
-          <MenuItem value="AVAILABLE">Available</MenuItem>
-          <MenuItem value="UNAVAILABLE">Unavailable</MenuItem>
+          <MenuItem value="AVAILABLE">사용 가능</MenuItem>
+          <MenuItem value="UNAVAILABLE">사용 불가</MenuItem>
         </TextField>
         <TextField
-          label="Stock Quantity"
+          label="재고 수량"
           name="stockQuantity"
           variant="outlined"
           type="number"
@@ -195,7 +195,7 @@ const ProductAdd = () => {
           onChange={handleInputChange}
         />
         <TextField
-          label="Picture URL"
+          label="사진 URL"
           name="pictureUrl"
           variant="outlined"
           fullWidth
@@ -210,7 +210,7 @@ const ProductAdd = () => {
           />
         )}
         <Button type="submit" variant="contained" color="primary">
-          Register Product
+          상품 등록
         </Button>
       </form>
     </div>

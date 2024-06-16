@@ -82,7 +82,7 @@ export function UserMenu({ onOpen, onClose, anchorElUser }) {
               aria-controls="menu-appbar"
               aria-haspopup="true"
             >
-              <Link to="/admin/category">
+              <Link to="/admin/manager">
                 <ManageAccountsIcon />
               </Link>
             </IconButton>
