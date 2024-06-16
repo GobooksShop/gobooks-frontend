@@ -4,29 +4,29 @@ export const signUp = (req) => {
   return httpClient.post('/users', req);
 };
 
-export const getUserInfo = async (id) => {
-  const response = await httpClient.get(`/users/${id}`);
+export const getUserInfo = async (userId) => {
+  const response = await httpClient.get(`/users/${userId}`);
   return response.data;
 };
 
-export const getUserAddress = async (id) => {
-  const response = await httpClient.get(`/users/address/${id}`);
+export const getUserAddress = async (userId) => {
+  const response = await httpClient.get(`/users/address/${userId}`);
   return response.data;
 };
 
-export const saveUserAddress = async (id, address) => {
-  const response = await httpClient.post(`/users/address/${id}`, address);
+export const saveUserAddress = async (userId, address) => {
+  const response = await httpClient.post(`/users/address/${userId}`, address);
   return response.data;
 };
 
-export const updateUserAddress = async (id, address) => {
-  const response = await httpClient.put(`/users/address/${id}`, address);
+export const updateUserAddress = async (userId, address) => {
+  const response = await httpClient.put(`/users/address/${userId}`, address);
   return response.data;
 };
 
-export const deleteUserAddress = async (id, addressId) => {
+export const deleteUserAddress = async (userId, addressId) => {
   const response = await httpClient.delete(
-    `/users/address/${id}/${addressId}`,
+    `/users/address/${userId}/${addressId}`,
   );
   return response.data;
 };
