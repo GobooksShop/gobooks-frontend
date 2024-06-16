@@ -66,3 +66,8 @@ export const verifyCode = async (email, code) => {
 export const checkEmail = (email) => {
   return httpClient.get('/auth/check-email', { params: { email } });
 };
+
+export const getUserStatusCounts = async () => {
+  const response = await httpClient.get('/admin/users/status');
+  return response.data;
+};

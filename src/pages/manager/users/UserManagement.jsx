@@ -1,6 +1,7 @@
-import React from 'react';
-import { Container, Grid, Paper, Typography, TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Select, MenuItem, Box, Pagination } from '@mui/material';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Container, Grid, Paper, Typography, TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Select, MenuItem, Box, Pagination, CircularProgress } from '@mui/material';
 import { styled } from '@mui/system';
+import { getUserStatusCounts } from '../../../api/user/userApi'; // 적절한 경로로 수정하세요
 
 const FilterContainer = styled(Box)({
   display: 'flex',
@@ -24,35 +25,71 @@ const rows = [
 ];
 
 const UserManagement = () => {
+  const [userStatusCounts, setUserStatusCounts] = useState({
+    total: 0,
+    active: 0,
+    suspended: 0,
+    banned: 0,
+    dormant: 0,
+    canceled: 0,
+  });
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [animate, setAnimate] = useState(false);
+
+  const fetchUserStatusCounts = useCallback(async () => {
+    setIsLoading(true);
+    setAnimate(true);
+    try {
+      const data = await getUserStatusCounts();
+      setUserStatusCounts(data);
+    } catch (error) {
+      console.error('Failed to fetch user status counts:', error);
+      setUserStatusCounts({
+        total: 0,
+        active: 0,
+        suspended: 0,
+        banned: 0,
+        dormant: 0,
+        canceled: 0,
+      });
+    } finally {
+      setIsLoading(false);
+      setTimeout(() => setAnimate(false), 500);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchUserStatusCounts();
+  }, [fetchUserStatusCounts]);
+
+  const renderStatusCard = (label, value) => (
+    <Grid item xs={12} sm={6} md={2} className="tw-min-w-[100px] tw-min-h-[100px]">
+      <Paper className={`tw-p-4 tw-text-center tw-bg-gray-100 ${animate ? 'tw-animate-blink' : ''}`}>
+        <Typography variant="h6">{label}</Typography>
+        {isLoading ? <CircularProgress /> : <Typography variant="h4">{value}</Typography>}
+      </Paper>
+    </Grid>
+  );
+
   return (
-    <Container maxWidth="lg" className="tw-mt-[5%] tw-mb-[5%]">
-      <Typography variant="h4" gutterBottom align="center" className="tw-mb-[3px]">
-        회원 관리
-      </Typography>
-      <Grid container spacing={3} justifyContent="center" className="tw-mt-[10%] tw-mb-[3%]">
-        <Grid item xs={12} sm={6} md={3} className="tw-min-w-[200px] tw-min-h-[120px]">
-          <Paper className="tw-p-4 tw-text-center tw-bg-gray-100">
-            <Typography variant="h6">전체</Typography>
-            <Typography variant="h4">100</Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3} className="tw-min-w-[200px] tw-min-h-[120px]">
-          <Paper className="tw-p-4 tw-text-center tw-bg-gray-100">
-            <Typography variant="h6">일시정지</Typography>
-            <Typography variant="h4">10</Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3} className="tw-min-w-[200px] tw-min-h-[120px]">
-          <Paper className="tw-p-4 tw-text-center tw-bg-gray-100">
-            <Typography variant="h6">휴면</Typography>
-            <Typography variant="h4">10</Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3} className="tw-min-w-[200px] tw-min-h-[120px]">
-          <Paper className="tw-p-4 tw-text-center tw-bg-gray-100">
-            <Typography variant="h6">탈퇴</Typography>
-            <Typography variant="h4">5</Typography>
-          </Paper>
+    <Container maxWidth="lg" className="tw-mt-12">
+      <Box  className="tw-mb-10">
+        <Typography variant="h4" gutterBottom align="center">
+          회원 관리
+        </Typography>
+      </Box>
+      <Grid container spacing={3} justifyContent="center" className="tw-mt-[5%] tw-mb-[3%]">
+        {renderStatusCard('전체', userStatusCounts.total)}
+        {renderStatusCard('정상', userStatusCounts.active)}
+        {renderStatusCard('일시정지', userStatusCounts.suspended)}
+        {renderStatusCard('영구정지', userStatusCounts.banned)}
+        {renderStatusCard('휴면계정', userStatusCounts.dormant)}
+        {renderStatusCard('탈퇴요청', userStatusCounts.canceled)}
+        <Grid item xs={12} sm={12} md={12} className="tw-flex tw-justify-end">
+          <Button variant="contained" color="primary" onClick={fetchUserStatusCounts}>
+            업데이트
+          </Button>
         </Grid>
       </Grid>
       <FilterContainer>
