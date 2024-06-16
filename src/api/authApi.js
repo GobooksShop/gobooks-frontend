@@ -22,11 +22,3 @@ export const refreshAccessToken = async () => {
   setAccessTokenToHttpClient(accessToken); // 새로운 Access Token 설정
   return response;
 };
-
-export const addCategoryFromApi = async (category) => {
-  return await httpClient.post('/admin/categories', { category });
-};
-
-export const getCategoryFromApi = async () => {
-  return await httpClient.get('/categories/hierarchy');
-};
