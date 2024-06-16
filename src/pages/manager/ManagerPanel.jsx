@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Category from './category/Category';
 import ProductAdd from './product/ProductAdd';
 import ProductEdit from './product/ProductEdit';
+import UserManagement from './users/UserManagement';
 
 function TabPanel(props) {
   const { children, value, index } = props;
@@ -46,12 +47,12 @@ export default function ManagerDashboard() {
         sx={{ marginBottom: '20px' }}
       >
         <Tab
+          label="회원 관리"
+          sx={{ fontSize: '1rem', fontWeight: 'bold', padding: '10px 20px' }}
+        />
+        <Tab
           label="카테고리"
-          sx={{
-            fontSize: '1rem',
-            fontWeight: 'bold',
-            padding: '10px 20px',
-          }}
+          sx={{ fontSize: '1rem', fontWeight: 'bold', padding: '10px 20px' }}
         />
         <Tab
           label="상품 추가"
@@ -63,12 +64,15 @@ export default function ManagerDashboard() {
         />
       </Tabs>
       <TabPanel value={tabIndex} index={0}>
-        <Category />
+        <UserManagement />
       </TabPanel>
       <TabPanel value={tabIndex} index={1}>
-        <ProductAdd />
+        <Category />
       </TabPanel>
       <TabPanel value={tabIndex} index={2}>
+        <ProductAdd />
+      </TabPanel>
+      <TabPanel value={tabIndex} index={3}>
         <ProductEdit />
       </TabPanel>
     </Box>
