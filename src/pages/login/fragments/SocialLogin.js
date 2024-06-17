@@ -4,6 +4,7 @@ import googleIcon from '../../../assets/socialLoginImages/btn_google.svg';
 import kakaoIcon from '../../../assets/socialLoginImages/btn_kakao.svg';
 import naverIcon from '../../../assets/socialLoginImages/btn_naver.svg';
 import { useNavigate } from 'react-router-dom';
+import useUserStore from '../../../store/useUserStore';
 
 const handleSocialLogin = (provider) => {
   let url = '';
@@ -39,10 +40,19 @@ const handleSocialLogin = (provider) => {
 
 const SocialLogin = () => {
   const navigate = useNavigate();  
+  const setUser = useUserStore((state) => state.setUser);
   useEffect(() => {
     const handleAuthComplete = (event) => {
-      if (event.origin === 'http://localhost:3000' && event.data === 'loginSuccessful') {
+      if (event.origin === 'http://localhost:8080' && event.data) {
         console.log('Login successful');
+        const { accessToken, userId, name, email, role } =
+          event.data;
+        console.log('response.data:' + event.data);
+        // Access Token을 로컬 스토리지에 저장
+        localStorage.setItem('accessToken', accessToken);
+        // Zustand 상태 업데이트
+        setUser({ userId, name, email, role });
+
         window.location.href = '/';
       }
     };
@@ -52,7 +62,7 @@ const SocialLogin = () => {
     return () => {
       window.removeEventListener('message', handleAuthComplete);
     };
-  }, [navigate]);
+  }, [navigate, setUser]);
 
   return (
     <div>
