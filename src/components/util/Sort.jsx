@@ -4,7 +4,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Box from '@mui/material/Box';
 
-function Sort({ onSortChange }) {
+function Sort({ onSortChange, value }) {
   const [sortBy, setSortBy] = React.useState('createdAt,desc');
 
   const handleChange = (event) => {
