@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 
 import Cookies from 'js-cookie';
-import { jwtDecode } from 'jwt-decode'; // Correct import as default
 import { useNavigate } from 'react-router-dom';
 import useUserStore from '../../../store/useUserStore';
 
@@ -10,25 +9,34 @@ const OAuth2RedirectHandler = () => {
   const setUser = useUserStore((state) => state.setUser);
 
   useEffect(() => {
-    const token = Cookies.get('USR_JWT');
-    console.log('token:', token);
-    if (token) {
-      localStorage.setItem('authToken', token);
+    const tokenResponseDtoCookie = Cookies.get('TokenResponseDto');
+    console.log('TokenResponseDto Cookie:', tokenResponseDtoCookie);
+
+    if (tokenResponseDtoCookie) {
       try {
-        const user = decodeToken(token);
-        if (user) {
-          setUser(user);
-          if (window.opener && !window.opener.closed) {
-            window.opener.postMessage('loginSuccessful', 'http://localhost:3000');
-            window.close(); 
-          } else {
-            navigate('/'); 
-          }
+        const decodedTokenResponseDto = decodeURIComponent(
+          tokenResponseDtoCookie,
+        );
+        const parsedTokenResponseDto = JSON.parse(decodedTokenResponseDto);
+        const { accessToken, refreshToken, userId, name, email, role } =
+          parsedTokenResponseDto;
+
+        localStorage.setItem('authToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+
+        const user = { userId, name, email, role };
+        setUser(user);
+
+        Cookies.remove('TokenResponseDto');
+
+        if (window.opener && !window.opener.closed) {
+          window.opener.postMessage('loginSuccessful', 'http://localhost:3000');
+          window.close();
         } else {
-          navigate('/login');
+          navigate('/');
         }
       } catch (error) {
-        console.error('Failed to decode token', error);
+        console.error('Failed to parse TokenResponseDto', error);
         navigate('/login');
       }
     } else {
@@ -37,21 +45,6 @@ const OAuth2RedirectHandler = () => {
   }, [setUser, navigate]);
 
   return <div>Loading...</div>;
-};
-
-const decodeToken = (token) => {
-  try {
-    const decoded = jwtDecode(token);
-    return {
-      userId: decoded.userId,
-      name: decoded.name,
-      email: decoded.userEmail,
-      role: decoded.role,
-    };
-  } catch (error) {
-    console.error('Failed to decode token', error);
-    return null;
-  }
 };
 
 export default OAuth2RedirectHandler;
