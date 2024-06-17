@@ -16,19 +16,25 @@ function ProductCard({product}) {
   const [imageUrl, setImageUrl] = useState(noImage); // 기본 이미지로 초기화
 
   useEffect(() => {
-    const img = new Image();
-    const imagePath = product.imageUrl || `./images/${product.id}.jpg`;
-    img.src = imagePath;
-    img.onload = () => {
+    setIsLoading(true);
+
+    if (product.pictureUrl) {
+      const img = new Image();
+      img.src = product.pictureUrl; // pictureUrl 직접 사용
+      img.onload = () => {
+        setIsLoading(false);
+        setImageUrl(img.src); // 이미지 로딩 성공 시 URL 업데이트
+      };
+      img.onerror = () => {
+        setIsLoading(false);
+        setImageUrl(noImage); // 로딩 실패 시 기본 이미지 사용
+        console.error(`Failed to load image for product ${product.id}`);
+      };
+    } else {
       setIsLoading(false);
-      setImageUrl(img.src); // 이미지 로딩 성공 시 URL 업데이트
-    };
-    img.onerror = () => {
-      setIsLoading(false);
-      setImageUrl(noImage); // 로딩 실패 시 기본 이미지 사용
-      console.error(`Failed to load image for product ${product.id}`);
-    };
-  }, [product.id, product.imageUrl]);
+      setImageUrl(noImage);
+    }
+  }, [product.id, product.pictureUrl]);
 
   const formattedPrice =
       product.fixedPrice !== undefined
@@ -56,10 +62,9 @@ function ProductCard({product}) {
                 <CardMedia
                     component="img"
                     sx={{
-                      height: 250,
-                      objectFit: 'cover',
+                      height: '100%'
                     }}
-                    className="tw-absolute tw-top-0 tw-left-0 tw-object-cover tw-h-full tw-w-full"
+                    className="tw-absolute tw-top-0 tw-left-0 tw-object-contain tw-h-full tw-w-full"
                     image={imageUrl}
                     alt={product.title || 'Product'}
                 />
