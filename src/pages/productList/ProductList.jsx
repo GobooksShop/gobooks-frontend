@@ -46,13 +46,20 @@ function ProductList() {
     setLoading(true);
     setError('');
     try {
-      const page = searchParams.get('page') || 0;
-      const size = searchParams.get('size') || 12;
-      const sort = searchParams.get('sort') || 'createdAt,desc';
+      const page = parseInt(searchParams.get('page'), 10) || 0; // 페이지 번호 숫자로 변환
+      const size = 12; // 페이지 크기 12로 고정
+      const sort = searchParams.get('sort') || 'createdAt,desc'; // 정렬 기준
+
+      const params = new URLSearchParams({
+        page: page.toString(), // 페이지 번호를 문자열로 변환
+        size: size.toString(),
+        sort
+      });
 
       const response = await axios.get(
-          `http://localhost:8080/api/products/category/${categoryId}/paged?page=${page}&size=${size}&sort=${sort}`,
+          `http://localhost:8080/api/products/category/${categoryId}/paged?${params}`
       );
+
       setProducts(response.data.content);
       setCurrentPage(response.data.number);
       setTotalPages(response.data.totalPages);
@@ -66,10 +73,11 @@ function ProductList() {
 
   useEffect(() => {
     fetchProducts();
-  }, [categoryId, searchParams]);
+  }, [categoryId, searchParams, currentPage]);
 
-  const handlePageChange = (newPage) => {
-    setSearchParams({ page: newPage, sort: sortBy });
+  const handlePageChange = (event, newPage) => {
+    console.log(newPage);
+    setSearchParams({ page: newPage-1, sort: sortBy });
   };
 
   const handleSortChange = (newSortBy) => {
