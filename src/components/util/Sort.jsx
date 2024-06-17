@@ -1,8 +1,9 @@
 import * as React from 'react';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+
 import Box from '@mui/material/Box';
+import FormControl from '@mui/material/FormControl';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 function Sort({ onSortChange }) {
   const [sortBy, setSortBy] = React.useState('createdAt,desc');
@@ -13,21 +14,21 @@ function Sort({ onSortChange }) {
   };
 
   return (
-      <Box sx={{ minWidth: 120 }}>
-        <FormControl fullWidth>
-          <Select
-              labelId="sort-label"
-              id="sort-select"
-              value={sortBy}
-              onChange={handleChange}
-              size="small"
-          >
-            <MenuItem value="createdAt,desc">최신순</MenuItem>
-            <MenuItem value="fixedPrice,asc">낮은 가격순</MenuItem>
-            <MenuItem value="fixedPrice,desc">높은 가격순</MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
+    <Box sx={{ minWidth: 120 }}>
+      <FormControl fullWidth>
+        <Select
+          labelId="sort-label"
+          id="sort-select"
+          value={sortBy}
+          onChange={handleChange}
+          size="small"
+        >
+          <MenuItem value="createdAt,desc">최신순</MenuItem>
+          <MenuItem value="fixedPrice,asc">낮은 가격순</MenuItem>
+          <MenuItem value="fixedPrice,desc">높은 가격순</MenuItem>
+        </Select>
+      </FormControl>
+    </Box>
   );
 }
 
