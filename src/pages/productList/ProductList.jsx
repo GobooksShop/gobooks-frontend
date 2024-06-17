@@ -42,30 +42,29 @@ function ProductList() {
 
   const category = findCategoryById(categories, Number(categoryId));
   const categoryName = category ? category.name : '';
+  const fetchProducts = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const page = searchParams.get('page') || 0;
+      const size = searchParams.get('size') || 12;
+      const sort = searchParams.get('sort') || 'createdAt,desc';
+
+      const response = await axios.get(
+          `http://localhost:8080/api/products/category/${categoryId}/paged?page=${page}&size=${size}&sort=${sort}`,
+      );
+      setProducts(response.data.content);
+      setCurrentPage(response.data.number);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      setError('상품을 불러오는 중 오류가 발생했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);
-      setError('');
-      try {
-        const page = searchParams.get('page') || 0;
-        const size = searchParams.get('size') || 12;
-        const sort = searchParams.get('sort') || 'createdAt,desc';
-
-        const response = await axios.get(
-          `http://localhost:8080/api/products/category/${categoryId}/paged?page=${page}&size=${size}&sort=${sort}`,
-        );
-        setProducts(response.data.content);
-        setCurrentPage(response.data.number);
-        setTotalPages(response.data.totalPages);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-        setError('상품을 불러오는 중 오류가 발생했습니다.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchProducts();
   }, [categoryId, searchParams]);
 

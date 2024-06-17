@@ -15,10 +15,10 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Carousel from 'react-material-ui-carousel';
 import { PageContainer } from '../../components/PageContainer';
+const itemsPerPage = 4;
 
 function BookCarousel({ books }) {
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 4;
 
   const totalPages = Math.ceil(books.length / itemsPerPage);
 
