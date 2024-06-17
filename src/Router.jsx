@@ -7,7 +7,6 @@ import Login from './pages/login/Login';
 import Main from './pages/main/Main';
 import ManagerDashboard from './pages/manager/ManagerPanel';
 import MyPagePanel from './pages/myPage/MyPagePanel';
-import OAuth2RedirectHandler from './pages/login/fragments/Oauth2RedirectHandler';
 import Order from './pages/order/Order';
 import ProductAdd from './pages/manager/product/ProductAdd';
 import ProductDetail from './pages/productDetail/ProductDetail';
@@ -20,7 +19,6 @@ const Router = () => {
     <Routes>
       <Route path="/" element={<Main />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/login/oauth2/redirect" element={<OAuth2RedirectHandler />} />
       <Route path="/join" element={<Join />} />
       <Route path="/order" element={<Order />} />
       <Route path="/product/list/:categoryId" element={<ProductList />} />
