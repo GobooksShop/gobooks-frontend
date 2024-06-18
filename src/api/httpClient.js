@@ -1,13 +1,14 @@
 import axios from 'axios';
+const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 export const httpClient = axios.create({
-    baseURL: 'http://localhost:8080/api',
-    timeout: 5000,
-    withCredentials: true,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  baseURL: `${baseURL}/api`,
+  timeout: 5000,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
 httpClient.interceptors.request.use(
   (config) => {

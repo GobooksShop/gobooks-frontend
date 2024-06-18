@@ -15,6 +15,7 @@ import ProductCard from '../../components/product/ProductCard';
 import Sort from '../../components/util/Sort';
 import axios from 'axios';
 import useCategoryStore from '../../store/useCategoryStore';
+const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 function ProductList() {
   const { categoryId } = useParams();
@@ -63,7 +64,7 @@ function ProductList() {
       });
 
       const response = await axios.get(
-        `http://localhost:8080/api/products/category/${categoryId}/paged?${params}`,
+        `${baseURL}/api/products/category/${categoryId}/paged?${params}`,
       );
 
       setProducts(response.data.content);
@@ -91,7 +92,7 @@ function ProductList() {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/categories/${categoryId}/breadcrumbs`)
+    fetch(`${baseURL}/api/categories/${categoryId}/breadcrumbs`)
       .then((res) => res.json())
       .then((data) => setBreadcrumbs(data));
   }, [categoryId]);

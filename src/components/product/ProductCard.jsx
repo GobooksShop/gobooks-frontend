@@ -16,6 +16,8 @@ import {PageContainer} from "../PageContainer";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add"; // 기본 이미지 추가
 
+const baseURL = process.env.REACT_APP_API_BASE_URL;
+
 function ProductCard({ product }) {
   const [isLoading, setIsLoading] = useState(true);
   const [imageUrl, setImageUrl] = useState(noImage); // 기본 이미지로 초기화
@@ -28,7 +30,7 @@ function ProductCard({ product }) {
     setIsLoading(true);
 
     if (product.pictureUrl) {
-      const fullImageUrl = `http://localhost:8080/image/${product.pictureUrl}`; // Construct full URL
+      const fullImageUrl = `${baseURL}/image/${product.pictureUrl}`; // Construct full URL
       const img = new Image();
       img.src = fullImageUrl;
       img.onload = () => {

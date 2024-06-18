@@ -42,6 +42,8 @@ const ProductDetail = () => {
   const [totalPrice, setTotalPrice] = React.useState(0);
   const { user } = useUserStore((state) => state);
 
+  const baseURL = process.env.REACT_APP_API_BASE_URL;
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -109,9 +111,9 @@ const ProductDetail = () => {
     return <p>No product found</p>;
   }
 
-  const pictureUrl = `http://localhost:8080/image/${product.pictureUrl}`;
+  const pictureUrl = `${baseURL}/image/${product.pictureUrl}`;
   // 상품 정보 이미지 URL 통으로 넣으면 될 것 같아요 각 제품당 1개씩
-  const infoImageUrl = `http://localhost:8080/image/${product.infoImageUrl}`;
+  const infoImageUrl = `${baseURL}/image/${product.infoImageUrl}`;
 
   const handleDeleteProduct = async () => {
     if (window.confirm('!!상품을 정말 삭제하시겠습니까?')) {
