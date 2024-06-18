@@ -12,9 +12,6 @@ import React, { useEffect, useState } from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import noImage from '../../pages/productList/images/noimage.jpg';
 import useCartOrderStore from "../../store/useCartOrderStore";
-import {PageContainer} from "../PageContainer";
-import RemoveIcon from "@mui/icons-material/Remove";
-import AddIcon from "@mui/icons-material/Add"; // 기본 이미지 추가
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
@@ -24,7 +21,6 @@ function ProductCard({ product }) {
   const { addCart, addOrder } = useCartOrderStore((state) => state);
   const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();
-  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     setIsLoading(true);
@@ -55,13 +51,13 @@ function ProductCard({ product }) {
 
   const handleAddToCart = () => {
     if (product) {
-      addCart(product.id, quantity, product.fixedPrice, 'cart');
+      addCart(product.id, 1, product.fixedPrice, 'cart');
       setOpenDialog(true);
     }
   };
 
   const handleBuyNow = () => {
-    addOrder(product.id, quantity, product.fixedPrice, 'order');
+    addOrder(product.id, 1, product.fixedPrice, 'order');
     navigate(`/order`);
   };
 
@@ -72,10 +68,6 @@ function ProductCard({ product }) {
   const handleGoToCart = () => {
     setOpenDialog(false);
     navigate('/cart');
-  };
-
-  const handleQuantityChange = (newValue) => {
-    setQuantity(Math.max(1, newValue)); // 최소값 1 유지
   };
 
   return (
@@ -173,7 +165,7 @@ function ProductCard({ product }) {
               <Typography component="span" variant="body1" fontWeight="bold">
                 {product?.title}
               </Typography>{' '}
-              {quantity}권이
+              1권이
               <br />
               장바구니에 추가되었습니다.
             </Typography>
