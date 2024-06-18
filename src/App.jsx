@@ -6,11 +6,12 @@ import Header from './components/header/Header';
 import Router from './Router';
 import { createContext, useState } from 'react';
 
-export const DeliveryContext = createContext();
+export const DeliveryContext = createContext(null);
 
 const DeliveryProvider = ({ children }) => {
   const [deliveryInfo, setDeliveryInfo] = useState({
     name: '',
+    label: '',
     zipcode: '',
     address: '',
     realAddress: '',

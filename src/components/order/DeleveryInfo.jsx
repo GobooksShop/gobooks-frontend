@@ -7,9 +7,35 @@ import { DeliveryContext } from '../../App';
 const DeleveryInfo = () => {
   const {deliveryInfo, setDeliveryInfo} = useContext(DeliveryContext);
 
+  // useEffect(() => {
+  //   const button = document.getElementById('dropdownHoverButton');
+  //   const dropdown = document.getElementById('dropdownHover');
+  //
+  //   const showDropdown = () => {
+  //     dropdown.classList.remove('tw-hidden');
+  //   };
+  //
+  //   const hideDropdown = () => {
+  //     dropdown.classList.add('tw-hidden');
+  //   };
+  //
+  //   button.addEventListener('mouseover', showDropdown);
+  //   button.addEventListener('mouseout', hideDropdown);
+  //   dropdown.addEventListener('mouseover', showDropdown);
+  //   dropdown.addEventListener('mouseout', hideDropdown);
+  //
+  //   return () => {
+  //     button.removeEventListener('mouseover', showDropdown);
+  //     button.removeEventListener('mouseout', hideDropdown);
+  //     dropdown.removeEventListener('mouseover', showDropdown);
+  //     dropdown.removeEventListener('mouseout', hideDropdown);
+  //   };
+  // }, []);
+
   useEffect(() => {
     setDeliveryInfo(deliveryInfo);
   }, [deliveryInfo, setDeliveryInfo]);
+
 
   const open = useDaumPostcodePopup("//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js");
 
@@ -56,7 +82,39 @@ const DeleveryInfo = () => {
       <header className="title tw-h-24 tw-flex tw-items-center">
         <h1 className="tw-font-semibold tw-text-2xl">배송주소</h1>
       </header>
-      <div className="tw-grid tw-grid-cols-6 tw-gap-5 tw-grid-rows-table-layout tw-border-solid tw-border tw-border-gray-500/50 tw-rounded tw-px-5 tw-py-4">
+      {/*<button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover" data-dropdown-trigger="hover"*/}
+      {/*        className="tw-text-white tw-bg-blue-700 hover:tw-bg-blue-800 focus:tw-ring-4 focus:tw-outline-none focus:tw-ring-blue-300 tw-font-medium tw-rounded-lg tw-text-sm tw-px-5 tw-py-2.5 tw-text-center tw-inline-flex tw-items-center dark:tw-bg-blue-600 dark:hover:tw-bg-blue-700 dark:focus:tw-ring-blue-800"*/}
+      {/*        type="button">Dropdown hover <svg className="tw-w-2.5 tw-h-2.5 ms-3" aria-hidden="true"*/}
+      {/*                                          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">*/}
+      {/*  <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />*/}
+      {/*</svg>*/}
+      {/*</button>*/}
+
+      {/*<div id="dropdownHover"*/}
+      {/*     className="tw-z-10 tw-hidden tw-bg-white tw-divide-y tw-divide-gray-100 tw-rounded-lg tw-shadow tw-w-44 dark:tw-bg-gray-700">*/}
+      {/*  <ul className="tw-py-2 tw-text-sm tw-text-gray-700 dark:tw-text-gray-200" aria-labelledby="dropdownHoverButton">*/}
+      {/*    <li>*/}
+      {/*      <a href="#"*/}
+      {/*         className="tw-block tw-px-4 tw-py-2 hover:tw-bg-gray-100 dark:hover:tw-bg-gray-600 dark:hover:tw-text-white">Dashboard</a>*/}
+      {/*    </li>*/}
+      {/*    <li>*/}
+      {/*      <a href="#"*/}
+      {/*         className="tw-block tw-px-4 tw-py-2 hover:tw-bg-gray-100 dark:hover:tw-bg-gray-600 dark:hover:tw-text-white">Settings</a>*/}
+      {/*    </li>*/}
+      {/*    <li>*/}
+      {/*      <a href="#"*/}
+      {/*         className="tw-block tw-px-4 tw-py-2 hover:tw-bg-gray-100 dark:hover:tw-bg-gray-600 dark:hover:tw-text-white">Earnings</a>*/}
+      {/*    </li>*/}
+      {/*    <li>*/}
+      {/*      <a href="#"*/}
+      {/*         className="tw-block tw-px-4 tw-py-2 hover:tw-bg-gray-100 dark:hover:tw-bg-gray-600 dark:hover:tw-text-white">Sign*/}
+      {/*        out</a>*/}
+      {/*    </li>*/}
+      {/*  </ul>*/}
+      {/*</div>*/}
+
+      <div
+        className="tw-grid tw-grid-cols-6 tw-gap-5 tw-grid-rows-table-layout tw-border-solid tw-border tw-border-gray-500/50 tw-rounded tw-px-5 tw-py-4">
         <div className="tw-row-span-1 tw-col-span-2 tw-flex tw-items-center">
           <label htmlFor="name" className="tw-block tw-w-40 tw-pl-8 tw-text-blue-500">이름</label>
           <input

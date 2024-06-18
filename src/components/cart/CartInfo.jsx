@@ -35,7 +35,6 @@ const CartInfo = (props) => {
   }, []);
 
   const handleOrderClick = () => {
-    updateTotalAmount();
     const selectedCartItems = cartItems
       .filter((item) => item.isSelected)
       .map(({ productId, quantity, price }) => ({ productId, quantity, price }));

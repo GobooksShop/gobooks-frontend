@@ -3,6 +3,7 @@ import {
   Button,
   FormControl,
   Grid,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -13,6 +14,7 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import React, { useEffect, useState } from 'react';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import useCategoryStore from '../../../store/useCategoryStore';
 import useProductStore from '../../../store/useProductStore';
 
@@ -28,9 +30,10 @@ const ProductAdd = () => {
     publicationYear: null,
     status: '',
     stockQuantity: '',
-    pictureUrl: '',
+    pictureFile: null,
     categoryIds: [],
   });
+  const [fileName, setFileName] = useState('');
 
   useEffect(() => {
     fetchCategories();
@@ -39,6 +42,12 @@ const ProductAdd = () => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setProductDetails((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setProductDetails((prev) => ({ ...prev, pictureFile: file }));
+    setFileName(file ? `${file.name}` : '');
   };
 
   const handleDateChange = (value) => {
@@ -52,14 +61,24 @@ const ProductAdd = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await addProduct({
-      ...productDetails,
-      fixedPrice: parseInt(productDetails.fixedPrice),
-      stockQuantity: parseInt(productDetails.stockQuantity),
-      publicationYear: productDetails.publicationYear
+    const formData = new FormData();
+    formData.append('title', productDetails.title);
+    formData.append('author', productDetails.author);
+    formData.append('isbn', productDetails.isbn);
+    formData.append('content', productDetails.content);
+    formData.append('fixedPrice', productDetails.fixedPrice);
+    formData.append(
+      'publicationYear',
+      productDetails.publicationYear
         ? productDetails.publicationYear.toISOString()
-        : null,
-    });
+        : '',
+    );
+    formData.append('status', productDetails.status);
+    formData.append('stockQuantity', productDetails.stockQuantity);
+    formData.append('pictureFile', productDetails.pictureFile);
+    formData.append('categoryIds', productDetails.categoryIds.join(','));
+
+    await addProduct(formData);
 
     setProductDetails({
       title: '',
@@ -70,9 +89,10 @@ const ProductAdd = () => {
       publicationYear: null,
       status: '',
       stockQuantity: '',
-      pictureUrl: '',
+      pictureFile: null,
       categoryIds: [],
     });
+    setFileName('');
   };
 
   const renderCategoryOptions = (category, level = 0) => {
@@ -97,7 +117,11 @@ const ProductAdd = () => {
 
   return (
     <div className="tw-container tw-mx-auto tw-p-4 tw-pt-8 tw-max-w-4xl">
-      <form onSubmit={handleSubmit} className="tw-space-y-4">
+      <form
+        onSubmit={handleSubmit}
+        className="tw-space-y-4"
+        encType="multipart/form-data"
+      >
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <Box display="flex" alignItems="center">
@@ -194,24 +218,47 @@ const ProductAdd = () => {
           value={productDetails.stockQuantity}
           onChange={handleInputChange}
         />
-        <TextField
-          label="사진 URL"
-          name="pictureUrl"
-          variant="outlined"
-          fullWidth
-          value={productDetails.pictureUrl}
-          onChange={handleInputChange}
-        />
-        {productDetails.pictureUrl && (
-          <img
-            src={productDetails.pictureUrl}
-            alt="Product Preview"
-            className="tw-mt-2 tw-rounded-lg tw-max-w-md"
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          border="1px dashed gray"
+          borderRadius="4px"
+          padding="16px"
+          marginBottom="20px"
+          position="relative"
+        >
+          <input
+            accept="image/*"
+            style={{ display: 'none' }}
+            id="contained-button-file"
+            type="file"
+            onChange={handleFileChange}
           />
-        )}
-        <Button type="submit" variant="contained" color="primary">
-          상품 등록
-        </Button>
+          <label htmlFor="contained-button-file" style={{ width: '100%' }}>
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              width="100%"
+            >
+              <IconButton component="span">
+                <AddPhotoAlternateIcon fontSize="large" />
+              </IconButton>
+              <Typography variant="body1">{fileName || '사진 추가'}</Typography>
+            </Box>
+          </label>
+        </Box>
+        <Box display="flex" justifyContent="center" mt={4}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            style={{ width: '50%' }}
+          >
+            상품 등록
+          </Button>
+        </Box>
       </form>
     </div>
   );
