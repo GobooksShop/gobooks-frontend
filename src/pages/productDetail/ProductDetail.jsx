@@ -1,7 +1,5 @@
 import {
   AppBar,
-  BottomNavigation,
-  BottomNavigationAction,
   Box,
   Button,
   ButtonGroup,
@@ -10,14 +8,12 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
+  DialogTitle, Divider,
   Grid,
   IconButton,
-  InputAdornment,
   TextField,
   Toolbar,
   Typography,
-  useMediaQuery,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -27,6 +23,7 @@ import { PageContainer } from '../../components/PageContainer';
 import RemoveIcon from '@mui/icons-material/Remove';
 import useCartOrderStore from '../../store/useCartOrderStore';
 import useProductStore from '../../store/useProductStore';
+import ReturnPolicy from "../../components/product/ReturnPolicy";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -98,39 +95,66 @@ const ProductDetail = () => {
 
   return (
     <PageContainer>
+      {/* 상품 카드 */}
       <Card className="tw-max-w-5xl tw-mx-auto tw-my-8 tw-p-5 tw-overflow-hidden">
         <Grid container spacing={3} className="tw-p-4 tw-md:p-8">
-          <Grid item md={6}>
+          <Grid item md={6} className="tw-p-10">
             {product.pictureUrl && (
               <img
                 src={product.pictureUrl}
                 alt={product.title}
-                className="tw-w-full tw-h-auto object-cover tw-rounded-lg tw-shadow-md"
+                className="tw-w-full tw-h-auto object-contain tw-shadow-md"
               />
             )}
           </Grid>
           <Grid item md={6} className="tw-flex tw-flex-col tw-justify-between">
             <CardContent className="tw-space-y-6">
-              <Typography variant="h4" component="h1" className="tw-font-bold">
+              <Typography variant="h4" component="h1" fontWeight="bold">
                 {product.title}
               </Typography>
-              <Typography variant="h6" className="tw-text-gray-600">
-                {product.fixedPrice}원
-              </Typography>
-              <Typography variant="body2" color="textSecondary" gutterBottom>
-                {product.author}
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-                Description: {product.content}
-              </Typography>
               <Typography variant="body2" color="textSecondary">
-                Published: {product.publicationYear}
+                {product.author} · {product.publicationYear}
+              </Typography>
+              <Divider />
+              <Typography variant="h5" fontWeight="bold">
+                {product.fixedPrice.toLocaleString()}원
+              </Typography>
+              <Divider />
+              <Typography variant="body2" color="textSecondary"
+                          sx={{ lineHeight: 1.6 }} gutterBottom>
+                {product.content}
               </Typography>
             </CardContent>
           </Grid>
         </Grid>
       </Card>
 
+      {/* 상품 추가 정보 */}
+      <Grid container spacing={3} className="tw-p-4 tw-md:p-8">
+        <Grid item xs={12}>
+          <Typography variant="h5" gutterBottom>
+            상품 정보
+          </Typography>
+        </Grid>
+        <Divider />
+        <Grid item xs={12} sm={8} md={7} className="tw-mx-auto">
+          <Box className="tw-w-full tw-relative">
+            {product.infoImageUrl && (
+                <img
+                    src={product.infoImageUrl}
+                    alt="상품 정보 이미지"
+                    className="tw-w-full tw-h-auto object-contain"
+                    style={{ maxWidth: '60%' }}
+                />
+            )}
+          </Box>
+        </Grid>
+      </Grid>
+
+      {/* 교환/환불 정책 */}
+      <ReturnPolicy />
+
+      {/* 하단 바 */}
       <AppBar
         position="fixed"
         color="default"
@@ -230,6 +254,7 @@ const ProductDetail = () => {
         </Toolbar>
       </AppBar>
 
+      {/* 버튼 클릭 시 다이얼로그 */}
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle></DialogTitle>
         <DialogContent className="tw-mx-6 tw-my-4">
