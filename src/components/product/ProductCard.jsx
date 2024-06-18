@@ -1,18 +1,28 @@
 import {
+  Box,
+  Button, ButtonGroup,
   Card,
   CardContent,
-  CardMedia,
-  Skeleton,
+  CardMedia, Dialog, DialogActions, DialogContent, DialogTitle, IconButton,
+  Skeleton, TextField,
   Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
-import { Link } from 'react-router-dom';
-import noImage from '../../pages/productList/images/noimage.jpg'; // 기본 이미지 추가
+import {Link, useNavigate} from 'react-router-dom';
+import noImage from '../../pages/productList/images/noimage.jpg';
+import useCartOrderStore from "../../store/useCartOrderStore";
+import {PageContainer} from "../PageContainer";
+import RemoveIcon from "@mui/icons-material/Remove";
+import AddIcon from "@mui/icons-material/Add"; // 기본 이미지 추가
 
 function ProductCard({ product }) {
   const [isLoading, setIsLoading] = useState(true);
   const [imageUrl, setImageUrl] = useState(noImage); // 기본 이미지로 초기화
+  const { addCart, addOrder } = useCartOrderStore((state) => state);
+  const [openDialog, setOpenDialog] = useState(false);
+  const navigate = useNavigate();
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     setIsLoading(true);
@@ -41,54 +51,143 @@ function ProductCard({ product }) {
       ? product.fixedPrice.toLocaleString()
       : 'N/A';
 
+  const handleAddToCart = () => {
+    if (product) {
+      addCart(product.id, quantity, product.fixedPrice, 'cart');
+      setOpenDialog(true);
+    }
+  };
+
+  const handleBuyNow = () => {
+    addOrder(product.id, quantity, product.fixedPrice, 'order');
+    navigate(`/order`);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleGoToCart = () => {
+    setOpenDialog(false);
+    navigate('/cart');
+  };
+
+  const handleQuantityChange = (newValue) => {
+    setQuantity(Math.max(1, newValue)); // 최소값 1 유지
+  };
+
   return (
-    <Link to={`/product/detail/${product.id}`}>
-      <Card
-        sx={{
-          borderRadius: '8px',
-          boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-          transition: 'box-shadow 0.3s ease',
-          '&:hover': {
-            boxShadow: '0px 0px 8px #ABA5F3',
-          },
-          height: '100%',
-        }}
-      >
-        <div className="tw-relative tw-pb-[142%]">
-          {' '}
-          {/* 책 표지 비율 유지 */}
-          {isLoading ? (
-            <Skeleton variant="rectangular" width="100%" height="100%" />
-          ) : (
-            <CardMedia
-              component="img"
-              sx={{
-                height: '100%',
-              }}
-              className="tw-absolute tw-top-0 tw-left-0 tw-object-contain tw-h-full tw-w-full"
-              image={imageUrl}
-              alt={product.title || 'Product'}
-            />
-          )}
-        </div>
-        <CardContent className="tw-p-4">
-          <Typography
-            variant="h6"
-            component="div"
-            className="tw-mb-2 tw-line-clamp-2"
+      <>
+          <Card
+            sx={{
+              borderRadius: '8px',
+              boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+              transition: 'box-shadow 0.3s ease',
+              '&:hover': {
+                boxShadow: '0px 0px 8px #ABA5F3',
+              },
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+              // p: 1
+            }}
           >
-            {product.title || 'Unnamed Product'}
-          </Typography>
-          <Typography variant="body2" color="textSecondary" className="tw-mb-2">
-            {product.author || 'Unknown Author'} /{' '}
-            {product.publisher || 'Unknown Publisher'}
-          </Typography>
-          <Typography variant="h6" component="div" className="tw-font-bold">
-            {formattedPrice}원
-          </Typography>
-        </CardContent>
-      </Card>
-    </Link>
+            <Link to={`/product/detail/${product.id}`}>
+            <div className="tw-relative tw-pb-[142%]">
+              {' '}
+              {/* 책 표지 비율 유지 */}
+              {isLoading ? (
+                <Skeleton variant="rectangular" width="100%" height="100%" />
+              ) : (
+                <CardMedia
+                  component="img"
+                  sx={{
+                    height: '100%',
+                  }}
+                  className="tw-absolute tw-top-0 tw-left-0 tw-object-contain tw-h-full tw-w-full"
+                  image={imageUrl}
+                  alt={product.title || 'Product'}
+                />
+              )}
+            </div>
+            <CardContent sx={{
+              "&:last-child": {
+                paddingBottom: 1
+              }
+            }}>
+              <Typography
+                variant="h7"
+                component="div"
+                className="tw-mb-2 tw-line-clamp-2"
+                fontWeight="bold"
+              >
+                {product.title || 'Unnamed Product'}
+              </Typography>
+              <Typography variant="body2" color="textSecondary" className="tw-py-2">
+                {product.author || 'Unknown Author'}
+              </Typography>
+              <Typography variant="h7" component="div">
+                {formattedPrice}원
+              </Typography>
+            </CardContent>
+            </Link>
+
+
+              {/* 구매 관련 버튼 */}
+              <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'flex-end',
+                    gap: 1,
+                    mt: 'auto',
+                    py: 2,
+                    width: '100%'
+                  }}
+              >
+                <Button
+                    variant="outlined"
+                    onClick={handleAddToCart}
+                    fullWidth
+                    sx={{ flexGrow: 1, ml: 2 }}>
+                  장바구니
+                </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleBuyNow}
+                    fullWidth
+                    sx={{ flexGrow: 1, mr: 2 }}
+                >
+                  바로구매
+                </Button>
+              </Box>
+          </Card>
+
+        {/* 버튼 클릭 시 다이얼로그 */}
+        <Dialog open={openDialog} onClose={handleCloseDialog}>
+          <DialogTitle></DialogTitle>
+          <DialogContent className="tw-mx-6 tw-my-4">
+            <Typography variant="body1" align="center">
+              <Typography component="span" variant="body1" fontWeight="bold">
+                {product?.title}
+              </Typography>{' '}
+              {quantity}권이
+              <br />
+              장바구니에 추가되었습니다.
+            </Typography>
+          </DialogContent>
+          <DialogActions
+              sx={{ justifyContent: 'center', marginBottom: 2, gap: 1 }}
+          >
+            <Button variant="outlined" onClick={handleCloseDialog}>
+              계속 쇼핑
+            </Button>
+            <Button variant="contained" onClick={handleGoToCart}>
+              장바구니로 이동
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </>
   );
 }
 
