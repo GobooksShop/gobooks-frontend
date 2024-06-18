@@ -6,17 +6,19 @@ import naverIcon from '../../../assets/socialLoginImages/btn_naver.svg';
 import { useNavigate } from 'react-router-dom';
 import useUserStore from '../../../store/useUserStore';
 
+const baseURL = process.env.REACT_APP_API_BASE_URL;
+
 const handleSocialLogin = (provider) => {
   let url = '';
   switch (provider) {
     case 'google':
-      url = 'http://localhost:8080/oauth2/authorization/google';
+      url = `${baseURL}/oauth2/authorization/google`;
       break;
     case 'kakao':
-      url = 'http://localhost:8080/oauth2/authorization/kakao';
+      url = `${baseURL}/oauth2/authorization/kakao`;
       break;
     case 'naver':
-      url = 'http://localhost:8080/oauth2/authorization/naver';
+      url = `${baseURL}/oauth2/authorization/naver`;
       break;
     default:
       console.error('Unknown provider:', provider);
@@ -43,7 +45,7 @@ const SocialLogin = () => {
   const setUser = useUserStore((state) => state.setUser);
   useEffect(() => {
     const handleAuthComplete = (event) => {
-      if (event.origin === 'http://localhost:8080' && event.data) {
+      if (event.origin === `${baseURL}` && event.data) {
         console.log('Login successful');
         const { accessToken, userId, name, email, role } =
           event.data;
