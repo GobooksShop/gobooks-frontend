@@ -6,10 +6,12 @@ import naverIcon from '../../../assets/socialLoginImages/btn_naver.svg';
 import { useNavigate } from 'react-router-dom';
 import useUserStore from '../../../store/useUserStore';
 
+const baseURL = process.env.REACT_APP_API_BASE_URL;
+
 const providerUrls = {
-  google: 'http://localhost:8080/oauth2/authorization/google',
-  kakao: 'http://localhost:8080/oauth2/authorization/kakao',
-  naver: 'http://localhost:8080/oauth2/authorization/naver',
+  google: `${baseURL}/oauth2/authorization/google`,
+  kakao: `${baseURL}/oauth2/authorization/kakao`,
+  naver: `${baseURL}/oauth2/authorization/naver`,
 };
 
 const handleSocialLogin = (provider) => {
