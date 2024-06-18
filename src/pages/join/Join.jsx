@@ -30,6 +30,7 @@ function Join() {
     confirmPassword: '',
     termsAgreed: false,
     marketingAgreed: false,
+    phone: '',
   });
 
   const [errors, setErrors] = useState({});
@@ -55,6 +56,7 @@ function Join() {
       formData.nickname &&
       isVerified &&
       formData.termsAgreed &&
+      formData.phone &&
       !Object.values(errors).some(Boolean)
     );
   }, [formData, errors, isVerified]);
@@ -80,7 +82,7 @@ function Join() {
       setSendCodeButtonDisabled(true);
       setTimer(180);
       setResendAvailable(false);
-      alert('Verification code sent to your email.');
+      alert('인증코드가 이메일로 전송되었습니다.');
     } catch (error) {
       console.error('Error sending verification code:', error);
     }
@@ -93,7 +95,7 @@ function Join() {
         setVerificationStatus('인증 완료');
         setIsVerified(true);
         setCodeChecked(true);
-        console.log('Code verified successfully.');
+        console.log('인증 성공');
       } else {
         setVerificationStatus('인증실패');
         setIsVerified(false);
@@ -104,6 +106,16 @@ function Join() {
       setVerificationStatus('Verification failed');
       setIsVerified(false);
     }
+  };
+
+  const normalizePhoneNumber = (phone) => {
+    // Remove any non-digit characters
+    const cleaned = ('' + phone).replace(/\D/g, '');
+    const match = cleaned.match(/^(\d{3})(\d{4})(\d{4})$/);
+    if (match) {
+      return `${match[1]}-${match[2]}-${match[3]}`;
+    }
+    return null;
   };
 
   const validateField = (name, value) => {
@@ -139,6 +151,16 @@ function Join() {
         error = '이름은 빈 값이 들어올 수 없습니다.';
       } else if (!namePattern.test(value)) {
         error = '이름은 2자리 이상 한글 또는 영문만 입력 가능합니다.';
+      }
+    } else if (name === 'phone') {
+      const phonePattern = /^010-\d{4}-\d{4}$/;
+      const normalizedPhone = normalizePhoneNumber(value);
+      if (!value) {
+        error = '핸드폰 번호는 빈 값이 들어올 수 없습니다.';
+      } else if (!phonePattern.test(normalizedPhone)) {
+        error = '핸드폰 번호는 010-1234-5678 형식으로 입력해야 합니다.';
+      } else {
+        setFormData((prev) => ({ ...prev, phone: normalizedPhone }));
       }
     }
     setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
@@ -194,7 +216,7 @@ function Join() {
         }
       }
     } else {
-      alert('Please verify your email first.');
+      alert('이메일을 먼저 인증해주세요.');
     }
   };
 
@@ -223,7 +245,7 @@ function Join() {
       setSendCodeButtonDisabled(true);
       setTimer(180);
       setResendAvailable(false);
-      alert('Verification code resent to your email.');
+      alert('인증코드가 이메일로 발송되었습니다.');
     } catch (error) {
       console.error('Error resending verification code:', error);
     }
@@ -351,7 +373,7 @@ function Join() {
               <>
                 <TextField
                   fullWidth
-                  label="Verification Code"
+                  label="인증 코드"
                   variant="outlined"
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
@@ -414,6 +436,18 @@ function Join() {
               onChange={handleInputChange}
               error={!!errors.nickname}
               helperText={errors.nickname}
+              margin="normal"
+              style={{ marginBottom: '20px' }}
+            />
+            <TextField
+              fullWidth
+              label="핸드폰 번호"
+              variant="outlined"
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
+              error={!!errors.phone}
+              helperText={errors.phone}
               margin="normal"
               style={{ marginBottom: '20px' }}
             />
