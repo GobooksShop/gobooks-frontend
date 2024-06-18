@@ -109,7 +109,6 @@ function Join() {
   };
 
   const normalizePhoneNumber = (phone) => {
-    // Remove any non-digit characters
     const cleaned = ('' + phone).replace(/\D/g, '');
     const match = cleaned.match(/^(\d{3})(\d{4})(\d{4})$/);
     if (match) {

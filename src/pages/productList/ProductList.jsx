@@ -11,7 +11,6 @@ import React, { useEffect, useState } from 'react';
 
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import HomeIcon from '@mui/icons-material/Home';
-// import Pagination from '../../components/util/Pagination';
 import ProductCard from '../../components/product/ProductCard';
 import Sort from '../../components/util/Sort';
 import axios from 'axios';

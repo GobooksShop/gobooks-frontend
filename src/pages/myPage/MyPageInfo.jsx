@@ -1,4 +1,11 @@
-import { Button, Checkbox, FormControlLabel, Grid, TextField, Typography } from '@mui/material';
+import {
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  TextField,
+  Typography,
+} from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { deleteUser, updateUserInfo } from '../../api/user/userApi';
 
@@ -13,13 +20,14 @@ function MyPageInfo() {
     password: '',
     nickname: '',
     marketingAgreed: false,
+    phone: '',
   });
   const [errors, setErrors] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
 
   useEffect(() => {
-    setUserInfo({ ...user, password: '' });
+    setUserInfo({ ...user, password: '', phone: user.phone || '' });
   }, [user]);
 
   const validateField = useCallback(
@@ -65,6 +73,15 @@ function MyPageInfo() {
           }
           break;
         }
+        case 'phone': {
+          const phonePattern = /^010-\d{4}-\d{4}$/;
+          if (!value) {
+            error = '핸드폰 번호는 빈 값이 들어올 수 없습니다.';
+          } else if (!phonePattern.test(value)) {
+            error = '핸드폰 번호는 010-1234-5678 형식으로 입력해야 합니다.';
+          }
+          break;
+        }
         default:
           error = !value ? `${name}은(는) 빈 값이 들어올 수 없습니다.` : '';
           break;
@@ -75,11 +92,22 @@ function MyPageInfo() {
     [userInfo.password, setErrors],
   );
 
+  const formatPhoneNumber = (phoneNumber) => {
+    const cleaned = phoneNumber.replace(/\D/g, '');
+    const match = cleaned.match(/^(\d{3})(\d{3,4})(\d{4})$/);
+    if (match) {
+      return `${match[1]}-${match[2]}-${match[3]}`;
+    }
+    return phoneNumber;
+  };
+
   const handleInputChange = useCallback(
     (e) => {
       const { name, value } = e.target;
-      validateField(name, value);
-      setUserInfo((prev) => ({ ...prev, [name]: value }));
+      const formattedValue =
+        name === 'phone' ? formatPhoneNumber(value) : value;
+      setUserInfo((prev) => ({ ...prev, [name]: formattedValue }));
+      validateField(name, formattedValue);
     },
     [setUserInfo, validateField],
   );
@@ -119,9 +147,11 @@ function MyPageInfo() {
 
   const onClickUpdate = async () => {
     try {
-      const isValid = Object.entries(userInfo).every(
-        ([name, value]) => validateField(name, value)
-      ) && (!userInfo.password || validateField('password', userInfo.password));
+      const isValid =
+        Object.entries(userInfo).every(([name, value]) =>
+          name === 'marketingAgreed' ? true : validateField(name, value),
+        ) &&
+        (!userInfo.password || validateField('password', userInfo.password));
 
       if (isValid) {
         if (!user.userId) {
@@ -129,9 +159,9 @@ function MyPageInfo() {
           return;
         }
         const response = await updateUserInfo(user.userId, userInfo);
-        setUser({ ...userInfo, password: '' }); // Update Zustand store and clear password
+        setUser({ ...userInfo, password: '' }); 
         console.log('유저 정보 업데이트 성공', response);
-        setIsEditing(false); // Reset editing state after successful update
+        setIsEditing(false);
       } else {
         console.error('유효성 검사 실패');
       }
@@ -147,7 +177,7 @@ function MyPageInfo() {
         return;
       }
       await deleteUser(user.userId);
-      clearUser(); // Clear user data from Zustand store
+      clearUser();
       console.log('탈퇴 처리되었습니다.');
     } catch (error) {
       console.error('탈퇴 처리 오류', error);
@@ -156,11 +186,7 @@ function MyPageInfo() {
 
   return (
     <PageContainer>
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="center"
-      >
+      <Grid container justifyContent="center" alignItems="center">
         <Grid
           item
           xs={12}
@@ -207,6 +233,19 @@ function MyPageInfo() {
               error={!!errors.nickname}
               helperText={errors.nickname}
               margin="normal"
+              disabled={!isEditing}
+            />
+            <TextField
+              fullWidth
+              label="핸드폰 번호"
+              variant="outlined"
+              name="phone"
+              value={userInfo.phone}
+              onChange={handleInputChange}
+              error={!!errors.phone}
+              helperText={errors.phone}
+              margin="normal"
+              style={{ marginBottom: '20px' }}
               disabled={!isEditing}
             />
             {isEditing && (

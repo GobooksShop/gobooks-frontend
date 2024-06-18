@@ -93,7 +93,6 @@ const ProductAdd = () => {
       const response = await addOrUpdateProduct(formData);
       console.log('Product added successfully:', response.data);
 
-      // Reset form after successful submission
       setProductDetails({
         title: '',
         author: '',
@@ -258,6 +257,7 @@ const ProductAdd = () => {
               justifyContent="center"
               alignItems="center"
               width="100%"
+              height={15}
             >
               <IconButton component="span">
                 <AddPhotoAlternateIcon fontSize="large" />
@@ -266,6 +266,14 @@ const ProductAdd = () => {
             </Box>
           </label>
         </Box>
+        {productDetails.pictureFile && (
+          <img
+            src={URL.createObjectURL(productDetails.pictureFile)}
+            alt="사진 미리보기"
+            className="tw-mt-2 tw-rounded-lg tw-max-w-md"
+            style={{ maxWidth: '100%', height: 'auto', maxHeight: '300px' }}
+          />
+        )}
         <Box display="flex" justifyContent="center" mt={4}>
           <Button
             type="submit"
