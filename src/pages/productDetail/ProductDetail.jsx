@@ -1,7 +1,5 @@
 import {
   AppBar,
-  BottomNavigation,
-  BottomNavigationAction,
   Box,
   Button,
   ButtonGroup,
@@ -11,32 +9,38 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
   Grid,
   IconButton,
-  InputAdornment,
+  Stack,
   TextField,
   Toolbar,
   Typography,
-  useMediaQuery,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+
 import AddIcon from '@mui/icons-material/Add';
 import { PageContainer } from '../../components/PageContainer';
 import RemoveIcon from '@mui/icons-material/Remove';
+import ReturnPolicy from '../../components/product/ReturnPolicy';
 import useCartOrderStore from '../../store/useCartOrderStore';
 import useProductStore from '../../store/useProductStore';
+import useUserStore from '../../store/useUserStore';
 
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { from } = location.state || { from: { pathname: '/' } };
   const [product, setProduct] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const {addCart, addOrder} = useCartOrderStore((state) => state);
-  const { fetchProductDetails } = useProductStore();
+  const { addCart, addOrder } = useCartOrderStore((state) => state);
+  const { fetchProductDetails, deleteProduct } = useProductStore();
   const [totalPrice, setTotalPrice] = React.useState(0);
+  const { user } = useUserStore((state) => state);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -85,6 +89,16 @@ const ProductDetail = () => {
     navigate('/cart');
   };
 
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const formattedTomorrow = tomorrow.toLocaleDateString('ko-KR', {
+    month: '2-digit',
+    day: '2-digit',
+    weekday: 'short',
+  });
+
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -95,41 +109,133 @@ const ProductDetail = () => {
     return <p>No product found</p>;
   }
 
+  const pictureUrl = `http://localhost:8080/image/${product.pictureUrl}`;
+  // 상품 정보 이미지 URL 통으로 넣으면 될 것 같아요 각 제품당 1개씩
+  const infoImageUrl = `http://localhost:8080/image/${product.infoImageUrl}`;
+
+  const handleDeleteProduct = async () => {
+    if (window.confirm('!!상품을 정말 삭제하시겠습니까?')) {
+      try {
+        await deleteProduct(id);
+        alert('상품이 삭제되었습니다.');
+        navigate(from);
+      } catch (error) {
+        console.error('Failed to delete product', error);
+        alert('상품 삭제에 실패했습니다.');
+      }
+    }
+  };
+
   return (
     <PageContainer>
+      {/* 상품 카드 */}
       <Card className="tw-max-w-5xl tw-mx-auto tw-my-8 tw-p-5 tw-overflow-hidden">
         <Grid container spacing={3} className="tw-p-4 tw-md:p-8">
-          <Grid item md={6}>
+          <Grid item md={6} className="tw-p-10">
             {product.pictureUrl && (
               <img
-                src={product.pictureUrl}
+                src={pictureUrl}
                 alt={product.title}
-                className="tw-w-full tw-h-auto object-cover tw-rounded-lg tw-shadow-md"
+                style={{ width: '100%', height: '500px', objectFit: 'contain' }}
+                className="tw-w-full tw-h-auto object-contain tw-shadow-md"
               />
             )}
           </Grid>
           <Grid item md={6} className="tw-flex tw-flex-col tw-justify-between">
             <CardContent className="tw-space-y-6">
-              <Typography variant="h4" component="h1" className="tw-font-bold">
+              {user.role === 'ROLE_ADMIN' && (
+                <div>
+                  <Button
+                    variant="outlined"
+                    onClick={() => navigate(`/admin/product/edit/${id}`)}
+                    sx={{ mt: 2, mr: 2 }}
+                  >
+                    상품 수정
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={handleDeleteProduct}
+                    sx={{ mt: 2 }}
+                  >
+                    상품 삭제
+                  </Button>
+                </div>
+              )}
+              <Typography variant="h4" component="h1" fontWeight="bold">
                 {product.title}
               </Typography>
-              <Typography variant="h6" className="tw-text-gray-600">
-                {product.fixedPrice}원
-              </Typography>
-              <Typography variant="body2" color="textSecondary" gutterBottom>
-                {product.author}
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-                Description: {product.content}
-              </Typography>
               <Typography variant="body2" color="textSecondary">
-                Published: {product.publicationYear}
+                {product.author} · {product.publicationYear}
               </Typography>
+              <Divider />
+              {/* 할인율 추가해야 함 */}
+              <Typography variant="h5" fontWeight="bold" textAlign="right">
+                {product.fixedPrice.toLocaleString()}원
+              </Typography>
+              <Divider />
+              <Stack spacing={1} direction="column">
+                <Stack
+                  spacing={1}
+                  direction="row"
+                  justifyContent="space-between"
+                >
+                  <Typography variant="body1" fontWeight="bold">
+                    배송 안내
+                  </Typography>
+                  <Typography>내일 {formattedTomorrow} 도착 예정</Typography>
+                </Stack>
+                <Stack alignItems="flex-end">
+                  <Typography variant="body2" color="textSecondary">
+                    기본배송지 기준
+                  </Typography>
+                </Stack>
+              </Stack>
+              <Divider />
+              <Stack spacing={1} direction="row" justifyContent="space-between">
+                <Typography variant="body2">ISBN</Typography>
+                <Typography variant="body2" color="textSecondary">
+                  {product.isbn}
+                </Typography>
+              </Stack>
             </CardContent>
           </Grid>
         </Grid>
       </Card>
 
+      {/* 상품 추가 정보 */}
+      <Box className="tw-max-w-5xl tw-mx-auto tw-p-4 tw-md:p-8 tw-mb-10">
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Typography variant="h5" gutterBottom>
+              상품 정보
+            </Typography>
+            <Divider sx={{ my: 2 }} />
+            <Typography variant="body2" sx={{ lineHeight: 1.6 }} gutterBottom>
+              {product.content}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={8} md={7} className="tw-mx-auto">
+            <Box className="tw-w-full tw-relative">
+              (상품 정보 이미지) {/* <- 이미지 url 등록 후 문구 삭제 바람 */}
+              {product.infoImageUrl && (
+                <img
+                  src={infoImageUrl}
+                  alt="상품 정보 이미지"
+                  className="tw-w-full tw-h-auto object-contain"
+                />
+              )}
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+
+      {/* 교환/환불 정책 */}
+      <Box className="tw-max-w-5xl tw-mx-auto tw-p-4 tw-md:p-8">
+        <ReturnPolicy />
+      </Box>
+
+      {/* 하단 바 */}
       <AppBar
         position="fixed"
         color="default"
@@ -229,6 +335,7 @@ const ProductDetail = () => {
         </Toolbar>
       </AppBar>
 
+      {/* 버튼 클릭 시 다이얼로그 */}
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle></DialogTitle>
         <DialogContent className="tw-mx-6 tw-my-4">

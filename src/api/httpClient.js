@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 export const httpClient = axios.create({
-    // eslint-disable-next-line
     baseURL: 'http://localhost:8080/api',
     timeout: 5000,
     withCredentials: true,

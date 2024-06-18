@@ -4,11 +4,19 @@ export const fetchProductsByCategory = async (categoryId) => {
   return await httpClient.get(`/products/category/${categoryId}`);
 };
 
-export const addOrUpdateProduct = async (product) => {
-  if (product.id) {
-    return await httpClient.put(`/products/${product.id}`, product);
+export const addOrUpdateProduct = async (formData, id = null) => {
+  if (id) {
+    return await httpClient.put(`/products/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
   } else {
-    return await httpClient.post(`/products`, product);
+    return await httpClient.post(`/products`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
   }
 };
 

@@ -15,12 +15,11 @@ import React, { useEffect, useState } from 'react';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import { addOrUpdateProduct } from '../../../api/product/productApi';
 import useCategoryStore from '../../../store/useCategoryStore';
-import useProductStore from '../../../store/useProductStore';
 
 const ProductAdd = () => {
   const { categories, fetchCategories } = useCategoryStore();
-  const { addProduct } = useProductStore();
   const [productDetails, setProductDetails] = useState({
     title: '',
     author: '',
@@ -46,8 +45,12 @@ const ProductAdd = () => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    setProductDetails((prev) => ({ ...prev, pictureFile: file }));
-    setFileName(file ? `${file.name}` : '');
+    if (file && file.type.startsWith('image/')) {
+      setProductDetails((prev) => ({ ...prev, pictureFile: file }));
+      setFileName(file.name);
+    } else {
+      alert('이미지 파일만 업로드 할 수 있습니다.');
+    }
   };
 
   const handleDateChange = (value) => {
@@ -61,38 +64,51 @@ const ProductAdd = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     const formData = new FormData();
-    formData.append('title', productDetails.title);
-    formData.append('author', productDetails.author);
-    formData.append('isbn', productDetails.isbn);
-    formData.append('content', productDetails.content);
-    formData.append('fixedPrice', productDetails.fixedPrice);
-    formData.append(
-      'publicationYear',
-      productDetails.publicationYear
+
+    const productData = {
+      title: productDetails.title,
+      author: productDetails.author,
+      isbn: productDetails.isbn,
+      content: productDetails.content,
+      fixedPrice: productDetails.fixedPrice,
+      publicationYear: productDetails.publicationYear
         ? productDetails.publicationYear.toISOString()
         : '',
+      status: productDetails.status,
+      stockQuantity: productDetails.stockQuantity,
+      categoryIds: productDetails.categoryIds,
+    };
+
+    formData.append(
+      'product',
+      new Blob([JSON.stringify(productData)], { type: 'application/json' }),
     );
-    formData.append('status', productDetails.status);
-    formData.append('stockQuantity', productDetails.stockQuantity);
-    formData.append('pictureFile', productDetails.pictureFile);
-    formData.append('categoryIds', productDetails.categoryIds.join(','));
+    if (productDetails.pictureFile) {
+      formData.append('pictureFile', productDetails.pictureFile);
+    }
 
-    await addProduct(formData);
+    try {
+      const response = await addOrUpdateProduct(formData);
+      console.log('Product added successfully:', response.data);
 
-    setProductDetails({
-      title: '',
-      author: '',
-      isbn: '',
-      content: '',
-      fixedPrice: '',
-      publicationYear: null,
-      status: '',
-      stockQuantity: '',
-      pictureFile: null,
-      categoryIds: [],
-    });
-    setFileName('');
+      setProductDetails({
+        title: '',
+        author: '',
+        isbn: '',
+        content: '',
+        fixedPrice: '',
+        publicationYear: null,
+        status: '',
+        stockQuantity: '',
+        pictureFile: null,
+        categoryIds: [],
+      });
+      setFileName('');
+    } catch (error) {
+      console.error('Error adding product:', error);
+    }
   };
 
   const renderCategoryOptions = (category, level = 0) => {
@@ -241,6 +257,7 @@ const ProductAdd = () => {
               justifyContent="center"
               alignItems="center"
               width="100%"
+              height={15}
             >
               <IconButton component="span">
                 <AddPhotoAlternateIcon fontSize="large" />
@@ -249,6 +266,14 @@ const ProductAdd = () => {
             </Box>
           </label>
         </Box>
+        {productDetails.pictureFile && (
+          <img
+            src={URL.createObjectURL(productDetails.pictureFile)}
+            alt="사진 미리보기"
+            className="tw-mt-2 tw-rounded-lg tw-max-w-md"
+            style={{ maxWidth: '100%', height: 'auto', maxHeight: '300px' }}
+          />
+        )}
         <Box display="flex" justifyContent="center" mt={4}>
           <Button
             type="submit"

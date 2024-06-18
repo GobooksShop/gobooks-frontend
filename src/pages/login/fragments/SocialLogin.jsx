@@ -48,9 +48,7 @@ const SocialLogin = () => {
         const { accessToken, userId, name, email, role } =
           event.data;
         console.log('response.data:' + event.data);
-        // Access Token을 로컬 스토리지에 저장
         localStorage.setItem('accessToken', accessToken);
-        // Zustand 상태 업데이트
         setUser({ userId, name, email, role });
 
         window.location.href = '/';
