@@ -122,11 +122,12 @@ function AdBanner({ images }) {
 
 function Main() {
   const adImages = [
-    'https://i.imgur.com/p0opf31.jpg',
+    'https://i.imgur.com/y4j0R2X.jpg',
     'https://i.imgur.com/YNrOP7z.jpg',
     'https://i.imgur.com/BjZObZG.jpg',
     'https://i.imgur.com/0bSoyfO.jpg',
     'https://i.imgur.com/IDwQTwM.jpg',
+    'https://i.imgur.com/yX6xL0R.jpeg'
   ];
 
   const [steadySellers] = useState([
