@@ -3,6 +3,7 @@ import {
   Button,
   FormControl,
   Grid,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -14,6 +15,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import dayjs from 'dayjs';
 import useCategoryStore from '../../../store/useCategoryStore';
 import useProductStore from '../../../store/useProductStore';
@@ -33,24 +35,44 @@ const ProductEdit = () => {
     publicationYear: null,
     status: '',
     stockQuantity: '',
-    pictureUrl: '',
+    pictureFile: null,
     categoryIds: [],
   });
+  const [fileName, setFileName] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchCategories();
-    fetchProductDetails(id).then((data) => {
-      setProductDetails({
-        ...data,
-        publicationYear: data.publicationYear ? dayjs(data.publicationYear) : null,
-        categoryIds: data.categoryIds || [],
-      });
-    });
+    const fetchData = async () => {
+      await fetchCategories();
+      const data = await fetchProductDetails(id);
+      if (data) {
+        setProductDetails({
+          ...data,
+          publicationYear: data.publicationYear
+            ? dayjs(data.publicationYear)
+            : null,
+          categoryIds: data.categoryIds || [],
+        });
+        setFileName(data.pictureFile ? data.pictureFile.name : '');
+      }
+      setLoading(false);
+    };
+    fetchData();
   }, [id, fetchCategories, fetchProductDetails]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setProductDetails((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      setProductDetails((prev) => ({ ...prev, pictureFile: file }));
+      setFileName(file.name);
+    } else {
+      alert('이미지 파일만 업로드 할 수 있습니다.');
+    }
   };
 
   const handleDateChange = (value) => {
@@ -64,15 +86,37 @@ const ProductEdit = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await updateProduct(id, {
-      ...productDetails,
+
+    const formData = new FormData();
+
+    const productData = {
+      title: productDetails.title,
+      author: productDetails.author,
+      isbn: productDetails.isbn,
+      content: productDetails.content,
       fixedPrice: parseInt(productDetails.fixedPrice),
-      stockQuantity: parseInt(productDetails.stockQuantity),
       publicationYear: productDetails.publicationYear
         ? productDetails.publicationYear.toISOString()
-        : null,
-    });
-    navigate(`/product/detail/${id}`); // Redirect to the product detail page after updating
+        : '',
+      status: productDetails.status,
+      stockQuantity: parseInt(productDetails.stockQuantity),
+      categoryIds: productDetails.categoryIds,
+    };
+
+    formData.append(
+      'product',
+      new Blob([JSON.stringify(productData)], { type: 'application/json' }),
+    );
+    if (productDetails.pictureFile) {
+      formData.append('pictureFile', productDetails.pictureFile);
+    }
+
+    try {
+      await updateProduct(id, formData);
+      navigate(`/product/detail/${id}`); // Redirect to the product detail page after updating
+    } catch (error) {
+      console.error('Error updating product:', error);
+    }
   };
 
   const renderCategoryOptions = (category, level = 0) => {
@@ -95,12 +139,20 @@ const ProductEdit = () => {
     return options;
   };
 
+  if (loading) {
+    return <Typography>Loading...</Typography>;
+  }
+
   return (
     <div className="tw-container tw-mx-auto tw-p-4 tw-pt-8 tw-max-w-4xl">
       <Typography variant="h4" gutterBottom>
         Edit Product
       </Typography>
-      <form onSubmit={handleSubmit} className="tw-space-y-4">
+      <form
+        onSubmit={handleSubmit}
+        className="tw-space-y-4"
+        encType="multipart/form-data"
+      >
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Box display="flex" alignItems="center">
@@ -197,17 +249,40 @@ const ProductEdit = () => {
           value={productDetails.stockQuantity}
           onChange={handleInputChange}
         />
-        <TextField
-          label="Picture URL"
-          name="pictureUrl"
-          variant="outlined"
-          fullWidth
-          value={productDetails.pictureUrl}
-          onChange={handleInputChange}
-        />
-        {productDetails.pictureUrl && (
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          border="1px dashed gray"
+          borderRadius="4px"
+          padding="16px"
+          marginBottom="20px"
+          position="relative"
+        >
+          <input
+            accept="image/*"
+            style={{ display: 'none' }}
+            id="contained-button-file"
+            type="file"
+            onChange={handleFileChange}
+          />
+          <label htmlFor="contained-button-file" style={{ width: '100%' }}>
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              width="100%"
+            >
+              <IconButton component="span">
+                <AddPhotoAlternateIcon fontSize="large" />
+              </IconButton>
+              <Typography variant="body1">{fileName || '사진 추가'}</Typography>
+            </Box>
+          </label>
+        </Box>
+        {productDetails.pictureFile && (
           <img
-            src={productDetails.pictureUrl}
+            src={URL.createObjectURL(productDetails.pictureFile)}
             alt="Product Preview"
             className="tw-mt-2 tw-rounded-lg tw-max-w-md"
           />

@@ -18,7 +18,7 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import AddIcon from '@mui/icons-material/Add';
 import { PageContainer } from '../../components/PageContainer';
@@ -26,17 +26,21 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import ReturnPolicy from '../../components/product/ReturnPolicy';
 import useCartOrderStore from '../../store/useCartOrderStore';
 import useProductStore from '../../store/useProductStore';
+import useUserStore from '../../store/useUserStore';
 
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { from } = location.state || { from: { pathname: '/' } };
   const [product, setProduct] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const { addCart, addOrder } = useCartOrderStore((state) => state);
-  const { fetchProductDetails } = useProductStore();
+  const { fetchProductDetails, deleteProduct } = useProductStore();
   const [totalPrice, setTotalPrice] = React.useState(0);
+  const { user } = useUserStore((state) => state);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -109,6 +113,19 @@ const ProductDetail = () => {
   // 상품 정보 이미지 URL 통으로 넣으면 될 것 같아요 각 제품당 1개씩
   const infoImageUrl = `http://localhost:8080/image/${product.infoImageUrl}`;
 
+  const handleDeleteProduct = async () => {
+    if (window.confirm('!!상품을 정말 삭제하시겠습니까?')) {
+      try {
+        await deleteProduct(id);
+        alert('상품이 삭제되었습니다.');
+        navigate(from);
+      } catch (error) {
+        console.error('Failed to delete product', error);
+        alert('상품 삭제에 실패했습니다.');
+      }
+    }
+  };
+
   return (
     <PageContainer>
       {/* 상품 카드 */}
@@ -126,6 +143,25 @@ const ProductDetail = () => {
           </Grid>
           <Grid item md={6} className="tw-flex tw-flex-col tw-justify-between">
             <CardContent className="tw-space-y-6">
+              {user.role === 'ROLE_ADMIN' && (
+                <div>
+                  <Button
+                    variant="outlined"
+                    onClick={() => navigate(`/admin/product/edit/${id}`)}
+                    sx={{ mt: 2, mr: 2 }}
+                  >
+                    상품 수정
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={handleDeleteProduct}
+                    sx={{ mt: 2 }}
+                  >
+                    상품 삭제
+                  </Button>
+                </div>
+              )}
               <Typography variant="h4" component="h1" fontWeight="bold">
                 {product.title}
               </Typography>
