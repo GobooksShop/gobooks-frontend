@@ -54,7 +54,7 @@ export default function ManagerDashboard() {
           sx={{ fontSize: '1rem', fontWeight: 'bold', padding: '10px 20px' }}
         />
         <Tab
-          label="카테고리"
+          label="카테고리 관리"
           sx={{ fontSize: '1rem', fontWeight: 'bold', padding: '10px 20px' }}
         />
         <Tab

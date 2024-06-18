@@ -16,10 +16,8 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { PageContainer } from '../../../components/PageContainer';
 import useCategoryStore from '../../../store/useCategoryStore';
-import { useNavigate } from 'react-router-dom';
 
 function Category() {
-  const navigate = useNavigate();
   const {
     categories,
     fetchCategories,
@@ -227,13 +225,6 @@ function Category() {
           margin: '0 auto',
         }}
       >
-        <Typography
-          variant="h4"
-          gutterBottom
-          className="tw-text-center tw-my-4 tw-p-10"
-        >
-          카테고리 관리 페이지
-        </Typography>
         <Box className="tw-border tw-mb-4 tw-flex tw-flex-wrap">
           <Typography
             variant="h6"

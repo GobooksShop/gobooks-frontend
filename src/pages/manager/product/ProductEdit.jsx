@@ -113,7 +113,7 @@ const ProductEdit = () => {
 
     try {
       await updateProduct(id, formData);
-      navigate(`/product/detail/${id}`); // Redirect to the product detail page after updating
+      navigate(`/product/detail/${id}`); // 제품을 업데이트 한 후 제품 세부 정보 페이지로 리디렉션
     } catch (error) {
       console.error('Error updating product:', error);
     }
@@ -145,24 +145,21 @@ const ProductEdit = () => {
 
   return (
     <div className="tw-container tw-mx-auto tw-p-4 tw-pt-8 tw-max-w-4xl">
-      <Typography variant="h4" gutterBottom>
-        Edit Product
-      </Typography>
       <form
         onSubmit={handleSubmit}
         className="tw-space-y-4"
         encType="multipart/form-data"
       >
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <Box display="flex" alignItems="center">
               <FormControl fullWidth variant="outlined">
-                <InputLabel>Categories</InputLabel>
+                <InputLabel>카테고리</InputLabel>
                 <Select
                   multiple
                   value={productDetails.categoryIds}
                   onChange={handleCategoryChange}
-                  label="Categories"
+                  label="카테고리"
                   renderValue={(selected) => selected.join(', ')}
                 >
                   {categories.flatMap((category) =>
@@ -171,13 +168,13 @@ const ProductEdit = () => {
                 </Select>
               </FormControl>
               <Typography variant="body1" style={{ marginLeft: '10px' }}>
-                Selected: {productDetails.categoryIds.join(', ')}
+                선택된 항목: {productDetails.categoryIds.join(', ')}
               </Typography>
             </Box>
           </Grid>
         </Grid>
         <TextField
-          label="Title"
+          label="제목"
           name="title"
           variant="outlined"
           fullWidth
@@ -185,7 +182,7 @@ const ProductEdit = () => {
           onChange={handleInputChange}
         />
         <TextField
-          label="Author"
+          label="저자"
           name="author"
           variant="outlined"
           fullWidth
@@ -201,7 +198,7 @@ const ProductEdit = () => {
           onChange={handleInputChange}
         />
         <TextField
-          label="Content"
+          label="내용"
           name="content"
           variant="outlined"
           multiline
@@ -211,7 +208,7 @@ const ProductEdit = () => {
           onChange={handleInputChange}
         />
         <TextField
-          label="Fixed Price"
+          label="고정 가격"
           name="fixedPrice"
           variant="outlined"
           type="number"
@@ -221,7 +218,7 @@ const ProductEdit = () => {
         />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
-            label="Publication Year"
+            label="출판 연도"
             views={['year']}
             value={productDetails.publicationYear}
             onChange={handleDateChange}
@@ -229,7 +226,7 @@ const ProductEdit = () => {
           />
         </LocalizationProvider>
         <TextField
-          label="Status"
+          label="상태"
           select
           name="status"
           value={productDetails.status}
@@ -237,11 +234,11 @@ const ProductEdit = () => {
           fullWidth
           variant="outlined"
         >
-          <MenuItem value="AVAILABLE">Available</MenuItem>
-          <MenuItem value="UNAVAILABLE">Unavailable</MenuItem>
+          <MenuItem value="AVAILABLE">판매 중</MenuItem>
+          <MenuItem value="UNAVAILABLE">판매 중지</MenuItem>
         </TextField>
         <TextField
-          label="Stock Quantity"
+          label="재고 수량"
           name="stockQuantity"
           variant="outlined"
           type="number"
@@ -272,6 +269,7 @@ const ProductEdit = () => {
               justifyContent="center"
               alignItems="center"
               width="100%"
+              height={15}
             >
               <IconButton component="span">
                 <AddPhotoAlternateIcon fontSize="large" />
@@ -283,13 +281,21 @@ const ProductEdit = () => {
         {productDetails.pictureFile && (
           <img
             src={URL.createObjectURL(productDetails.pictureFile)}
-            alt="Product Preview"
+            alt="사진 미리보기"
             className="tw-mt-2 tw-rounded-lg tw-max-w-md"
+            style={{ maxWidth: '100%', height: 'auto', maxHeight: '300px' }}
           />
         )}
-        <Button type="submit" variant="contained" color="primary">
-          Update Product
-        </Button>
+        <Box display="flex" justifyContent="center" mt={4}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            style={{ width: '50%' }}
+          >
+            상품 수정
+          </Button>
+        </Box>
       </form>
     </div>
   );

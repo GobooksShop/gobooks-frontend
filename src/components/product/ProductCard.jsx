@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
-import { Link } from 'react-router-dom'; // Link 컴포넌트 import
+import { Link } from 'react-router-dom';
 import noImage from '../../pages/productList/images/noimage.jpg'; // 기본 이미지 추가
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
@@ -22,7 +22,7 @@ function ProductCard({ product }) {
     if (product.pictureUrl) {
       const fullImageUrl = `${baseURL}/image/${product.pictureUrl}`; // Construct full URL
       const img = new Image();
-      img.src = fullImageUrl; // Use full URL for loading image
+      img.src = fullImageUrl;
       img.onload = () => {
         setIsLoading(false);
         setImageUrl(img.src); // 이미지 로딩 성공 시 URL 업데이트
