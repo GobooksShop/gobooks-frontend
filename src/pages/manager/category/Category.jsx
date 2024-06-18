@@ -221,7 +221,12 @@ function Category() {
 
   return (
     <PageContainer>
-      <main>
+      <main
+        style={{
+          maxWidth: '833px',
+          margin: '0 auto',
+        }}
+      >
         <Typography
           variant="h4"
           gutterBottom
