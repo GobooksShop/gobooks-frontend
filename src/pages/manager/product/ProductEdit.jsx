@@ -105,7 +105,7 @@ const ProductEdit = () => {
 
     formData.append(
       'product',
-      new Blob([JSON.stringify(productData)], { type: 'application/json' }),
+      new Blob([JSON.stringify(productData)], { type: 'application/json' })
     );
     if (productDetails.pictureFile) {
       formData.append('pictureFile', productDetails.pictureFile);
@@ -113,7 +113,7 @@ const ProductEdit = () => {
 
     try {
       await updateProduct(id, formData);
-      navigate(`/product/detail/${id}`); // 제품을 업데이트 한 후 제품 세부 정보 페이지로 리디렉션
+      navigate(`/product/detail/${id}`);
     } catch (error) {
       console.error('Error updating product:', error);
     }

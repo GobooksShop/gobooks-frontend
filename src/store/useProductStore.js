@@ -1,4 +1,5 @@
 import * as productApi from '../api/product/productApi';
+
 import { create } from 'zustand';
 
 const useProductStore = create((set) => ({
@@ -30,12 +31,12 @@ const useProductStore = create((set) => ({
     }
   },
 
-  addProduct: async (product) => {
+  addProduct: async (formData) => {
     set({ isLoading: true });
     try {
-      await productApi.addOrUpdateProduct(product);
+      const response = await productApi.addOrUpdateProduct(formData);
       set((state) => ({
-        products: [...state.products, product],
+        products: [...state.products, response.data],
         isLoading: false,
       }));
     } catch (error) {
@@ -44,12 +45,12 @@ const useProductStore = create((set) => ({
     }
   },
 
-  updateProduct: async (id, product) => {
+  updateProduct: async (id, formData) => {
     set({ isLoading: true });
     try {
-      const updatedProduct = await productApi.addOrUpdateProduct({ ...product, id });
+      const response = await productApi.addOrUpdateProduct(formData, id);
       set((state) => ({
-        products: state.products.map((p) => (p.id === id ? updatedProduct : p)),
+        products: state.products.map((p) => (p.id === id ? response.data : p)),
         isLoading: false,
       }));
     } catch (error) {
