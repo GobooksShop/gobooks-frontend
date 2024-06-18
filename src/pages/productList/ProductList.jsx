@@ -1,14 +1,21 @@
-import { Box, CircularProgress, Typography, Breadcrumbs, Pagination, Stack } from '@mui/material';
+import {
+  Box,
+  Breadcrumbs,
+  CircularProgress,
+  Pagination,
+  Stack,
+  Typography,
+} from '@mui/material';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import { useParams, useSearchParams, Link } from 'react-router-dom';
 
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import HomeIcon from '@mui/icons-material/Home';
 // import Pagination from '../../components/util/Pagination';
 import ProductCard from '../../components/product/ProductCard';
 import Sort from '../../components/util/Sort';
 import axios from 'axios';
 import useCategoryStore from '../../store/useCategoryStore';
-import HomeIcon from '@mui/icons-material/Home';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 function ProductList() {
   const { categoryId } = useParams();
@@ -53,11 +60,11 @@ function ProductList() {
       const params = new URLSearchParams({
         page: page.toString(), // 페이지 번호를 문자열로 변환
         size: size.toString(),
-        sort
+        sort,
       });
 
       const response = await axios.get(
-          `http://localhost:8080/api/products/category/${categoryId}/paged?${params}`
+        `http://localhost:8080/api/products/category/${categoryId}/paged?${params}`,
       );
 
       setProducts(response.data.content);
@@ -92,28 +99,28 @@ function ProductList() {
 
   return (
     <Box className="tw-px-4 sm:tw-px-8 tw-py-10 sm:tw-py-16 tw-max-w-screen-xl tw-mx-auto">
-      <Breadcrumbs aria-label="breadcrumb" separator={<ArrowForwardIosIcon fontSize='1rem'/>}
-                   sx={{ marginBottom: '5px' }}
+      <Breadcrumbs
+        aria-label="breadcrumb"
+        separator={<ArrowForwardIosIcon fontSize="1rem" />}
+        sx={{ marginBottom: '5px' }}
       >
-        <Link
-            underline="hover"
-            color="inherit"
-            to="/"
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center'}}>
+        <Link underline="hover" color="inherit" to="/">
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <HomeIcon sx={{ mr: 1, fontSize: '1rem' }} />
             HOME
           </Box>
         </Link>
         {breadcrumbs.map((crumb, index) => (
-            <Link
-                key={crumb.id}
-                underline="hover"
-                color={crumb.id === parseInt(categoryId, 10) ? 'primary' : 'inherit'} // 현재 카테고리 확인
-                to={`/product/list/${crumb.id}`}
-            >
-              {crumb.name}
-            </Link>
+          <Link
+            key={crumb.id}
+            underline="hover"
+            color={
+              crumb.id === parseInt(categoryId, 10) ? 'primary' : 'inherit'
+            } // 현재 카테고리 확인
+            to={`/product/list/${crumb.id}`}
+          >
+            {crumb.name}
+          </Link>
         ))}
       </Breadcrumbs>
       <Typography
@@ -125,16 +132,16 @@ function ProductList() {
       </Typography>
       <Box className="tw-flex tw-justify-between tw-items-center tw-mb-6 sm:tw-mb-10">
         <Stack spacing={2} direction="row">
-        <Pagination
-              className="tw-mt-6 sm:tw-mt-10"
-              count={totalPages}
-              page={currentPage + 1}
-              onChange={handlePageChange}
-              variant="outlined"
-              shape="rounded"
-              color="primary"
-              showFirstButton
-              showLastButton
+          <Pagination
+            className="tw-mt-6 sm:tw-mt-10"
+            count={totalPages}
+            page={currentPage + 1}
+            onChange={handlePageChange}
+            variant="outlined"
+            shape="rounded"
+            color="primary"
+            showFirstButton
+            showLastButton
           />
         </Stack>
         <Sort onSortChange={handleSortChange} />
@@ -159,17 +166,22 @@ function ProductList() {
         </Box>
       )}
 
-      <Stack spacing={2} className="tw-py-10" justifyContent="center" alignItems="center">
+      <Stack
+        spacing={2}
+        className="tw-py-10"
+        justifyContent="center"
+        alignItems="center"
+      >
         <Pagination
-            className="tw-mt-6 sm:tw-mt-10"
-            count={totalPages}
-            page={currentPage + 1}
-            onChange={handlePageChange}
-            variant="outlined"
-            shape="rounded"
-            color="primary"
-            showFirstButton
-            showLastButton
+          className="tw-mt-6 sm:tw-mt-10"
+          count={totalPages}
+          page={currentPage + 1}
+          onChange={handlePageChange}
+          variant="outlined"
+          shape="rounded"
+          color="primary"
+          showFirstButton
+          showLastButton
         />
       </Stack>
     </Box>

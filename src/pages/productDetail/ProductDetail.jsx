@@ -8,9 +8,11 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle, Divider,
+  DialogTitle,
+  Divider,
   Grid,
-  IconButton, Stack,
+  IconButton,
+  Stack,
   TextField,
   Toolbar,
   Typography,
@@ -21,9 +23,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import { PageContainer } from '../../components/PageContainer';
 import RemoveIcon from '@mui/icons-material/Remove';
+import ReturnPolicy from '../../components/product/ReturnPolicy';
 import useCartOrderStore from '../../store/useCartOrderStore';
 import useProductStore from '../../store/useProductStore';
-import ReturnPolicy from "../../components/product/ReturnPolicy";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -32,7 +34,7 @@ const ProductDetail = () => {
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const {addCart, addOrder} = useCartOrderStore((state) => state);
+  const { addCart, addOrder } = useCartOrderStore((state) => state);
   const { fetchProductDetails } = useProductStore();
   const [totalPrice, setTotalPrice] = React.useState(0);
 
@@ -103,6 +105,10 @@ const ProductDetail = () => {
     return <p>No product found</p>;
   }
 
+  const pictureUrl = `http://localhost:8080/image/${product.pictureUrl}`;
+  // 상품 정보 이미지 URL 통으로 넣으면 될 것 같아요 각 제품당 1개씩
+  const infoImageUrl = `http://localhost:8080/image/${product.infoImageUrl}`;
+
   return (
     <PageContainer>
       {/* 상품 카드 */}
@@ -111,8 +117,9 @@ const ProductDetail = () => {
           <Grid item md={6} className="tw-p-10">
             {product.pictureUrl && (
               <img
-                src={product.pictureUrl}
+                src={pictureUrl}
                 alt={product.title}
+                style={{ width: '100%', height: '500px', objectFit: 'contain' }}
                 className="tw-w-full tw-h-auto object-contain tw-shadow-md"
               />
             )}
@@ -132,13 +139,15 @@ const ProductDetail = () => {
               </Typography>
               <Divider />
               <Stack spacing={1} direction="column">
-                <Stack spacing={1} direction="row" justifyContent="space-between">
+                <Stack
+                  spacing={1}
+                  direction="row"
+                  justifyContent="space-between"
+                >
                   <Typography variant="body1" fontWeight="bold">
                     배송 안내
                   </Typography>
-                  <Typography>
-                    내일 {formattedTomorrow} 도착 예정
-                  </Typography>
+                  <Typography>내일 {formattedTomorrow} 도착 예정</Typography>
                 </Stack>
                 <Stack alignItems="flex-end">
                   <Typography variant="body2" color="textSecondary">
@@ -148,9 +157,7 @@ const ProductDetail = () => {
               </Stack>
               <Divider />
               <Stack spacing={1} direction="row" justifyContent="space-between">
-                <Typography variant="body2">
-                  ISBN
-                </Typography>
+                <Typography variant="body2">ISBN</Typography>
                 <Typography variant="body2" color="textSecondary">
                   {product.isbn}
                 </Typography>
@@ -167,9 +174,8 @@ const ProductDetail = () => {
             <Typography variant="h5" gutterBottom>
               상품 정보
             </Typography>
-            <Divider sx={{ my:2 }} />
-            <Typography variant="body2"
-                        sx={{ lineHeight: 1.6 }} gutterBottom>
+            <Divider sx={{ my: 2 }} />
+            <Typography variant="body2" sx={{ lineHeight: 1.6 }} gutterBottom>
               {product.content}
             </Typography>
           </Grid>
@@ -177,11 +183,11 @@ const ProductDetail = () => {
             <Box className="tw-w-full tw-relative">
               (상품 정보 이미지) {/* <- 이미지 url 등록 후 문구 삭제 바람 */}
               {product.infoImageUrl && (
-                  <img
-                      src={product.infoImageUrl}
-                      alt="상품 정보 이미지"
-                      className="tw-w-full tw-h-auto object-contain"
-                  />
+                <img
+                  src={infoImageUrl}
+                  alt="상품 정보 이미지"
+                  className="tw-w-full tw-h-auto object-contain"
+                />
               )}
             </Box>
           </Grid>
