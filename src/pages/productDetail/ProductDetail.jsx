@@ -10,7 +10,7 @@ import {
   DialogContent,
   DialogTitle, Divider,
   Grid,
-  IconButton,
+  IconButton, Stack,
   TextField,
   Toolbar,
   Typography,
@@ -83,6 +83,16 @@ const ProductDetail = () => {
     navigate('/cart');
   };
 
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const formattedTomorrow = tomorrow.toLocaleDateString('ko-KR', {
+    month: '2-digit',
+    day: '2-digit',
+    weekday: 'short',
+  });
+
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -116,34 +126,56 @@ const ProductDetail = () => {
                 {product.author} · {product.publicationYear}
               </Typography>
               <Divider />
+              {/* 할인율 추가해야 함 */}
               <Typography variant="h5" fontWeight="bold" textAlign="right">
                 {product.fixedPrice.toLocaleString()}원
               </Typography>
               <Divider />
-              <Typography variant="body2" color="textSecondary"
-                          sx={{ lineHeight: 1.6 }} gutterBottom>
-                {product.content}
-              </Typography>
+              <Stack spacing={1} direction="column">
+                <Stack spacing={1} direction="row" justifyContent="space-between">
+                  <Typography variant="body1" fontWeight="bold">
+                    배송 안내
+                  </Typography>
+                  <Typography>
+                    내일 {formattedTomorrow} 도착 예정
+                  </Typography>
+                </Stack>
+                <Stack alignItems="flex-end">
+                  <Typography variant="body2" color="textSecondary">
+                    기본배송지 기준
+                  </Typography>
+                </Stack>
+              </Stack>
               <Divider />
-              <Typography variant="body2" color="textSecondary" textAlign="right">
-                ISBN | {product.isbn}
-              </Typography>
+              <Stack spacing={1} direction="row" justifyContent="space-between">
+                <Typography variant="body2">
+                  ISBN
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  {product.isbn}
+                </Typography>
+              </Stack>
             </CardContent>
           </Grid>
         </Grid>
       </Card>
 
       {/* 상품 추가 정보 */}
-      <Box className="tw-max-w-5xl tw-mx-auto tw-p-4 tw-md:p-8">
+      <Box className="tw-max-w-5xl tw-mx-auto tw-p-4 tw-md:p-8 tw-mb-10">
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Typography variant="h5" gutterBottom>
               상품 정보
             </Typography>
+            <Divider sx={{ my:2 }} />
+            <Typography variant="body2"
+                        sx={{ lineHeight: 1.6 }} gutterBottom>
+              {product.content}
+            </Typography>
           </Grid>
-          <Divider/>
           <Grid item xs={12} sm={8} md={7} className="tw-mx-auto">
             <Box className="tw-w-full tw-relative">
+              (상품 정보 이미지) {/* <- 이미지 url 등록 후 문구 삭제 바람 */}
               {product.infoImageUrl && (
                   <img
                       src={product.infoImageUrl}
