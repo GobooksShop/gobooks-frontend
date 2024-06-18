@@ -3,7 +3,7 @@ import { Typography, Divider, Box } from '@mui/material';
 
 function ReturnPolicy() {
   return (
-      <Box className="tw-p-4 tw-md:p-8 tw-mt-10">
+      <Box>
         <Typography variant="h5" gutterBottom>
           교환/반품/품절 안내
         </Typography>

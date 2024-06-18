@@ -116,7 +116,7 @@ const ProductDetail = () => {
                 {product.author} · {product.publicationYear}
               </Typography>
               <Divider />
-              <Typography variant="h5" fontWeight="bold">
+              <Typography variant="h5" fontWeight="bold" textAlign="right">
                 {product.fixedPrice.toLocaleString()}원
               </Typography>
               <Divider />
@@ -124,35 +124,42 @@ const ProductDetail = () => {
                           sx={{ lineHeight: 1.6 }} gutterBottom>
                 {product.content}
               </Typography>
+              <Divider />
+              <Typography variant="body2" color="textSecondary" textAlign="right">
+                ISBN | {product.isbn}
+              </Typography>
             </CardContent>
           </Grid>
         </Grid>
       </Card>
 
       {/* 상품 추가 정보 */}
-      <Grid container spacing={3} className="tw-p-4 tw-md:p-8">
-        <Grid item xs={12}>
-          <Typography variant="h5" gutterBottom>
-            상품 정보
-          </Typography>
+      <Box className="tw-max-w-5xl tw-mx-auto tw-p-4 tw-md:p-8">
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Typography variant="h5" gutterBottom>
+              상품 정보
+            </Typography>
+          </Grid>
+          <Divider/>
+          <Grid item xs={12} sm={8} md={7} className="tw-mx-auto">
+            <Box className="tw-w-full tw-relative">
+              {product.infoImageUrl && (
+                  <img
+                      src={product.infoImageUrl}
+                      alt="상품 정보 이미지"
+                      className="tw-w-full tw-h-auto object-contain"
+                  />
+              )}
+            </Box>
+          </Grid>
         </Grid>
-        <Divider />
-        <Grid item xs={12} sm={8} md={7} className="tw-mx-auto">
-          <Box className="tw-w-full tw-relative">
-            {product.infoImageUrl && (
-                <img
-                    src={product.infoImageUrl}
-                    alt="상품 정보 이미지"
-                    className="tw-w-full tw-h-auto object-contain"
-                    style={{ maxWidth: '60%' }}
-                />
-            )}
-          </Box>
-        </Grid>
-      </Grid>
+      </Box>
 
       {/* 교환/환불 정책 */}
-      <ReturnPolicy />
+      <Box className="tw-max-w-5xl tw-mx-auto tw-p-4 tw-md:p-8">
+        <ReturnPolicy />
+      </Box>
 
       {/* 하단 바 */}
       <AppBar
