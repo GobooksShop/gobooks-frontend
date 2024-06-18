@@ -35,7 +35,7 @@ const ProductDetail = () => {
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const {addCart, addOrders} = useCartOrderStore((state) => state);
+  const {addCart, addOrder} = useCartOrderStore((state) => state);
   const { fetchProductDetails } = useProductStore();
   const [totalPrice, setTotalPrice] = React.useState(0);
 
@@ -60,14 +60,14 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (product) {
-      addCart(product.id, quantity, product.fixedPrice);
+      addCart(product.id, quantity, product.fixedPrice, 'cart');
       // alert(`${product.title}이(가) 장바구니에 추가되었습니다.`);
       setOpenDialog(true);
     }
   };
 
   const handleBuyNow = () => {
-    addOrders(product.id, quantity, product.fixedPrice);
+    addOrder(product.id, quantity, product.fixedPrice, 'order');
     navigate(`/order`);
   };
 

@@ -13,29 +13,32 @@ const CartItems = (props) => {
     const fetchData = async () => {
 
       const storeData = JSON.parse(localStorage.getItem('cart-storage')).state || [];
-      const orderData = JSON.parse(localStorage.getItem('cart-storage')).state.orderItems || [];
-      if (orderData.length === 1) {
-        const data = await getProduct(orderData.productId);
+      const existDirectOrder = storeData.orderItems || [];
 
-        const cartDatas = {
-          'productId': data.id,
-          'product_name': orderData.title,
-          'quantity': data.quantity,
-          'price': orderData.fixedPrice,
-          'isSelected': data.isSelected,
-          'amount': orderData.fixedPrice * data.quantity,
-          'img_url': 'https://contents.kyobobook.co.kr/sih/fit-in/300x0/pdt/9791192987675.jpg',
-        };
-
-        console.log(cartDatas);
-        setCartItems(cartDatas);
-        store.resetOrderItems();
-        return;
-      }
-      console.log('======================new===============================');
-      console.log(storeData);
       if (!storeData) {
         console.error('로컬 스토리지에서 cart-storage 데이터를 가져올 수 없습니다.');
+        return;
+      }
+
+      if (existDirectOrder.length === 1) {
+        const productIdList = existDirectOrder.map((item) => item.productId);
+        console.log(productIdList);
+        const data = await getProduct(productIdList);
+        console.log(data);
+        const cartDatas = [{
+          'productId': data[0].id,
+          'product_name': data[0].title,
+          'quantity': existDirectOrder[0].quantity,
+          'price': data[0].fixedPrice,
+          'isSelected': existDirectOrder[0].isSelected,
+          'amount': data[0].fixedPrice * existDirectOrder[0].quantity,
+          'img_url': 'https://contents.kyobobook.co.kr/sih/fit-in/300x0/pdt/9791192987675.jpg',
+        }];
+
+        setCartItems(cartDatas);
+        store.updateTotalOrderAmount();
+        store.resetOrderItems();
+
         return;
       }
       const storedCartItems = storeData.cartItems;
@@ -43,9 +46,10 @@ const CartItems = (props) => {
       const data = await getProduct(productList);
 
       const cartData = [];
-      console.log(data);
+      console.log("cart에서 order로 넘어올때 타는 로직");
+      console.log(props.isOrders);
       if (props.isOrders) {
-        const selectedOrderItems = storedCartItems.filter(item => item.isSelected);
+        const selectedOrderItems = storedCartItems.filter(item => item.isSelected && item.status == 'cart');
         for (const orderItem of selectedOrderItems) {
           const productData = data.find(item => item.id === orderItem.productId);
           console.log(productData);
@@ -56,6 +60,7 @@ const CartItems = (props) => {
             'price': productData.fixedPrice,
             'isSelected': orderItem.isSelected,
             'amount': productData.fixedPrice * orderItem.quantity,
+            'status': 'cart',
             'img_url': 'https://contents.kyobobook.co.kr/sih/fit-in/300x0/pdt/9791192987675.jpg',
           };
           cartData.push(cartDatas);
@@ -65,7 +70,12 @@ const CartItems = (props) => {
       } else {
         for (const item of data) {
           console.log(storedCartItems);
-          const storedItem = storedCartItems.find(cartItem => cartItem.productId === item.id);
+          console.log(item);
+          const storedItem = storedCartItems.find(cartItem => cartItem.productId === item.id && cartItem.status === 'cart');
+          console.log(storedItem);
+          if(!storedItem){
+            return;
+          }
           const cartDatas = {
             'productId': item.id,
             'product_name': item.title,
@@ -73,15 +83,20 @@ const CartItems = (props) => {
             'price': item.fixedPrice,
             'isSelected': storedItem.isSelected,
             'amount': item.fixedPrice * storedItem.quantity,
+            'status': 'cart',
             'img_url': 'https://contents.kyobobook.co.kr/sih/fit-in/300x0/pdt/9791192987675.jpg',
           };
+
           cartData.push(cartDatas);
         }
       }
 
       console.log(cartData);
       setCartItems(cartData);
-      store.updateTotalAmount();
+      if(existDirectOrder.length === 0 ){
+        store.updateTotalOrderAmount();
+        store.updateTotalCartAmount();
+      }
     };
     fetchData();
   }, []);
@@ -98,13 +113,14 @@ const CartItems = (props) => {
     setSelectAll(newSelectAll);
     const updatedItems = cartItems.map(item => ({ ...item, isSelected: newSelectAll }));
     setCartItems(updatedItems);
-    store.updateCartItems(updatedItems.map(({ productId, quantity, price, isSelected }) => ({
+    store.updateCartItems(updatedItems.map(({ productId, quantity, price, isSelected, status }) => ({
       productId: productId,
       quantity,
       price,
       isSelected,
+      status
     })));
-    store.updateTotalAmount();
+    store.updateTotalCartAmount();
   };
 
   const handleSelectItem = (index) => {
@@ -117,7 +133,7 @@ const CartItems = (props) => {
       price,
       isSelected,
     })));
-    store.updateTotalAmount();
+    store.updateTotalCartAmount();
   };
 
   const handleCountChange = (productId, newCount, index) => {
@@ -129,13 +145,14 @@ const CartItems = (props) => {
       amount: newCount * updatedItems[index].price,
     };
     setCartItems(updatedItems);
-    store.updateCartItems(updatedItems.map(({ productId, quantity, price, isSelected }) => ({
+    store.updateCartItems(updatedItems.map(({ productId, quantity, price, isSelected, status }) => ({
       productId: productId,
       quantity,
       price,
       isSelected,
+      status
     })));
-    store.updateTotalAmount();
+    store.updateTotalCartAmount();
   };
 
   //버튼 클릭시 삭제합니다.
@@ -148,7 +165,7 @@ const CartItems = (props) => {
       price,
       isSelected,
     })));
-    store.updateTotalAmount();
+    store.updateTotalCartAmount();
   };
   //각각의 아이템을 선택하여 삭제합니다.
   const handleDeleteItem = (index) => {
@@ -160,7 +177,7 @@ const CartItems = (props) => {
       price,
       isSelected,
     })));
-    store.updateTotalAmount();
+    store.updateTotalCartAmount();
   };
 
   return (
@@ -202,7 +219,7 @@ const CartItems = (props) => {
               </div>
               <div className="md:tw-w-52">
                 <div className="tw-w-20 tw-flex tw-flex-col tw-items-center">
-                  <span>{item.amount}원</span>
+                  <span>{item.amount * 0.9}원</span>
                   {props.isOrders ? <></> :
                     <CartProductCounter
                       idx={index}
