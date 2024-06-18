@@ -38,13 +38,16 @@ export default function ManagerDashboard() {
         padding: '20px',
         boxSizing: 'border-box',
         boxShadow: '0px 10px 20px rgba(0,0,0,0.1)',
+        '#tabpanel-1': { width: '100% !important' },
       }}
     >
       <Tabs
         value={tabIndex}
         onChange={handleChange}
         aria-label="Manager Dashboard Tabs"
-        sx={{ marginBottom: '20px' }}
+        sx={{
+          marginBottom: '20px',
+        }}
       >
         <Tab
           label="회원 관리"

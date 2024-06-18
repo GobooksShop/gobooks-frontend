@@ -1,40 +1,38 @@
-import React, {useEffect, useState} from 'react';
 import {
-  Tabs,
-  Tab,
   Box,
-  Typography,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
+  ClickAwayListener,
   Collapse,
   IconButton,
+  Tab,
+  Tabs,
+  Typography,
 } from '@mui/material';
-import {Link, useNavigate} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import CloseIcon from '@mui/icons-material/Close';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
 import useCategoryStore from '../../../store/useCategoryStore';
-import { Grid } from '@mui/material';
 
-const Depth3 = ({category, onLinkClick}) => {
+const Depth3 = ({ category, onLinkClick }) => {
   return (
-      <Box className="tw-my-1">
-        <Link to={`/product/list/${category.id}`}
-              onClick={() => onLinkClick(`/product/list/${category.id}`)}>
-          <Typography
-              className="tw-text-sm tw-text-gray-600">
-            {category.name}
-          </Typography>
-        </Link>
-      </Box>
+    <Box className="tw-my-1">
+      <Link
+        to={`/product/list/${category.id}`}
+        onClick={() => onLinkClick(`/product/list/${category.id}`)}
+      >
+        <Typography className="tw-text-sm tw-text-gray-600">
+          {category.name}
+        </Typography>
+      </Link>
+    </Box>
   );
 };
 
-const Depth2 = ({category, selectedCategory, handleCategory, onLinkClick}) => {
+const Depth2 = ({ category, selectedCategory, handleCategory, onLinkClick }) => {
   const [isOpen, setIsOpen] = useState(selectedCategory?.id === category.id);
 
   const toggleOpen = () => {
@@ -43,43 +41,42 @@ const Depth2 = ({category, selectedCategory, handleCategory, onLinkClick}) => {
   };
 
   return (
-      <Box sx={{width: '200px', minWidth: '150px'}}>
-        <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-            className="tw-py-1"
-            onClick={toggleOpen}
+    <Box sx={{ width: '200px', minWidth: '150px' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+        className="tw-py-1"
+        onClick={toggleOpen}
+      >
+        <Link
+          to={`/product/list/${category.id}`}
+          onClick={onLinkClick}
+          className="tw-no-underline tw-truncate"
         >
-          <Link to={`/product/list/${category.id}`} onClick={onLinkClick}
-                className="tw-no-underline tw-truncate">
-            <Typography>{category.name}</Typography>
-          </Link>
+          <Typography>{category.name}</Typography>
+        </Link>
 
-          {category.children.length > 0 && (
-              <IconButton onClick={toggleOpen} className="tw-cursor-pointer">
-                {isOpen ? (
-                    <ExpandLess sx={{color: 'grey.300'}}/>
-                ) : (
-                    <ExpandMore sx={{color: 'grey.300'}}/>
-                )}
-              </IconButton>
-          )}
-        </Box>
-
-        <Collapse in={isOpen} timeout="auto" unmountOnExit={false}>
-          <Box
-              className="tw-ml-2 transition-all duration-300 ease-in-out overflow-hidden"
-              style={{maxHeight: isOpen ? '500px' : '0'}}>
-            {category.children.map((categoryDepth3) => (
-                <Depth3 key={categoryDepth3.id} category={categoryDepth3}
-                        onLinkClick={onLinkClick}/>
-            ))}
-          </Box>
-        </Collapse>
+        {category.children.length > 0 && (
+          <IconButton onClick={toggleOpen} className="tw-cursor-pointer">
+            {isOpen ? <ExpandLess sx={{ color: 'grey.300' }} /> : <ExpandMore sx={{ color: 'grey.300' }} />}
+          </IconButton>
+        )}
       </Box>
+
+      <Collapse in={isOpen} timeout="auto" unmountOnExit={false}>
+        <Box
+          className="tw-ml-2 transition-all duration-300 ease-in-out overflow-hidden"
+          style={{ maxHeight: isOpen ? '500px' : '0' }}
+        >
+          {category.children.map((categoryDepth3) => (
+            <Depth3 key={categoryDepth3.id} category={categoryDepth3} onLinkClick={onLinkClick} />
+          ))}
+        </Box>
+      </Collapse>
+    </Box>
   );
 };
 
@@ -88,9 +85,9 @@ export function CategoryMenu() {
   const [selectedDepth2, setSelectedDepth2] = useState(null);
   const [selectedTab, setSelectedTab] = useState(0);
   const [openDepth2, setOpenDepth2] = useState({});
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // 메뉴 열림 상태 추가
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const {categories, fetchCategories} = useCategoryStore();
+  const { categories, fetchCategories } = useCategoryStore();
 
   useEffect(() => {
     fetchCategories();
@@ -122,77 +119,74 @@ export function CategoryMenu() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleClickAway = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
-      <Box className="tw-relative tw-w-full">
-        <IconButton
-            size="large"
-            aria-label="메뉴 열기/닫기"
-            onClick={handleMenuToggle}
-            className="tw-text-black focus:tw-outline-none"
-        >
-          {isMenuOpen ? <CloseIcon/> : <MenuIcon/>}
-        </IconButton>
-        {isMenuOpen && (
-            <Box
-                className="tw-absolute tw-top-full tw-left-0 tw-z-20 tw-mt-2 tw-rounded-lg tw-shadow-lg tw-bg-white"
-                role="menu"
-                aria-orientation="vertical"
-                aria-labelledby="menu-appbar"
-                sx={{
-                  maxHeight: 600,
-                  overflowY: 'auto',
-                }}
+    <Box className="tw-relative tw-w-full">
+      <IconButton
+        size="large"
+        aria-label="메뉴 열기/닫기"
+        onClick={handleMenuToggle}
+        className="tw-text-black focus:tw-outline-none"
+      >
+        {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
+      </IconButton>
+      {isMenuOpen && (
+        <ClickAwayListener onClickAway={handleClickAway}>
+          <Box
+            className="tw-absolute tw-top-full tw-left-0 tw-z-20 tw-mt-2 tw-rounded-lg tw-shadow-lg tw-bg-white"
+            role="menu"
+            aria-orientation="vertical"
+            aria-labelledby="menu-appbar"
+            sx={{
+              maxHeight: 600,
+              overflowY: 'auto',
+            }}
+          >
+            <Tabs
+              value={selectedTab}
+              onChange={handleChangeTab}
+              indicatorColor="primary"
+              textColor="primary"
+              variant="scrollable"
+              scrollButtons="auto"
+              aria-label="scrollable auto tabs example"
             >
-              {/* 1단계 카테고리 (탭) */}
-              <Tabs
-                  value={selectedTab}
-                  onChange={handleChangeTab}
-                  indicatorColor="primary"
-                  textColor="primary"
-                  variant="scrollable"
-                  scrollButtons="auto"
-                  aria-label="scrollable auto tabs example"
-              >
-                {categories.map((category) => (
-                    <Tab
-                        key={category.id}
-                        label={category.name}
+              {categories.map((category) => (
+                <Tab key={category.id} label={category.name} />
+              ))}
+            </Tabs>
+
+            {categories[selectedTab]?.children.length > 0 && (
+              <Box className="tw-flex-1 tw-py-5 tw-px-5">
+                <Link
+                  to={`/product/list/${categories[selectedTab].id}`}
+                  onClick={() => handleLinkClick(`/product/list/${categories[selectedTab].id}`)}
+                >
+                  <Typography variant="h6" component="h2" className="tw-flex tw-items-center tw-font-bold">
+                    {categories[selectedTab].name} 전체
+                    <ArrowForwardIosIcon className="tw-ml-1" sx={{ fontSize: '1rem' }} />
+                  </Typography>
+                </Link>
+
+                <Box className="tw-flex tw-flex-col tw-gap-1 tw-mt-4">
+                  {categories[selectedTab].children.map((categoryDepth2) => (
+                    <Depth2
+                      key={categoryDepth2.id}
+                      category={categoryDepth2}
+                      selectedCategory={selectedDepth2}
+                      handleCategory={handleSelectedDepth2}
+                      onLinkClick={handleLinkClick}
                     />
-                ))}
-              </Tabs>
-
-              {/* 2단계 및 3단계 카테고리 */}
-              {categories[selectedTab]?.children.length > 0 && (
-                  <Box className="tw-flex-1 tw-py-5 tw-px-5">
-                    {/* Depth 1 Link */}
-                    <Link to={`/product/list/${categories[selectedTab].id}`}
-                          onClick={() => handleLinkClick(
-                              `/product/list/${categories[selectedTab].id}`)}>
-                      <Typography variant="h6" component="h2"
-                                  className="tw-flex tw-items-center tw-font-bold">
-                        {categories[selectedTab].name} 전체
-                        <ArrowForwardIosIcon className="tw-ml-1"
-                                             sx={{fontSize: '1rem'}}/>
-                      </Typography>
-                    </Link>
-
-                    {/* Depth 2 & 3 List */}
-                    <Box className="tw-flex tw-flex-col tw-gap-1 tw-mt-4">
-                      {categories[selectedTab].children.map(
-                          (categoryDepth2) => (
-                              <Depth2
-                                  key={categoryDepth2.id}
-                                  category={categoryDepth2}
-                                  selectedCategory={selectedDepth2}
-                                  handleCategory={handleSelectedDepth2}
-                                  onLinkClick={handleLinkClick}
-                              />
-                          ))}
-                    </Box>
-                  </Box>
-              )}
-            </Box>
-        )}
-      </Box>
+                  ))}
+                </Box>
+              </Box>
+            )}
+          </Box>
+        </ClickAwayListener>
+      )}
+    </Box>
   );
 }
