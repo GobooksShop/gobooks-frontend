@@ -13,6 +13,7 @@ import ProductDetail from './pages/productDetail/ProductDetail';
 import ProductEdit from './pages/manager/product/ProductEdit';
 import ProductList from './pages/productList/ProductList';
 import UserManagement from './pages/manager/users/UserManagement';
+import { OrdersComplate } from './pages/order/OrdersComplate';
 
 const Router = () => {
   return (
@@ -21,6 +22,7 @@ const Router = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/join" element={<Join />} />
       <Route path="/order" element={<Order />} />
+        <Route path="/order/complate" element={<OrdersComplate />} />
       <Route path="/product/list/:categoryId" element={<ProductList />} />
       <Route path="/product/detail/:id" element={<ProductDetail />} />
       <Route path="/admin/product/add" element={<ProductAdd />} />
