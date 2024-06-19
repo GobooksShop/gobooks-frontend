@@ -31,6 +31,18 @@ const useProductStore = create((set) => ({
     }
   },
 
+  fetchProductImgDetail: async (productId) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await productApi.fetchProductImgDetail(productId);
+      set({ productImgDetail: response.data, isLoading: false });
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch product image details:', error);
+      set({ error: error.message, isLoading: false });
+    }
+  },
+
   addProduct: async (formData) => {
     set({ isLoading: true });
     try {
