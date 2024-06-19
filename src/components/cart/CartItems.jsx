@@ -199,7 +199,7 @@ const CartItems = (props) => {
       <div className="tw-grid-table-wrap tw-px-2 tw-border-0 tw-border-b tw-border-solid tw-border-gray-400/35">
         <ul className="tw-px-2">
           {cartItems.map((item, index) => (
-            <li key={item.productId + index + crypto.randomUUID()}
+            <li key={item.productId + index}
                 className="tw-flex md:tw-items-center md:tw-gap-10 md:tw-h-36 tw-border-0 tw-border-b tw-border-solid tw-border-gray-400/35">
               {props.isOrders ? <></> : <input
                 type="checkbox"
