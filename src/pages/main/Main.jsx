@@ -122,10 +122,10 @@ function Main() {
   ];
 
   const [products, setProducts] = useState({
-    steadySellers: [],
-    newBooks: [],
-    todaysBook: [],
-    bestSellers: [],
+    1: [],
+    2: [],
+    3: [],
+    4: [],
   });
   const [loading, setLoading] = useState(true);
 
@@ -133,6 +133,7 @@ function Main() {
     const fetchProducts = async () => {
       try {
         const response = await fetchMainProducts();
+        console.log('Fetched Products:', response.data); // 데이터 확인을 위한 콘솔 로그
         setProducts(response.data);
         setLoading(false);
       } catch (error) {
@@ -167,10 +168,10 @@ function Main() {
           >
             상반기 베스트셀러
           </h2>
-          {products.bestSellers && products.bestSellers.length > 0 ? (
-            <BookCarousel books={products.bestSellers} />
+          {products[1] && products[1].length > 0 ? (
+            <BookCarousel books={products[1]} />
           ) : (
-            <Typography>No data available for 베스트셀러.</Typography>
+            <Typography>No data available for 상반기 베스트셀러.</Typography>
           )}
         </section>
 
@@ -186,8 +187,8 @@ function Main() {
           >
             화제의 신상
           </h2>
-          {products.newBooks && products.newBooks.length > 0 ? (
-            <BookCarousel books={products.newBooks} />
+          {products[2] && products[2].length > 0 ? (
+            <BookCarousel books={products[2]} />
           ) : (
             <Typography>No data available for 화제의 신상.</Typography>
           )}
@@ -205,8 +206,8 @@ function Main() {
           >
             오늘의 책
           </h2>
-          {products.todaysBook && products.todaysBook.length > 0 ? (
-            <BookCarousel books={products.todaysBook} />
+          {products[3] && products[3].length > 0 ? (
+            <BookCarousel books={products[3]} />
           ) : (
             <Typography>No data available for 오늘의 책.</Typography>
           )}
@@ -224,8 +225,8 @@ function Main() {
           >
             스테디셀러
           </h2>
-          {products.steadySellers && products.steadySellers.length > 0 ? (
-            <BookCarousel books={products.steadySellers} />
+          {products[4] && products[4].length > 0 ? (
+            <BookCarousel books={products[4]} />
           ) : (
             <Typography>No data available for 스테디셀러.</Typography>
           )}
