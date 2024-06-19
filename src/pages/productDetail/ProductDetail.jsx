@@ -50,7 +50,10 @@ const ProductDetail = () => {
         const productData = await fetchProductDetails(id);
         setProduct(productData);
         if (productData) {
-          setTotalPrice(productData.fixedPrice * quantity);
+          const price = productData.discount
+            ? productData.fixedPrice * 0.9
+            : productData.fixedPrice;
+          setTotalPrice(price * quantity);
         }
         setLoading(false);
       } catch (error) {
@@ -168,27 +171,35 @@ const ProductDetail = () => {
                     sx={{ mt: 2 }}
                   >
                     상품 삭제
-                  </Button>
-                </div>
+                </Button>
+              </div>
+            )}
+            <Typography variant="h4" component="h1" fontWeight="bold">
+              {product.title}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              {product.author} · {product.publicationYear}
+            </Typography>
+            <Divider />
+            <Typography variant="h5" fontWeight="bold" textAlign="right">
+              {product.discount ? (
+                <span>
+                  <span style={{ textDecoration: 'line-through', marginRight: '8px' }}>
+                    {product.fixedPrice.toLocaleString()}원
+                  </span>
+                  {(product.fixedPrice * 0.9).toLocaleString()}원
+                </span>
+              ) : (
+                `${product.fixedPrice.toLocaleString()}원`
               )}
-              <Typography variant="h4" component="h1" fontWeight="bold">
-                {product.title}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                {product.author} · {product.publicationYear}
-              </Typography>
-              <Divider />
-              {/* 할인율 추가해야 함 */}
-              <Typography variant="h5" fontWeight="bold" textAlign="right">
-                {product.fixedPrice.toLocaleString()}원
-              </Typography>
-              <Divider />
-              <Stack spacing={1} direction="column">
-                <Stack
-                  spacing={1}
-                  direction="row"
-                  justifyContent="space-between"
-                >
+            </Typography>
+            <Divider />
+            <Stack spacing={1} direction="column">
+              <Stack
+                spacing={1}
+                direction="row"
+                justifyContent="space-between"
+              >
                   <Typography variant="body1" fontWeight="bold">
                     배송 안내
                   </Typography>

@@ -9,6 +9,8 @@ import {
   Select,
   TextField,
   Typography,
+  Checkbox,
+  FormControlLabel,
 } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import React, { useEffect, useState } from 'react';
@@ -37,6 +39,7 @@ const ProductEdit = () => {
     stockQuantity: '',
     pictureFile: null,
     categoryIds: [],
+    discount: false,
   });
   const [fileName, setFileName] = useState('');
   const [loading, setLoading] = useState(true);
@@ -52,6 +55,7 @@ const ProductEdit = () => {
             ? dayjs(data.publicationYear)
             : null,
           categoryIds: data.categoryIds || [],
+          discount: data.discount || false,
         });
         setFileName(data.pictureFile ? data.pictureFile.name : '');
       }
@@ -84,6 +88,10 @@ const ProductEdit = () => {
     setProductDetails((prev) => ({ ...prev, categoryIds: value }));
   };
 
+  const handleDiscountChange = (event) => {
+    setProductDetails((prev) => ({ ...prev, discount: event.target.checked }));
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -101,6 +109,7 @@ const ProductEdit = () => {
       status: productDetails.status,
       stockQuantity: parseInt(productDetails.stockQuantity),
       categoryIds: productDetails.categoryIds,
+      discount: productDetails.discount,
     };
 
     formData.append(
@@ -246,6 +255,17 @@ const ProductEdit = () => {
           fullWidth
           value={productDetails.stockQuantity}
           onChange={handleInputChange}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={productDetails.discount}
+              onChange={handleDiscountChange}
+              name="discount"
+              color="primary"
+            />
+          }
+          label="할인 여부"
         />
         <Box
           display="flex"
