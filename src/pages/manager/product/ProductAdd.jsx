@@ -1,7 +1,10 @@
 import {
   Box,
-  Button, Chip,
+  Button,
+  Checkbox,
+  Chip,
   FormControl,
+  FormControlLabel,
   Grid,
   IconButton,
   InputLabel,
@@ -9,8 +12,6 @@ import {
   Select,
   TextField,
   Typography,
-  Checkbox,
-  FormControlLabel,
 } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import React, { useEffect, useState } from 'react';
@@ -169,15 +170,33 @@ const ProductAdd = () => {
             </Box>
           </Grid>
           <Grid item xs={6}>
-            <Box component="div" style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginLeft: 10 }}>
+            <Box
+              component="div"
+              style={{
+                display: 'flex',
+                gap: 8,
+                flexWrap: 'wrap',
+                marginLeft: 10,
+              }}
+            >
               {productDetails.categoryIds.map((categoryId) => {
-                const categoryName = categories.find((cat) => cat.id === categoryId)?.name || categoryId;
+                const categoryName =
+                  categories.find((cat) => cat.id === categoryId)?.name ||
+                  categoryId;
                 return (
-                    <Chip
-                        key={categoryId}
-                        label={categoryName}
-                        onDelete={() => handleCategoryChange({ target: { value: productDetails.categoryIds.filter(id => id !== categoryId) } })}
-                    />
+                  <Chip
+                    key={categoryId}
+                    label={categoryName}
+                    onDelete={() =>
+                      handleCategoryChange({
+                        target: {
+                          value: productDetails.categoryIds.filter(
+                            (id) => id !== categoryId,
+                          ),
+                        },
+                      })
+                    }
+                  />
                 );
               })}
             </Box>
