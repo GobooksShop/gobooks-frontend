@@ -141,9 +141,9 @@ function Category() {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              {categories.map((rootCategory) =>
-                renderCategoryOptions(rootCategory),
-              )}
+              {categories
+                .filter((rootCategory) => rootCategory.id !== category.id) // prevent setting itself as parent
+                .map((rootCategory) => renderCategoryOptions(rootCategory))}
             </Select>
           </FormControl>
           <Box className="tw-ml-auto">
