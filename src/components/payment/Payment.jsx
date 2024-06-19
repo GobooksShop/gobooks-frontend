@@ -127,23 +127,14 @@ const Payment = () => {
                 impUid: response.imp_uid,
                 merchantUid: merchantUid
               };
-
-              complete_payment(requestPaymentData)
-                .then(data => {
-                  console.log(data);
-                  resetMerchantUid();
-                  navigate("/order/complate");
-                })
-                .catch(error => {
-                  console.log(error);
-                  alert(error);
-                });
+              navigate("/order/complete", {state: {payData: requestPaymentData }});
             } else {
-              console.log(response);
+              console.log("실패 else문을 탑니다.");
             }
           },
         );
       })
+
       .catch(error => {
         alert(error + "배송 정보를 확인할 수 없습니다.");
       });
