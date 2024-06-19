@@ -41,7 +41,7 @@ const ProductDetail = () => {
   const { fetchProductDetails, deleteProduct } = useProductStore();
   const [totalPrice, setTotalPrice] = React.useState(0);
   const { user } = useUserStore((state) => state);
-
+  const [isSoldOut, setIsSoldOut] = useState(null);
   const baseURL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
@@ -50,7 +50,10 @@ const ProductDetail = () => {
         const productData = await fetchProductDetails(id);
         setProduct(productData);
         if (productData) {
-          setTotalPrice(productData.fixedPrice * quantity);
+          const price = productData.discount
+            ? productData.fixedPrice * 0.9
+            : productData.fixedPrice;
+          setTotalPrice(price * quantity);
         }
         setLoading(false);
       } catch (error) {
@@ -63,10 +66,15 @@ const ProductDetail = () => {
     fetchProduct();
   }, [id, fetchProductDetails, quantity]);
 
+  useEffect(() => {
+    if (product) {
+      setIsSoldOut(product.stockQuantity <= 0);
+    }
+  }, [product]);
+
   const handleAddToCart = () => {
     if (product) {
       addCart(product.id, quantity, product.fixedPrice, 'cart');
-      // alert(`${product.title}이(가) 장바구니에 추가되었습니다.`);
       setOpenDialog(true);
     }
   };
@@ -134,14 +142,16 @@ const ProductDetail = () => {
       <Card className="tw-max-w-5xl tw-mx-auto tw-my-8 tw-p-5 tw-overflow-hidden">
         <Grid container spacing={3} className="tw-p-4 tw-md:p-8">
           <Grid item md={6} className="tw-p-10">
-            {product.pictureUrl && (
-              <img
-                src={pictureUrl}
-                alt={product.title}
-                style={{ width: '100%', height: '500px', objectFit: 'contain' }}
-                className="tw-w-full tw-h-auto object-contain tw-shadow-md"
-              />
-            )}
+            <div>
+              {product.pictureUrl && (
+                <img
+                  src={pictureUrl}
+                  alt={product.title}
+                  style={{ width: '100%', height: '500px', objectFit: 'contain' }}
+                  className="tw-w-full tw-h-auto object-contain tw-shadow-md"
+                />
+              )}
+            </div>
           </Grid>
           <Grid item md={6} className="tw-flex tw-flex-col tw-justify-between">
             <CardContent className="tw-space-y-6">
@@ -161,27 +171,35 @@ const ProductDetail = () => {
                     sx={{ mt: 2 }}
                   >
                     상품 삭제
-                  </Button>
-                </div>
+                </Button>
+              </div>
+            )}
+            <Typography variant="h4" component="h1" fontWeight="bold">
+              {product.title}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              {product.author} · {product.publicationYear}
+            </Typography>
+            <Divider />
+            <Typography variant="h5" fontWeight="bold" textAlign="right">
+              {product.discount ? (
+                <span>
+                  <span style={{ textDecoration: 'line-through', marginRight: '8px' }}>
+                    {product.fixedPrice.toLocaleString()}원
+                  </span>
+                  {(product.fixedPrice * 0.9).toLocaleString()}원
+                </span>
+              ) : (
+                `${product.fixedPrice.toLocaleString()}원`
               )}
-              <Typography variant="h4" component="h1" fontWeight="bold">
-                {product.title}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                {product.author} · {product.publicationYear}
-              </Typography>
-              <Divider />
-              {/* 할인율 추가해야 함 */}
-              <Typography variant="h5" fontWeight="bold" textAlign="right">
-                {product.fixedPrice.toLocaleString()}원
-              </Typography>
-              <Divider />
-              <Stack spacing={1} direction="column">
-                <Stack
-                  spacing={1}
-                  direction="row"
-                  justifyContent="space-between"
-                >
+            </Typography>
+            <Divider />
+            <Stack spacing={1} direction="column">
+              <Stack
+                spacing={1}
+                direction="row"
+                justifyContent="space-between"
+              >
                   <Typography variant="body1" fontWeight="bold">
                     배송 안내
                   </Typography>
@@ -322,14 +340,20 @@ const ProductDetail = () => {
           <Box
             sx={{ display: 'flex', justifyContent: 'left', flex: 1, gap: 1 }}
           >
-            <Button variant="outlined" onClick={handleAddToCart} sx={{ px: 4 }}>
-              장바구니
+            <Button
+                variant="outlined"
+                onClick={handleAddToCart}
+                sx={{ px: 4 }}
+                disabled={isSoldOut}
+            >
+              {isSoldOut ? '품절' : '장바구니'}
             </Button>
             <Button
               variant="contained"
               color="primary"
               onClick={handleBuyNow}
               sx={{ px: 4 }}
+              disabled={isSoldOut}
             >
               바로구매
             </Button>
