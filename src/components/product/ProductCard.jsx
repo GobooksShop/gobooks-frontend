@@ -21,6 +21,7 @@ function ProductCard({ product }) {
   const { addCart, addOrder } = useCartOrderStore((state) => state);
   const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();
+  const [isSoldOut, setIsSoldOut] = useState(product.stockQuantity === 0);
 
   useEffect(() => {
     setIsLoading(true);
@@ -42,12 +43,14 @@ function ProductCard({ product }) {
       setIsLoading(false);
       setImageUrl(noImage);
     }
-  }, [product.id, product.pictureUrl]);
+
+    setIsSoldOut(product.stockQuantity === 0);
+  }, [product.id, product.pictureUrl, product.stockQuantity]);
 
   const formattedPrice =
-    product.fixedPrice !== undefined
-      ? product.fixedPrice.toLocaleString()
-      : 'N/A';
+      product.fixedPrice !== undefined
+          ? product.fixedPrice.toLocaleString()
+          : 'N/A';
 
   const handleAddToCart = () => {
     if (product) {
@@ -72,7 +75,7 @@ function ProductCard({ product }) {
 
   return (
       <>
-          <Card
+        <Card
             sx={{
               borderRadius: '8px',
               boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
@@ -83,25 +86,41 @@ function ProductCard({ product }) {
               display: 'flex',
               flexDirection: 'column',
               height: '100%',
-              // p: 1
             }}
-          >
-            <Link to={`/product/detail/${product.id}`}>
+        >
+          <Link to={`/product/detail/${product.id}`}>
             <div className="tw-relative tw-pb-[142%]">
-              {' '}
-              {/* 책 표지 비율 유지 */}
               {isLoading ? (
-                <Skeleton variant="rectangular" width="100%" height="100%" />
+                  <Skeleton variant="rectangular" width="100%" height="100%" />
               ) : (
-                <CardMedia
-                  component="img"
-                  sx={{
-                    height: '100%',
-                  }}
-                  className="tw-absolute tw-top-0 tw-left-0 tw-object-contain tw-h-full tw-w-full"
-                  image={imageUrl}
-                  alt={product.title || 'Product'}
-                />
+                  <>
+                    <CardMedia
+                        component="img"
+                        sx={{
+                          height: '100%',
+                        }}
+                        className="tw-absolute tw-top-0 tw-left-0 tw-object-contain tw-h-full tw-w-full"
+                        image={imageUrl}
+                        alt={product.title || 'Product'}
+                    />
+                    {isSoldOut && (
+                        <Box
+                            sx={{
+                              position: 'absolute',
+                              top: 8,
+                              left: 8,
+                              backgroundColor: 'red',
+                              color: 'white',
+                              padding: '4px 8px',
+                              borderRadius: '4px',
+                              fontWeight: 'bold',
+                              zIndex: 1,
+                            }}
+                        >
+                          품절
+                        </Box>
+                    )}
+                  </>
               )}
             </div>
             <CardContent sx={{
@@ -110,10 +129,10 @@ function ProductCard({ product }) {
               }
             }}>
               <Typography
-                variant="h7"
-                component="div"
-                className="tw-mb-2 tw-line-clamp-2"
-                fontWeight="bold"
+                  variant="h7"
+                  component="div"
+                  className="tw-mb-2 tw-line-clamp-2"
+                  fontWeight="bold"
               >
                 {product.title || 'Unnamed Product'}
               </Typography>
@@ -124,38 +143,41 @@ function ProductCard({ product }) {
                 {formattedPrice}원
               </Typography>
             </CardContent>
-            </Link>
+          </Link>
 
 
-              {/* 구매 관련 버튼 */}
-              <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'flex-end',
-                    gap: 1,
-                    mt: 'auto',
-                    py: 2,
-                    width: '100%'
-                  }}
-              >
-                <Button
-                    variant="outlined"
-                    onClick={handleAddToCart}
-                    fullWidth
-                    sx={{ flexGrow: 1, ml: 2 }}>
-                  장바구니
-                </Button>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleBuyNow}
-                    fullWidth
-                    sx={{ flexGrow: 1, mr: 2 }}
-                >
-                  바로구매
-                </Button>
-              </Box>
-          </Card>
+          {/* 구매 관련 버튼 */}
+          <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'flex-end',
+                gap: 1,
+                mt: 'auto',
+                py: 2,
+                width: '100%'
+              }}
+          >
+            <Button
+                variant="outlined"
+                onClick={handleAddToCart}
+                fullWidth
+                sx={{ flexGrow: 1, ml: 2 }}
+                disabled={isSoldOut}
+            >
+              {isSoldOut ? '품절' : '장바구니'}
+            </Button>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={handleBuyNow}
+                fullWidth
+                sx={{ flexGrow: 1, mr: 2 }}
+                disabled={isSoldOut}
+            >
+              바로구매
+            </Button>
+          </Box>
+        </Card>
 
         {/* 버튼 클릭 시 다이얼로그 */}
         <Dialog open={openDialog} onClose={handleCloseDialog}>
