@@ -113,6 +113,7 @@ const ProductEdit = () => {
 
     try {
       await updateProduct(id, formData);
+      alert('상품이 수정되었습니다.');
       navigate(`/product/detail/${id}`);
     } catch (error) {
       console.error('Error updating product:', error);

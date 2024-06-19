@@ -93,6 +93,8 @@ const ProductAdd = () => {
       const response = await addOrUpdateProduct(formData);
       console.log('Product added successfully:', response.data);
 
+      alert('상품이 등록되었습니다.');
+
       setProductDetails({
         title: '',
         author: '',
@@ -222,8 +224,8 @@ const ProductAdd = () => {
           fullWidth
           variant="outlined"
         >
-          <MenuItem value="AVAILABLE">사용 가능</MenuItem>
-          <MenuItem value="UNAVAILABLE">사용 불가</MenuItem>
+          <MenuItem value="AVAILABLE">판매 가능</MenuItem>
+          <MenuItem value="UNAVAILABLE">판매 불가</MenuItem>
         </TextField>
         <TextField
           label="재고 수량"
