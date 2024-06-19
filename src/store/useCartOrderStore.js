@@ -130,7 +130,7 @@ const useCartOrderStore = create(
        * 카트에서 주문하기 버튼 눌렀을 때, merchantUId 제발급을 위해서 초기화 합니다.
        *
        */
-      resetMerchantUId: () => set({ merchantUid: '' }),
+      resetMerchantUid: () => set({ merchantUid: '' }),
       /**
        * merchantUid를 저장한다.
        */

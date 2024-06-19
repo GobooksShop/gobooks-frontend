@@ -8,4 +8,7 @@ const preparePayment = async (prepareData) => {
     return await httpClient.post(`${API_END_POINT}/prepare`,prepareData);
 }
 
-export {complete_payment, preparePayment}
+const getPaymentCompleteData = async (merchantUid) => {
+    return await  httpClient.get(`orders/${merchantUid}`);
+}
+export {complete_payment, preparePayment, getPaymentCompleteData}

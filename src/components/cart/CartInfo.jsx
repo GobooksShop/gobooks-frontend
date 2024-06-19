@@ -9,7 +9,7 @@ const CartInfo = (props) => {
   const [isFixed, setIsFixed] = useState(false);
   const {
     totalAmount,
-    resetMerchantUId,
+    resetMerchantUid,
     discountAmount,
     updateTotalAmount,
     cartItems,
@@ -51,7 +51,7 @@ const CartInfo = (props) => {
     response.then((response) => {
       if (response.status === 200) {
         //이미 발급된 merchantId()를 제거한다.
-        resetMerchantUId();
+        resetMerchantUid();
         navigate('/order');
       } else {
         alert('데이터 검증이 실패했습니다. 조작된 데이터로 판명됐습니다.');
