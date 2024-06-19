@@ -27,3 +27,7 @@ export const deleteProduct = async (id) => {
 export const fetchProductDetails = async (id) => {
   return await httpClient.get(`/products/${id}`);
 };
+
+export const fetchProductImgDetail = async (id) => {
+  return await httpClient.get(`/products/detail-img/${id}`);
+};

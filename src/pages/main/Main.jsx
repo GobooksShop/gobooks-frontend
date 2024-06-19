@@ -112,9 +112,14 @@ function AdBanner({ images }) {
           PrevIcon={<ArrowBackIcon />}
       >
         {images.map((image, index) => (
-            <Box key={index} sx={{ position: 'relative'}}>
-              <img src={image} alt={`Ad ${index + 1}`} style={{ width: '100%', borderRadius: 10 }} />
-            </Box>
+            <Box
+                key={index}
+                component="img"
+                loading="lazy"
+                src={image}
+                alt={`Ad ${index + 1}`}
+                sx={{ width: '100%', borderRadius: 3, objectFit: 'cover'}}
+               />
         ))}
       </Carousel>
   );

@@ -34,12 +34,14 @@ const ProductDetail = () => {
   const location = useLocation();
   const { from } = location.state || { from: { pathname: '/' } };
   const [product, setProduct] = useState(null);
+  const [productImgDetail, setProductImgDetail] = useState('');
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const { addCart, addOrder } = useCartOrderStore((state) => state);
-  const { fetchProductDetails, deleteProduct } = useProductStore();
-  const [totalPrice, setTotalPrice] = React.useState(0);
+  const { fetchProductDetails, fetchProductImgDetail, deleteProduct } =
+    useProductStore();
+  const [totalPrice, setTotalPrice] = useState(0);
   const { user } = useUserStore((state) => state);
   const [isSoldOut, setIsSoldOut] = useState(null);
   const baseURL = process.env.REACT_APP_API_BASE_URL;
@@ -48,7 +50,11 @@ const ProductDetail = () => {
     const fetchProduct = async () => {
       try {
         const productData = await fetchProductDetails(id);
+        const imgDetailData = await fetchProductImgDetail(id);
+
         setProduct(productData);
+        setProductImgDetail(imgDetailData);
+
         if (productData) {
           const price = productData.discount
             ? productData.fixedPrice * 0.9
@@ -64,7 +70,7 @@ const ProductDetail = () => {
     };
 
     fetchProduct();
-  }, [id, fetchProductDetails, quantity]);
+  }, [id, fetchProductDetails, fetchProductImgDetail, quantity]);
 
   useEffect(() => {
     if (product) {
@@ -99,6 +105,19 @@ const ProductDetail = () => {
     navigate('/cart');
   };
 
+  const handleDeleteProduct = async () => {
+    if (window.confirm('!!상품을 정말 삭제하시겠습니까?')) {
+      try {
+        await deleteProduct(id);
+        alert('상품이 삭제되었습니다.');
+        navigate(from);
+      } catch (error) {
+        console.error('Failed to delete product', error);
+        alert('상품 삭제에 실패했습니다.');
+      }
+    }
+  };
+
   const today = new Date();
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -120,21 +139,6 @@ const ProductDetail = () => {
   }
 
   const pictureUrl = `${baseURL}/image/${product.pictureUrl}`;
-  // 상품 정보 이미지 URL 통으로 넣으면 될 것 같아요 각 제품당 1개씩
-  const infoImageUrl = `${baseURL}/image/${product.infoImageUrl}`;
-
-  const handleDeleteProduct = async () => {
-    if (window.confirm('!!상품을 정말 삭제하시겠습니까?')) {
-      try {
-        await deleteProduct(id);
-        alert('상품이 삭제되었습니다.');
-        navigate(from);
-      } catch (error) {
-        console.error('Failed to delete product', error);
-        alert('상품 삭제에 실패했습니다.');
-      }
-    }
-  };
 
   return (
     <PageContainer>
@@ -147,7 +151,11 @@ const ProductDetail = () => {
                 <img
                   src={pictureUrl}
                   alt={product.title}
-                  style={{ width: '100%', height: '500px', objectFit: 'contain' }}
+                  style={{
+                    width: '100%',
+                    height: '500px',
+                    objectFit: 'contain',
+                  }}
                   className="tw-w-full tw-h-auto object-contain tw-shadow-md"
                 />
               )}
@@ -171,35 +179,40 @@ const ProductDetail = () => {
                     sx={{ mt: 2 }}
                   >
                     상품 삭제
-                </Button>
-              </div>
-            )}
-            <Typography variant="h4" component="h1" fontWeight="bold">
-              {product.title}
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              {product.author} · {product.publicationYear}
-            </Typography>
-            <Divider />
-            <Typography variant="h5" fontWeight="bold" textAlign="right">
-              {product.discount ? (
-                <span>
-                  <span style={{ textDecoration: 'line-through', marginRight: '8px' }}>
-                    {product.fixedPrice.toLocaleString()}원
-                  </span>
-                  {(product.fixedPrice * 0.9).toLocaleString()}원
-                </span>
-              ) : (
-                `${product.fixedPrice.toLocaleString()}원`
+                  </Button>
+                </div>
               )}
-            </Typography>
-            <Divider />
-            <Stack spacing={1} direction="column">
-              <Stack
-                spacing={1}
-                direction="row"
-                justifyContent="space-between"
-              >
+              <Typography variant="h4" component="h1" fontWeight="bold">
+                {product.title}
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                {product.author} · {product.publicationYear}
+              </Typography>
+              <Divider />
+              <Typography variant="h5" fontWeight="bold" textAlign="right">
+                {product.discount ? (
+                  <span>
+                    <span
+                      style={{
+                        textDecoration: 'line-through',
+                        marginRight: '8px',
+                      }}
+                    >
+                      {product.fixedPrice.toLocaleString()}원
+                    </span>
+                    {(product.fixedPrice * 0.9).toLocaleString()}원
+                  </span>
+                ) : (
+                  `${product.fixedPrice.toLocaleString()}원`
+                )}
+              </Typography>
+              <Divider />
+              <Stack spacing={1} direction="column">
+                <Stack
+                  spacing={1}
+                  direction="row"
+                  justifyContent="space-between"
+                >
                   <Typography variant="body1" fontWeight="bold">
                     배송 안내
                   </Typography>
@@ -235,18 +248,23 @@ const ProductDetail = () => {
               {product.content}
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={8} md={7} className="tw-mx-auto">
-            <Box className="tw-w-full tw-relative">
-              (상품 정보 이미지) {/* <- 이미지 url 등록 후 문구 삭제 바람 */}
-              {product.infoImageUrl && (
-                <img
-                  src={infoImageUrl}
-                  alt="상품 정보 이미지"
-                  className="tw-w-full tw-h-auto object-contain"
-                />
-              )}
-            </Box>
-          </Grid>
+          <Box className="tw-w-full tw-relative tw-flex tw-justify-center tw-items-center">
+            {productImgDetail && (
+              <img
+                src={productImgDetail}
+                alt="상품 정보 이미지"
+                className="object-contain"
+                style={{
+                  width: '700px',
+                  height: 'auto',
+                  marginBottom: '1rem',
+                  paddingTop: '50px',
+                  paddingLeft: '50px',
+                  paddingRight: '50px',
+                }}
+              />
+            )}
+          </Box>
         </Grid>
       </Box>
 
@@ -341,10 +359,10 @@ const ProductDetail = () => {
             sx={{ display: 'flex', justifyContent: 'left', flex: 1, gap: 1 }}
           >
             <Button
-                variant="outlined"
-                onClick={handleAddToCart}
-                sx={{ px: 4 }}
-                disabled={isSoldOut}
+              variant="outlined"
+              onClick={handleAddToCart}
+              sx={{ px: 4 }}
+              disabled={isSoldOut}
             >
               {isSoldOut ? '품절' : '장바구니'}
             </Button>
