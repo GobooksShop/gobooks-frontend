@@ -44,45 +44,66 @@ const Payment = () => {
 
   };
 
-  const validateCustomer = () => {
-    //todo 결제까지 끝낸 이후에 추가하겠습니다.
-    console.log(JSON.stringify(deliveryInfo, null, 2));
-    console.log(deliveryInfo.name);
+  const validateCustomer = async () => {
+    const { name, zipcode, address, realAddress, phoneNumber, landlinePhoneNumber } = deliveryInfo;
+
+    if (!name) {
+      alert('이름을 입력해주세요.');
+      return false;
+    }
+    if (!zipcode) {
+      alert('우편 번호를 입력해주세요.');
+      return false;
+    }
+    if (!address) {
+      alert('주소를 입력해주세요.');
+      return false;
+    }
+    if (!realAddress) {
+      alert('실제 주소를 입력해주세요.');
+      return false;
+    }
+    if (!phoneNumber && !landlinePhoneNumber) {
+      alert('휴대폰 또는 일반전화 번호를 입력해주세요.');
+      return false;
+    }
     return true;
   };
 
-  const paymentService = async () => {
-
-  };
-
   const saveDeliveryInfo = async () => {
-
-    if (!validateCustomer()) {
-      alert('배송지 정보를 다시 입력해주세요.');
-      return;
+    const isCustomerValid = await validateCustomer(); // validateCustomer()의 결과를 변수에 저장
+    if (!isCustomerValid) {
+      return false; // false를 반환하여 이후 코드를 실행하지 않도록 함
     }
-
+    else{
     const requestData = {
       merchantUid: merchantUid,
       userId: userId,
       orderAddressUpdate: {
-        label: '집',
-        zipcode: '10915',
-        address1: '경기 파주시 새꽃로 35 새꽃마을주공아파트',
-        address2: '306동 304호',
-        recipientName: '최민우',
-        recipientPhone: '01098786076',
+        label: 'home1234',
+        zipcode: deliveryInfo.zipcode,
+        address1: deliveryInfo.address,
+        address2: deliveryInfo.realAddress,
+        recipientName: deliveryInfo.name,
+        recipientPhone: deliveryInfo.phoneNumber.length > 0 ? deliveryInfo.phoneNumber : deliveryInfo.landlinePhoneNumber,
       },
     };
 
-    return await saveDelivery(requestData);
+    try{
+      const response = await saveDelivery(requestData);
+      return response;
+    }catch(error){
+      return false;
+    }
+    }
   };
 
   const handlePayment = async () => {
+    const isDeliverySaved = await saveDeliveryInfo();
+    if (!isDeliverySaved) return;
     saveDeliveryInfo()
       .then(data => {
         console.log('성공 데이터 패칭');
-        console.log(data);
         const { IMP } = window;
         IMP.init('imp76410462');
         IMP.request_pay(
@@ -91,7 +112,7 @@ const Payment = () => {
             pay_method: 'card',
             merchant_uid: merchantUid,
             name: '주문명:결제테스트',
-            amount: totalAmount,
+            amount: 1200,
             buyer_email: email,
             buyer_name: deliveryInfo.name,
             buyer_tel: deliveryInfo.phoneNumber.length > 0 ? deliveryInfo.phoneNumber : deliveryInfo.landlinePhoneNumber,
@@ -100,13 +121,11 @@ const Payment = () => {
             m_redirect_url: 'http://localhost:3000/orderDetails',
           },
           (response) => {
-            // callback 로직
-            //* ...중략... *//
             if (response.success) {
               console.log(response);
               const requestPaymentData = {
                 impUid: response.imp_uid,
-                merchantUid: merchantUid,
+                merchantUid: merchantUid
               };
 
               complete_payment(requestPaymentData)
