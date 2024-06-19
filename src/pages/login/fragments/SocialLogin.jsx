@@ -10,7 +10,7 @@ import useUserStore from '../../../store/useUserStore';
 const providerUrls = {
   google: `https://www.gobookstore.shop/oauth2/authorization/google`,
   kakao: `https://www.gobookstore.shop/oauth2/authorization/kakao`,
-  naver: `https://www.gobookstore.shop//oauth2/authorization/naver`,
+  naver: `https://www.gobookstore.shop/oauth2/authorization/naver`,
 };
 
 const handleSocialLogin = (provider) => {
@@ -43,7 +43,7 @@ const SocialLogin = () => {
 
   useEffect(() => {
     const handleAuthComplete = (event) => {
-      if (event.origin === `${baseURL}` && event.data) {
+      if (event.origin === 'https://www.gobookstore.shop' && event.data) {
         console.log('Login successful');
         const { accessToken, userId, name, email, role } = event.data;
         console.log('response.data:', event.data);
