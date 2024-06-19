@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 //todo TotalCount에 문제가 조금 있음. 프로그램이 돌아가는데 문제가 있는 이슈를 아니라서 나중에 수정함.
+//todo 같은 아이템을 카트에 담고 바로 주문을 눌렀을 경우. 카트에 있는 아이템을 삭제하고 바로 주문을 할지..
+//todo 아니면 같은 아이템을 삭제하지만,
 const useCartOrderStore = create(
   persist(
     (set) => ({
@@ -21,6 +23,13 @@ const useCartOrderStore = create(
        * @property {boolean} isSelected - 선택 여부를 나타내는 플래그
        */
       orderItems: [],
+      /**
+       * @typedef {Object} orderItem - 카트 아이템 row의 속성들을 담는 오브젝트
+       * @property {number} productId - 유니크한 productId값.
+       * @property {number} quantity - 각 제품을 주문 및 카트에 담은 갯수.
+       * @property {number} price - 각 제품의 가격
+       */
+      payItems: [],
       /**
        * 카트에 들어간 totalCount 갯수.
        * @type {number}

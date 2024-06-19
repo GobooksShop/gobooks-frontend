@@ -1,12 +1,17 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useDaumPostcodePopup } from 'react-daum-postcode';
 
 import CustomButton from '../ui/CustomButton';
 import { DeliveryContext } from '../../App';
 
-const DeleveryInfo = () => {
+/**
+ * @param props - props 객체
+ * @property pageName - 결제 페이지라면. {'pageName': 'orderComplate'}
+ * @returns React.FC
+ */
+const DeleveryInfo = (props) => {
   const {deliveryInfo, setDeliveryInfo} = useContext(DeliveryContext);
-
+  const inputActiveRef =  useRef([]);
   // useEffect(() => {
   //   const button = document.getElementById('dropdownHoverButton');
   //   const dropdown = document.getElementById('dropdownHover');
@@ -31,11 +36,22 @@ const DeleveryInfo = () => {
   //     dropdown.removeEventListener('mouseout', hideDropdown);
   //   };
   // }, []);
+  useEffect(() => {
+    disabledAllInputs();
+  }, [])
 
   useEffect(() => {
     setDeliveryInfo(deliveryInfo);
   }, [deliveryInfo, setDeliveryInfo]);
 
+  const disabledAllInputs = () => {
+    console.dir(inputActiveRef);
+    inputActiveRef.current.forEach(input => {
+      if(input){
+        input.disabled = props.inputActive;
+      }
+    })
+  }
 
   const open = useDaumPostcodePopup("//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js");
 
@@ -52,7 +68,6 @@ const DeleveryInfo = () => {
     if (data.buildingName !== '') {
       fullAddress += ` ${data.buildingName}`;
     }
-
 
     setDeliveryInfo({
       ...deliveryInfo,
@@ -112,7 +127,6 @@ const DeleveryInfo = () => {
       {/*    </li>*/}
       {/*  </ul>*/}
       {/*</div>*/}
-
       <div
         className="tw-grid tw-grid-cols-6 tw-gap-5 tw-grid-rows-table-layout tw-border-solid tw-border tw-border-gray-500/50 tw-rounded tw-px-5 tw-py-4">
         <div className="tw-row-span-1 tw-col-span-2 tw-flex tw-items-center">
@@ -125,6 +139,7 @@ const DeleveryInfo = () => {
             placeholder="이름"
             required
             value={deliveryInfo.name}
+            ref={el => inputActiveRef.current[0] = el}
             onChange={handleChange}
           />
         </div>
@@ -168,6 +183,7 @@ const DeleveryInfo = () => {
             className="tw-h-6 tw-bg-gray-50 tw-outline-none tw-border tw-border-solid tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 focus:tw-border-2 tw-block tw-w-full tw-p-2"
             placeholder="실제 주소"
             required
+            ref={el => inputActiveRef.current[1] = el}
             value={deliveryInfo.realAddress}
             onChange={handleChange}
           />
@@ -181,6 +197,7 @@ const DeleveryInfo = () => {
             className="tw-h-6 tw-bg-gray-50 tw-outline-none tw-border tw-border-solid tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 focus:tw-border-2 tw-block tw-w-full tw-p-2"
             placeholder="휴대폰"
             required
+            ref={el => inputActiveRef.current[2] = el}
             value={deliveryInfo.phoneNumber}
             onChange={handleChange}
           />
@@ -194,6 +211,7 @@ const DeleveryInfo = () => {
             className="tw-h-6 tw-bg-gray-50 tw-outline-none tw-border tw-border-solid tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 focus:tw-border-2 tw-block tw-w-full tw-p-2"
             placeholder="일반전화"
             required
+            ref={el => inputActiveRef.current[3] = el}
             value={deliveryInfo.landlinePhoneNumber}
             onChange={handleChange}
           />

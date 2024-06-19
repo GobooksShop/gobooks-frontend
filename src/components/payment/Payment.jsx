@@ -14,7 +14,6 @@ const Payment = () => {
   const {
     merchantUid,
     totalAmount,
-    discountAmount,
     setMerchantUid,
     resetMerchantUid,
   } = useCartOrderStore(state => state);
