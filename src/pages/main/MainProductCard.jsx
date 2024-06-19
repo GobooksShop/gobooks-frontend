@@ -1,5 +1,6 @@
 import {
   Card,
+  CardActionArea,
   CardContent,
   CardMedia,
   Skeleton,
@@ -8,12 +9,14 @@ import {
 import React, { useEffect, useState } from 'react';
 
 import noImage from '../../pages/productList/images/noimage.jpg';
+import { useNavigate } from 'react-router-dom';
 
 const baseURL = 'http://localhost:8080';
 
 function MainProductCard({ book }) {
   const [isLoading, setIsLoading] = useState(true);
   const [imageUrl, setImageUrl] = useState(noImage);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsLoading(true);
@@ -37,6 +40,10 @@ function MainProductCard({ book }) {
     }
   }, [book.id, book.pictureUrl]);
 
+  const handleClick = () => {
+    navigate(`/product/detail/${book.id}`);
+  };
+
   return (
     <Card
       sx={{
@@ -49,36 +56,38 @@ function MainProductCard({ book }) {
         height: '100%',
       }}
     >
-      <div className="tw-relative tw-pb-[90%]">
-        {isLoading ? (
-          <Skeleton variant="rectangular" width="100%" height="100%" />
-        ) : (
-          <CardMedia
-            component="img"
-            sx={{ height: '100%' }}
-            className="tw-absolute tw-top-0 tw-left-0 tw-object-contain tw-h-full tw-w-full"
-            image={imageUrl}
-            alt={book.title || 'Book'}
-          />
-        )}
-      </div>
-      <CardContent sx={{ padding: '8px' }}>
-        <Typography
-          gutterBottom
-          variant="h6"
-          component="div"
-          sx={{ fontSize: '1rem' }}
-        >
-          {book.title}
-        </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{ fontSize: '0.875rem' }}
-        >
-          {book.author}
-        </Typography>
-      </CardContent>
+      <CardActionArea onClick={handleClick}>
+        <div className="tw-relative tw-pb-[90%]">
+          {isLoading ? (
+            <Skeleton variant="rectangular" width="100%" height="100%" />
+          ) : (
+            <CardMedia
+              component="img"
+              sx={{ height: '100%' }}
+              className="tw-absolute tw-top-0 tw-left-0 tw-object-contain tw-h-full tw-w-full"
+              image={imageUrl}
+              alt={book.title || 'Book'}
+            />
+          )}
+        </div>
+        <CardContent sx={{ padding: '8px' }}>
+          <Typography
+            gutterBottom
+            variant="h6"
+            component="div"
+            sx={{ fontSize: '1rem' }}
+          >
+            {book.title}
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontSize: '0.875rem' }}
+          >
+            {book.author}
+          </Typography>
+        </CardContent>
+      </CardActionArea>
     </Card>
   );
 }
