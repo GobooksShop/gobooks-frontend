@@ -81,7 +81,7 @@ const ProductEdit = () => {
   };
 
   const handleDateChange = (value) => {
-    setProductDetails((prev) => ({ ...prev, publicationYear: value.format('YYYY-MM-DD') }));
+    setProductDetails((prev) => ({ ...prev, publicationYear: value }));
   };
 
   const handleCategoryChange = (event) => {
