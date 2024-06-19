@@ -9,95 +9,93 @@ const CartItems = (props) => {
   const [cartItems, setCartItems] = useState([]);
   const [selectAll, setSelectAll] = useState(true);
   const store = useCartOrderStore();
-  useEffect(() => {
-    const fetchData = async () => {
 
-      const storeData = JSON.parse(localStorage.getItem('cart-storage')).state || [];
-      const existDirectOrder = storeData.orderItems || [];
+  const fetchData = async () => {
 
-      if (!storeData) {
-        console.error('로컬 스토리지에서 cart-storage 데이터를 가져올 수 없습니다.');
-        return;
-      }
+    const storeData = JSON.parse(localStorage.getItem('cart-storage')).state || [];
+    // 분리 시작점.
+    const existDirectOrder = storeData.orderItems || [];
 
-      if (existDirectOrder.length === 1) {
-        const productIdList = existDirectOrder.map((item) => item.productId);
-        console.log(productIdList);
-        const data = await getProduct(productIdList);
-        console.log(data);
-        const cartDatas = [{
-          'productId': data[0].id,
-          'product_name': data[0].title,
-          'quantity': existDirectOrder[0].quantity,
-          'price': data[0].fixedPrice,
-          'isSelected': existDirectOrder[0].isSelected,
-          'amount': data[0].fixedPrice * existDirectOrder[0].quantity,
+    if (!storeData) {
+      console.error('로컬 스토리지에서 cart-storage 데이터를 가져올 수 없습니다.');
+      return;
+    }
+
+    if (existDirectOrder.length === 1) {
+      const productIdList = existDirectOrder.map((item) => item.productId);
+      const data = await getProduct(productIdList);
+      const cartDatas = [{
+        'productId': data[0].id,
+        'product_name': data[0].title,
+        'quantity': existDirectOrder[0].quantity,
+        'price': data[0].fixedPrice,
+        'isSelected': existDirectOrder[0].isSelected,
+        'amount': data[0].fixedPrice * existDirectOrder[0].quantity,
+        'img_url': 'https://contents.kyobobook.co.kr/sih/fit-in/300x0/pdt/9791192987675.jpg',
+      }];
+
+      setCartItems(cartDatas);
+      store.updateTotalOrderAmount();
+      store.resetOrderItems();
+
+      return;
+    }// end
+    //분리 시작점
+    const storedCartItems = storeData.cartItems;
+    const productList = storedCartItems.map((item) => item.productId);
+    const data = await getProduct(productList);
+
+    const cartData = [];
+    console.log('cart에서 order로 넘어올때 타는 로직');
+    console.log(props.isOrders);
+    if (props.isOrders) {
+      const selectedOrderItems = storedCartItems.filter(item => item.isSelected && item.status == 'cart');
+      for (const orderItem of selectedOrderItems) {
+        const productData = data.find(item => item.id === orderItem.productId);
+        const cartDatas = {
+          'productId': productData.id,
+          'product_name': productData.title,
+          'quantity': orderItem.quantity,
+          'price': productData.fixedPrice,
+          'isSelected': orderItem.isSelected,
+          'amount': productData.fixedPrice * orderItem.quantity,
+          'status': 'cart',
           'img_url': 'https://contents.kyobobook.co.kr/sih/fit-in/300x0/pdt/9791192987675.jpg',
-        }];
-
-        setCartItems(cartDatas);
-        store.updateTotalOrderAmount();
-        store.resetOrderItems();
-
-        return;
+        };
+        cartData.push(cartDatas);
       }
-      const storedCartItems = storeData.cartItems;
-      const productList = storedCartItems.map((item) => item.productId);
-      const data = await getProduct(productList);
-
-      const cartData = [];
-      console.log("cart에서 order로 넘어올때 타는 로직");
-      console.log(props.isOrders);
-      if (props.isOrders) {
-        const selectedOrderItems = storedCartItems.filter(item => item.isSelected && item.status == 'cart');
-        for (const orderItem of selectedOrderItems) {
-          const productData = data.find(item => item.id === orderItem.productId);
-          console.log(productData);
-          const cartDatas = {
-            'productId': productData.id,
-            'product_name': productData.title,
-            'quantity': orderItem.quantity,
-            'price': productData.fixedPrice,
-            'isSelected': orderItem.isSelected,
-            'amount': productData.fixedPrice * orderItem.quantity,
-            'status': 'cart',
-            'img_url': 'https://contents.kyobobook.co.kr/sih/fit-in/300x0/pdt/9791192987675.jpg',
-          };
-          cartData.push(cartDatas);
-
+    } else {
+      for (const item of data) {
+        console.log(storedCartItems);
+        console.log(item);
+        const storedItem = storedCartItems.find(cartItem => cartItem.productId === item.id && cartItem.status === 'cart');
+        console.log(storedItem);
+        if (!storedItem) {
+          return;
         }
-
-      } else {
-        for (const item of data) {
-          console.log(storedCartItems);
-          console.log(item);
-          const storedItem = storedCartItems.find(cartItem => cartItem.productId === item.id && cartItem.status === 'cart');
-          console.log(storedItem);
-          if(!storedItem){
-            return;
-          }
-          const cartDatas = {
-            'productId': item.id,
-            'product_name': item.title,
-            'quantity': storedItem.quantity,
-            'price': item.fixedPrice,
-            'isSelected': storedItem.isSelected,
-            'amount': item.fixedPrice * storedItem.quantity,
-            'status': 'cart',
-            'img_url': 'https://contents.kyobobook.co.kr/sih/fit-in/300x0/pdt/9791192987675.jpg',
-          };
-
-          cartData.push(cartDatas);
-        }
+        const cartDatas = {
+          'productId': item.id,
+          'product_name': item.title,
+          'quantity': storedItem.quantity,
+          'price': item.fixedPrice,
+          'isSelected': storedItem.isSelected,
+          'amount': item.fixedPrice * storedItem.quantity,
+          'status': 'cart',
+          'img_url': 'https://contents.kyobobook.co.kr/sih/fit-in/300x0/pdt/9791192987675.jpg',
+        };
+        cartData.push(cartDatas);
       }
+    }
+    //end
+    console.log(cartData);
+    setCartItems(cartData);
+    if (existDirectOrder.length === 0) {
+      store.updateTotalOrderAmount();
+      store.updateTotalCartAmount();
+    }
+  };
 
-      console.log(cartData);
-      setCartItems(cartData);
-      if(existDirectOrder.length === 0 ){
-        store.updateTotalOrderAmount();
-        store.updateTotalCartAmount();
-      }
-    };
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -118,7 +116,7 @@ const CartItems = (props) => {
       quantity,
       price,
       isSelected,
-      status
+      status,
     })));
     store.updateTotalCartAmount();
   };
@@ -127,11 +125,12 @@ const CartItems = (props) => {
     const newCartItems = [...cartItems];
     newCartItems[index].isSelected = !newCartItems[index].isSelected;
     setCartItems(newCartItems);
-    store.updateCartItems(newCartItems.map(({ productId, quantity, price, isSelected }) => ({
+    store.updateCartItems(newCartItems.map(({ productId, quantity, price, isSelected, status }) => ({
       productId: productId,
       quantity,
       price,
       isSelected,
+      status,
     })));
     store.updateTotalCartAmount();
   };
@@ -150,7 +149,7 @@ const CartItems = (props) => {
       quantity,
       price,
       isSelected,
-      status
+      status,
     })));
     store.updateTotalCartAmount();
   };
@@ -159,11 +158,12 @@ const CartItems = (props) => {
   const handleDeleteSelected = () => {
     const updatedItems = cartItems.filter(item => !item.isSelected);
     setCartItems(updatedItems);
-    store.updateCartItems(updatedItems.map(({ productId, quantity, price, isSelected }) => ({
+    store.updateCartItems(updatedItems.map(({ productId, quantity, price, isSelected, status }) => ({
       productId: productId,
       quantity,
       price,
       isSelected,
+      status,
     })));
     store.updateTotalCartAmount();
   };
@@ -171,11 +171,12 @@ const CartItems = (props) => {
   const handleDeleteItem = (index) => {
     const newCartItems = cartItems.filter((_, i) => i !== index);
     setCartItems(newCartItems);
-    store.updateCartItems(newCartItems.map(({ productId, quantity, price, isSelected }) => ({
+    store.updateCartItems(newCartItems.map(({ productId, quantity, price, isSelected, status }) => ({
       productId: productId,
       quantity,
       price,
       isSelected,
+      status,
     })));
     store.updateTotalCartAmount();
   };
@@ -195,7 +196,7 @@ const CartItems = (props) => {
           </>
         }
       </header>
-      <div className="grid-table-wrap tw-px-2 tw-border-0 tw-border-b tw-border-solid tw-border-gray-400/35">
+      <div className="tw-grid-table-wrap tw-px-2 tw-border-0 tw-border-b tw-border-solid tw-border-gray-400/35">
         <ul className="tw-px-2">
           {cartItems.map((item, index) => (
             <li key={item.productId + index + crypto.randomUUID()}
@@ -236,10 +237,8 @@ const CartItems = (props) => {
               </div>
               {props.isOrders ? <></> :
                 <div className="tw-self-start tw-mt-4 tw-justify-self-end ">
-                  <button onClick={() => handleDeleteItem(index)}
-                          className="tw-text-gray-500 hover:tw-text-gray-700 hover:tw-cursor-pointer">
-                    <CloseIcon />
-                  </button>
+                  <CloseIcon variant="h6" onClick={() => handleDeleteItem(index)}
+                             className=" tw-text-gray-500 hover:tw-text-gray-700 hover:tw-cursor-pointer" />
                 </div>
               }
             </li>
