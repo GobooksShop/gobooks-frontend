@@ -1,3 +1,4 @@
+import { Divider, IconButton, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 
 import googleIcon from '../../../assets/socialLoginImages/btn_google.svg';
@@ -5,14 +6,11 @@ import kakaoIcon from '../../../assets/socialLoginImages/btn_kakao.svg';
 import naverIcon from '../../../assets/socialLoginImages/btn_naver.svg';
 import { useNavigate } from 'react-router-dom';
 import useUserStore from '../../../store/useUserStore';
-import {Box, Divider, IconButton, Typography} from "@mui/material";
-
-const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 const providerUrls = {
-  google: `${baseURL}/oauth2/authorization/google`,
-  kakao: `${baseURL}/oauth2/authorization/kakao`,
-  naver: `${baseURL}/oauth2/authorization/naver`,
+  google: `https://www.gobookstore.shop/oauth2/authorization/google`,
+  kakao: `https://www.gobookstore.shop/oauth2/authorization/kakao`,
+  naver: `https://www.gobookstore.shop//oauth2/authorization/naver`,
 };
 
 const handleSocialLogin = (provider) => {
@@ -64,26 +62,32 @@ const SocialLogin = () => {
   }, [navigate, setUser]);
 
   return (
-      <>
-        <Typography variant="h7" className="tw-relative tw-bg-white tw-pt-10">
-          소셜 로그인
-        </Typography>
-        <Divider className="tw-w-full tw-p-1.5" />
-        <div className="tw-pt-3 tw-flex tw-justify-center tw-gap-4">
-          <IconButton onClick={() => handleSocialLogin('google')}
-                      className="tw-bg-transparent hover:tw-bg-gray-100">
-            <img src={googleIcon} alt="Google Login" className="tw-w-8 tw-h-8"/>
-          </IconButton>
-          <IconButton onClick={() => handleSocialLogin('kakao')}
-                      className="tw-bg-transparent hover:tw-bg-gray-100">
-            <img src={kakaoIcon} alt="Kakao Login" className="tw-w-8 tw-h-8"/>
-          </IconButton>
-          <IconButton onClick={() => handleSocialLogin('naver')}
-                      className="tw-bg-transparent hover:tw-bg-gray-100">
-            <img src={naverIcon} alt="Naver Login" className="tw-w-8 tw-h-8"/>
-          </IconButton>
-        </div>
-      </>
+    <>
+      <Typography variant="h7" className="tw-relative tw-bg-white tw-pt-10">
+        소셜 로그인
+      </Typography>
+      <Divider className="tw-w-full tw-p-1.5" />
+      <div className="tw-pt-3 tw-flex tw-justify-center tw-gap-4">
+        <IconButton
+          onClick={() => handleSocialLogin('google')}
+          className="tw-bg-transparent hover:tw-bg-gray-100"
+        >
+          <img src={googleIcon} alt="Google Login" className="tw-w-8 tw-h-8" />
+        </IconButton>
+        <IconButton
+          onClick={() => handleSocialLogin('kakao')}
+          className="tw-bg-transparent hover:tw-bg-gray-100"
+        >
+          <img src={kakaoIcon} alt="Kakao Login" className="tw-w-8 tw-h-8" />
+        </IconButton>
+        <IconButton
+          onClick={() => handleSocialLogin('naver')}
+          className="tw-bg-transparent hover:tw-bg-gray-100"
+        >
+          <img src={naverIcon} alt="Naver Login" className="tw-w-8 tw-h-8" />
+        </IconButton>
+      </div>
+    </>
   );
 };
 
