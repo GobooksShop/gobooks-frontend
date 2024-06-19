@@ -1,6 +1,6 @@
 import {
   Box,
-  Button,
+  Button, Chip,
   FormControl,
   Grid,
   IconButton,
@@ -54,7 +54,7 @@ const ProductAdd = () => {
   };
 
   const handleDateChange = (value) => {
-    setProductDetails((prev) => ({ ...prev, publicationYear: value }));
+    setProductDetails((prev) => ({ ...prev, publicationYear: value.format('YYYY-MM-DD') }));
   };
 
   const handleCategoryChange = (event) => {
@@ -134,7 +134,7 @@ const ProductAdd = () => {
   };
 
   return (
-    <div className="tw-container tw-mx-auto tw-p-4 tw-pt-8 tw-max-w-4xl">
+    <div className="tw-container tw-mx-auto tw-p-4 tw-pt-8 tw-max-w-2xl">
       <form
         onSubmit={handleSubmit}
         className="tw-space-y-4"
@@ -157,9 +157,20 @@ const ProductAdd = () => {
                   )}
                 </Select>
               </FormControl>
-              <Typography variant="body1" style={{ marginLeft: '10px' }}>
-                선택됨: {productDetails.categoryIds.join(', ')}
-              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={6}>
+            <Box component="div" style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginLeft: 10 }}>
+              {productDetails.categoryIds.map((categoryId) => {
+                const categoryName = categories.find((cat) => cat.id === categoryId)?.name || categoryId;
+                return (
+                    <Chip
+                        key={categoryId}
+                        label={categoryName}
+                        onDelete={() => handleCategoryChange({ target: { value: productDetails.categoryIds.filter(id => id !== categoryId) } })}
+                    />
+                );
+              })}
             </Box>
           </Grid>
         </Grid>
@@ -188,7 +199,7 @@ const ProductAdd = () => {
           onChange={handleInputChange}
         />
         <TextField
-          label="내용"
+          label="설명"
           name="content"
           variant="outlined"
           multiline
@@ -208,15 +219,14 @@ const ProductAdd = () => {
         />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
-            label="출판 연도"
-            views={['year']}
+            label="출판 일자"
             value={productDetails.publicationYear}
             onChange={handleDateChange}
             renderInput={(params) => <TextField {...params} fullWidth />}
           />
         </LocalizationProvider>
         <TextField
-          label="상태"
+          label="판매 가능 여부"
           select
           name="status"
           value={productDetails.status}
@@ -259,7 +269,7 @@ const ProductAdd = () => {
               justifyContent="center"
               alignItems="center"
               width="100%"
-              height={15}
+              height={150}
             >
               <IconButton component="span">
                 <AddPhotoAlternateIcon fontSize="large" />
@@ -276,12 +286,12 @@ const ProductAdd = () => {
             style={{ maxWidth: '100%', height: 'auto', maxHeight: '300px' }}
           />
         )}
-        <Box display="flex" justifyContent="center" mt={4}>
+        <Box display="flex" justifyContent="flex-end" mt={4}>
           <Button
             type="submit"
             variant="contained"
             color="primary"
-            style={{ width: '50%' }}
+            sx={{ px: 4, py: 1 }}
           >
             상품 등록
           </Button>
