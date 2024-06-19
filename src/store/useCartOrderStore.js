@@ -156,6 +156,10 @@ const useCartOrderStore = create(
         const discountAmount = totalAmount * 0.1;
         return { ...state, totalAmount: totalAmount - discountAmount, discountAmount };
       }),
+      /**
+       * CartItems의 validation을 진행합니다.
+       */
+
 
     }),
     {

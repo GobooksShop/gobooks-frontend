@@ -92,6 +92,32 @@ const DeleveryInfo = (props) => {
     }));
   };
 
+  const validateCustomer = () => {
+    const { name, zipcode, address, realAddress, phoneNumber, landlinePhoneNumber } = deliveryInfo;
+
+    if (!name) {
+      alert('이름을 입력해주세요.');
+      return false;
+    }
+    if (!zipcode) {
+      alert('우편 번호를 입력해주세요.');
+      return false;
+    }
+    if (!address) {
+      alert('주소를 입력해주세요.');
+      return false;
+    }
+    if (!realAddress) {
+      alert('실제 주소를 입력해주세요.');
+      return false;
+    }
+    if (!phoneNumber && !landlinePhoneNumber) {
+      alert('휴대폰 또는 일반전화 번호를 입력해주세요.');
+      return false;
+    }
+    return true;
+  };
+
   return (
     <div className="tw-w-full">
       <header className="title tw-h-24 tw-flex tw-items-center">

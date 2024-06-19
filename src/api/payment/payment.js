@@ -1,7 +1,7 @@
 import { httpClient } from "../httpClient";
 const API_END_POINT = '/payment'
-const complete_payment = async (imp_uid) => {
-    return await httpClient.post(`${API_END_POINT}/completePayment`, imp_uid);
+const complete_payment = async (requestPaymentData) => {
+    return await httpClient.post(`${API_END_POINT}/completePayment`, requestPaymentData);
 }
 
 const preparePayment = async (prepareData) => {
