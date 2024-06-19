@@ -33,59 +33,47 @@ function MyPageInfo() {
   const validateField = useCallback(
     (name, value) => {
       let error = '';
-      switch (name) {
-        case 'email': {
-          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!value) {
-            error = '이메일은 빈 값이 들어올 수 없습니다.';
-          } else if (!emailPattern.test(value)) {
-            error = '올바른 이메일 형식이 아닙니다.';
-          }
-          break;
+      if (name === 'email') {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!value) {
+          error = '이메일은 빈 값이 들어올 수 없습니다.';
+        } else if (!emailPattern.test(value)) {
+          error = '올바른 이메일 형식이 아닙니다.';
         }
-        case 'password':
-        case 'confirmPassword': {
-          const passwordPattern =
-            /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,32}$/;
-          if (!value) {
-            error = '패스워드는 빈 값이 들어올 수 없습니다.';
-          } else if (!passwordPattern.test(value)) {
-            error =
-              '패스워드는 영문, 숫자, 특수문자(!@#$%^&*) 조합으로 입력해야 합니다.';
-          }
-          if (name === 'confirmPassword' && userInfo.password !== value) {
-            error = '비밀번호가 일치하지 않습니다.';
-          }
-          break;
+      } else if (name === 'password' || name === 'confirmPassword') {
+        const passwordPattern =
+          /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,32}$/;
+        if (!value) {
+          error = '패스워드는 빈 값이 들어올 수 없습니다.';
+        } else if (!passwordPattern.test(value)) {
+          error =
+            '패스워드는 영문, 숫자, 특수문자(!@#$%^&*) 조합으로 입력해야 합니다.';
         }
-        case 'nickname': {
-          if (!value) {
-            error = '닉네임은 빈 값이 들어올 수 없습니다.';
-          }
-          break;
+        if (name === 'confirmPassword' && userInfo.password !== value) {
+          error = '비밀번호가 일치하지 않습니다.';
         }
-        case 'name': {
-          const namePattern = /^[a-zA-Z가-힣]{2,}$/;
-          if (!value) {
-            error = '이름은 빈 값이 들어올 수 없습니다.';
-          } else if (!namePattern.test(value)) {
-            error = '이름은 2자리 이상 한글 또는 영문만 입력 가능합니다.';
-          }
-          break;
+      } else if (name === 'nickname') {
+        if (!value) {
+          error = '닉네임은 빈 값이 들어올 수 없습니다.';
         }
-        case 'phone': {
-          const phonePattern = /^010-\d{4}-\d{4}$/;
-          if (!value) {
-            error = '핸드폰 번호는 빈 값이 들어올 수 없습니다.';
-          } else if (!phonePattern.test(value)) {
-            error = '핸드폰 번호는 010-1234-5678 형식으로 입력해야 합니다.';
-          }
-          break;
+      } else if (name === 'name') {
+        const namePattern = /^[a-zA-Z가-힣]{2,}$/;
+        if (!value) {
+          error = '이름은 빈 값이 들어올 수 없습니다.';
+        } else if (!namePattern.test(value)) {
+          error = '이름은 2자리 이상 한글 또는 영문만 입력 가능합니다.';
         }
-        default:
-          error = !value ? `${name}은(는) 빈 값이 들어올 수 없습니다.` : '';
-          break;
+      } else if (name === 'phone') {
+        const phonePattern = /^010-\d{4}-\d{4}$/;
+        if (!value) {
+          error = '핸드폰 번호는 빈 값이 들어올 수 없습니다.';
+        } else if (!phonePattern.test(value)) {
+          error = '핸드폰 번호는 010-1234-5678 형식으로 입력해야 합니다.';
+        }
+      } else {
+        error = !value ? `${name}은(는) 빈 값이 들어올 수 없습니다.` : '';
       }
+
       setErrors((prev) => ({ ...prev, [name]: error }));
       return error === '';
     },
@@ -159,7 +147,7 @@ function MyPageInfo() {
           return;
         }
         const response = await updateUserInfo(user.userId, userInfo);
-        setUser({ ...userInfo, password: '' }); 
+        setUser({ ...userInfo, password: '' });
         console.log('유저 정보 업데이트 성공', response);
         setIsEditing(false);
       } else {
