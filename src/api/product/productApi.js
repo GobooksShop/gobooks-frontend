@@ -31,3 +31,7 @@ export const fetchProductDetails = async (id) => {
 export const fetchProductImgDetail = async (id) => {
   return await httpClient.get(`/products/detail-img/${id}`);
 };
+
+export const fetchMainProducts = async () => {
+  return await httpClient.get('/products/main');
+};
