@@ -2,11 +2,13 @@ import { PageContainer } from '../../components/PageContainer';
 import CartItems from '../../components/cart/CartItems';
 import CartInfo from '../../components/cart/CartInfo';
 import OrderStatus from '../../components/order/OrderStatus';
+
 function Cart() {
+  const currentStep = 0;
 
   return (
     <PageContainer>
-      <OrderStatus />
+      <OrderStatus currentStep={currentStep} />
       <header className="title tw-h-24 tw-flex tw-items-center">
         <h1 className="tw-font-semibold tw-text-2xl">장바구니</h1>
       </header>

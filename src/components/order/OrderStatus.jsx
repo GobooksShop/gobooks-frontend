@@ -1,18 +1,34 @@
-const OrderStatus = () => {
+import {Box, Button, Typography} from "@mui/material";
+import React from "react";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+
+const steps = ['장바구니', '주문/결제', '주문 완료'];
+
+const OrderStatus = ({ currentStep }: { currentStep: number }) => {
 
   return (
-    <div className="tw-grid tw-grid-cols-8 tw-gap-2 tw-w-[500px] tw-h-[50px] tw-whitespace-nowrap">
-      <div className="tw-col-span-2">
-        <div className="tw-flex tw-justify-center tw-items-center tw-h-[50px] tw-p-2 tw-text-2xl tw-font-semibold tw-text-white tw-bg-blue-400">장바구니</div>
-      </div>
-      <div className="tw-col-span-2">
-        <div className="tw-flex tw-justify-center tw-items-center tw-h-[50px] tw-p-2 tw-text-2xl tw-font-semibold tw-text-white tw-bg-blue-400">주문</div>
-      </div>
-      <div className="tw-col-span-2">
-        <div className="tw-flex tw-justify-center tw-items-center tw-h-[50px] tw-p-2 tw-text-2xl tw-font-semibold tw-text-white tw-bg-blue-400">완료</div>
-      </div>
-    </div>
-  )
+      <Box className="tw-flex tw-items-center tw-gap-2">
+        {steps.map((label, index) => (
+            <React.Fragment key={label}>
+              <Button
+                  component="div"
+                  variant={index === currentStep ? 'contained' : 'outlined'}
+                  color="primary"
+                  sx={{ borderRadius: 2, pointerEvents: 'none', px:3, py:1 }}
+              >
+                {label}
+              </Button>
+              {index < steps.length - 1 && (
+                  <ArrowForwardIosIcon
+                      className={`tw-text-gray-400 ${
+                          index < currentStep ? 'tw-text-purple-400' : ''
+                      }`}
+                  />
+              )}
+            </React.Fragment>
+        ))}
+      </Box>
+  );
 }
 
 export default OrderStatus;
