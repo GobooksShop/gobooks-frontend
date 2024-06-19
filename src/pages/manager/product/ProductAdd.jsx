@@ -308,7 +308,7 @@ const ProductAdd = () => {
               justifyContent="center"
               alignItems="center"
               width="100%"
-              height={150}
+              height={25}
             >
               <IconButton component="span">
                 <AddPhotoAlternateIcon fontSize="large" />
