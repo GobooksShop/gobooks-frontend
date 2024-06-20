@@ -7,9 +7,8 @@ import useCartOrderStore from '../../store/useCartOrderStore';
 import { DeliveryContext } from '../../App';
 import { saveDelivery } from '../../api/delivery/delivery';
 import {useNavigate} from 'react-router-dom';
-import {complete_payment} from '../../api/payment/payment';
 
-const Payment = () => {
+const Payment = ({productName}) => {
 
   const {
     merchantUid,
@@ -40,10 +39,6 @@ const Payment = () => {
       });
   }, []);
 
-  const validatePayment = () => {
-
-  };
-
   const validateCustomer = async () => {
     const { name, zipcode, address, realAddress, phoneNumber, landlinePhoneNumber } = deliveryInfo;
 
@@ -71,9 +66,9 @@ const Payment = () => {
   };
 
   const saveDeliveryInfo = async () => {
-    const isCustomerValid = await validateCustomer(); // validateCustomer()의 결과를 변수에 저장
+    const isCustomerValid = await validateCustomer();
     if (!isCustomerValid) {
-      return false; // false를 반환하여 이후 코드를 실행하지 않도록 함
+      return false;
     }
     else{
     const requestData = {
@@ -111,8 +106,8 @@ const Payment = () => {
             pg: 'html5_inicis.INIpayTest',
             pay_method: 'card',
             merchant_uid: merchantUid,
-            name: '주문명:결제테스트',
-            amount: 1200,
+            name: productName,
+            amount: totalAmount,
             buyer_email: email,
             buyer_name: deliveryInfo.name,
             buyer_tel: deliveryInfo.phoneNumber.length > 0 ? deliveryInfo.phoneNumber : deliveryInfo.landlinePhoneNumber,
@@ -129,14 +124,13 @@ const Payment = () => {
               };
               navigate("/order/complete", {state: {payData: requestPaymentData }});
             } else {
-              console.log("실패 else문을 탑니다.");
+              console.log("");
             }
           },
         );
       })
-
       .catch(error => {
-        alert(error + "배송 정보를 확인할 수 없습니다.");
+
       });
 
 

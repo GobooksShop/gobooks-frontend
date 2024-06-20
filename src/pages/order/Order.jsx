@@ -12,6 +12,7 @@ function Order() {
 
   const { cartItems, setMerchantUid, merchantUid } = useCartOrderStore(state => state);
   const { userId } = useUserStore(state => state.user);
+  const currentStep = 1;
   useEffect(() => {
     if (merchantUid === '') {
       const requestOrderItems = {
@@ -35,7 +36,7 @@ function Order() {
   }, []);
   return (
     <PageContainer>
-      <OrderStatus />
+      <OrderStatus currentStep={currentStep}/>
       <header className="title tw-h-24 tw-flex tw-items-center">
         <h1 className="tw-font-semibold tw-text-2xl">주문/결제</h1>
       </header>
