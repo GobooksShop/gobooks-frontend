@@ -81,7 +81,7 @@ function ProductCard({ product }) {
               boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
               transition: 'box-shadow 0.3s ease',
               '&:hover': {
-                boxShadow: '0px 0px 8px #ABA5F3',
+                boxShadow: '0px 0px 8px #FF9800',
               },
               display: 'flex',
               flexDirection: 'column',
@@ -139,9 +139,26 @@ function ProductCard({ product }) {
               <Typography variant="body2" color="textSecondary" className="tw-py-2">
                 {product.author || 'Unknown Author'}
               </Typography>
-              <Typography variant="h7" component="div">
-                {formattedPrice}원
-              </Typography>
+              {/*<Typography variant="h7" component="div">*/}
+              {/*  {formattedPrice}원*/}
+              {/*</Typography>*/}
+              {product.discount ? (
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography variant="h8" color="primary" fontWeight="bold" sx={{mr: 1}}>
+                      10%
+                    </Typography>
+                    <Typography variant="body1" sx={{mr: 1, textDecoration: 'line-through', color: 'gray'}}>
+                      {formattedPrice}원
+                    </Typography>
+                    <Typography variant="h7" fontWeight="bold">
+                      {(product.fixedPrice * 0.9).toLocaleString()}원
+                    </Typography>
+                  </Box>
+              ) : (
+                  <Typography variant="h7" fontWeight="bold">
+                    {formattedPrice}원
+                  </Typography>
+              )}
             </CardContent>
           </Link>
 

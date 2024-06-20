@@ -52,7 +52,7 @@ function BookCarousel({ books }) {
   const [currentPage, setCurrentPage] = useState(0);
 
   if (!books || books.length === 0) {
-    return null; // or return a placeholder, or loading indicator
+    return null;
   }
 
   const totalPages = Math.ceil(books.length / itemsPerPage);
@@ -71,11 +71,11 @@ function BookCarousel({ books }) {
 
   return (
     <Box sx={{ position: 'relative', padding: '0 60px' }}>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} alignItems="center">
         {books
           .slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
           .map((book) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={book.id}>
+            <Grid item xs={12} sm={6} md={3} lg={3} key={book.id}>
               <MainProductCard book={book} />
             </Grid>
           ))}
@@ -89,7 +89,7 @@ function BookCarousel({ books }) {
           transform: 'translateY(-50%)',
           borderRadius: '50%',
           '&:hover': {
-            color: '#ABA5F3',
+            color: '#8BC34A',
           },
         }}
       >
@@ -103,6 +103,9 @@ function BookCarousel({ books }) {
           right: 0,
           transform: 'translateY(-50%)',
           borderRadius: '50%',
+          '&:hover': {
+            color: '#8BC34A',
+          },
         }}
       >
         <ArrowForwardIcon />
@@ -113,12 +116,12 @@ function BookCarousel({ books }) {
 
 function Main() {
   const adImages = [
-    'https://i.imgur.com/y4j0R2X.jpg',
+    'https://i.imgur.com/yX6xL0R.jpg',
+    'https://i.imgur.com/9yMs0qi.jpg',
     'https://i.imgur.com/YNrOP7z.jpg',
     'https://i.imgur.com/BjZObZG.jpg',
     'https://i.imgur.com/0bSoyfO.jpg',
     'https://i.imgur.com/IDwQTwM.jpg',
-    'https://i.imgur.com/yX6xL0R.jpeg',
   ];
 
   const [products, setProducts] = useState({
@@ -157,78 +160,74 @@ function Main() {
       <AdBanner images={adImages} />
       <div className="tw-container tw-mx-auto tw-py-10 ">
         <section className="tw-my-12">
-          <h2
-            className="tw-text-center tw-font-bold"
-            style={{
-              fontSize: '2.5rem',
-              marginBottom: '1.5rem',
-              marginTop: '5rem',
-              marginLeft: '3.5rem',
-            }}
+          <Typography
+              variant="h4"
+              sx={{
+                marginBottom: '2rem',
+                marginTop: '5rem',
+                textAlign: 'center'
+              }}
           >
-            상반기 베스트셀러
-          </h2>
+            오늘, 당신의 서재를 채울 특별한 책
+          </Typography>
           {products[1] && products[1].length > 0 ? (
             <BookCarousel books={products[1]} />
           ) : (
-            <Typography>No data available for 상반기 베스트셀러.</Typography>
+            <Typography>No data available</Typography>
           )}
         </section>
 
         <section className="tw-mb-10">
-          <h2
-            className="tw-text-center tw-font-bold"
-            style={{
-              fontSize: '2.5rem',
-              marginBottom: '1.5rem',
-              marginTop: '4.5rem',
-              marginLeft: '3.5rem',
-            }}
+          <Typography
+              variant="h4"
+              sx={{
+                marginBottom: '2rem',
+                marginTop: '5rem',
+                textAlign: 'center'
+              }}
           >
-            화제의 신상
-          </h2>
+            고북스가 찾아낸 숨겨진 보석 같은 책
+          </Typography>
           {products[2] && products[2].length > 0 ? (
             <BookCarousel books={products[2]} />
           ) : (
-            <Typography>No data available for 화제의 신상.</Typography>
+            <Typography>No data available</Typography>
           )}
         </section>
 
         <section className="tw-mb-10">
-          <h2
-            className="tw-text-center tw-font-bold"
-            style={{
-              fontSize: '2.5rem',
-              marginBottom: '1.5rem',
-              marginTop: '4.5rem',
-              marginLeft: '3.5rem',
-            }}
+          <Typography
+              variant="h4"
+              sx={{
+                marginBottom: '2rem',
+                marginTop: '5rem',
+                textAlign: 'center'
+              }}
           >
-            오늘의 책
-          </h2>
+            평범한 일상에 마법 같은 순간을 선물할 책
+          </Typography>
           {products[3] && products[3].length > 0 ? (
             <BookCarousel books={products[3]} />
           ) : (
-            <Typography>No data available for 오늘의 책.</Typography>
+            <Typography>No data available</Typography>
           )}
         </section>
 
         <section>
-          <h2
-            className="tw-text-center tw-font-bold"
-            style={{
-              fontSize: '2.5rem',
-              marginBottom: '1.5rem',
-              marginTop: '4.5rem',
-              marginLeft: '3.5rem',
-            }}
+          <Typography
+              variant="h4"
+              sx={{
+                marginBottom: '2rem',
+                marginTop: '5rem',
+                textAlign: 'center'
+              }}
           >
-            스테디셀러
-          </h2>
+            펼치는 순간, 새로운 세상이 열리는 책
+          </Typography>
           {products[4] && products[4].length > 0 ? (
             <BookCarousel books={products[4]} />
           ) : (
-            <Typography>No data available for 스테디셀러.</Typography>
+            <Typography>No data available</Typography>
           )}
         </section>
       </div>

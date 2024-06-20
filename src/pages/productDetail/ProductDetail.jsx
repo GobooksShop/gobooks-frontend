@@ -144,27 +144,27 @@ const ProductDetail = () => {
     <PageContainer>
       {/* 상품 카드 */}
       <Card className="tw-max-w-5xl tw-mx-auto tw-my-8 tw-p-5 tw-overflow-hidden">
-        <Grid container spacing={3} className="tw-p-4 tw-md:p-8">
-          <Grid item md={6} className="tw-p-10">
+        <Grid container className="tw-p-2" justifyContent="space-between">
+          <Grid item className="tw-p-10">
             <div>
               {product.pictureUrl && (
                 <img
                   src={pictureUrl}
                   alt={product.title}
                   style={{
-                    width: '100%',
+                    width: 'auto',
                     height: '500px',
                     objectFit: 'contain',
                   }}
-                  className="tw-w-full tw-h-auto object-contain tw-shadow-md"
+                  className="tw-w-full tw-h-auto object-contain tw-shadow-xl"
                 />
               )}
             </div>
           </Grid>
-          <Grid item md={6} className="tw-flex tw-flex-col tw-justify-between">
-            <CardContent className="tw-space-y-6">
+          <Grid item className="tw-p-5" sx={{width:'50%'}}>
+            <CardContent className="tw-space-y-6 tw-p-0">
               {user.role === 'ROLE_ADMIN' && (
-                <div>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
                   <Button
                     variant="outlined"
                     onClick={() => navigate(`/admin/product/edit/${id}`)}
@@ -180,7 +180,7 @@ const ProductDetail = () => {
                   >
                     상품 삭제
                   </Button>
-                </div>
+                </Box>
               )}
               <Typography variant="h4" component="h1" fontWeight="bold">
                 {product.title}
@@ -189,29 +189,30 @@ const ProductDetail = () => {
                 {product.author} · {product.publicationYear}
               </Typography>
               <Divider />
-              <Typography variant="h5" fontWeight="bold" textAlign="right">
-                {product.discount ? (
-                  <span>
-                    <span
-                      style={{
-                        textDecoration: 'line-through',
-                        marginRight: '8px',
-                      }}
-                    >
+              {product.discount ? (
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                    <Typography variant="h6" color="primary" fontWeight="bold" sx={{mr: 1}}>
+                      10%
+                    </Typography>
+                    <Typography variant="body1" sx={{mr: 1, textDecoration: 'line-through', color: 'gray'}}>
                       {product.fixedPrice.toLocaleString()}원
-                    </span>
-                    {(product.fixedPrice * 0.9).toLocaleString()}원
-                  </span>
-                ) : (
-                  `${product.fixedPrice.toLocaleString()}원`
-                )}
-              </Typography>
-              <Divider />
+                    </Typography>
+                    <Typography variant="h5" fontWeight="bold">
+                      {(product.fixedPrice * 0.9).toLocaleString()}원
+                    </Typography>
+                  </Box>
+              ) : (
+                  <Typography variant="h5" fontWeight="bold" align="right">
+                  {product.fixedPrice.toLocaleString()}원
+                  </Typography>
+              )}
+
+              <Divider/>
               <Stack spacing={1} direction="column">
                 <Stack
-                  spacing={1}
-                  direction="row"
-                  justifyContent="space-between"
+                    spacing={1}
+                    direction="row"
+                    justifyContent="space-between"
                 >
                   <Typography variant="body1" fontWeight="bold">
                     배송 안내

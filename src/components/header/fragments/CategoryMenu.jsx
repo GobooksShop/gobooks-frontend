@@ -32,8 +32,17 @@ const Depth3 = ({ category, onLinkClick }) => {
   );
 };
 
-const Depth2 = ({ category, selectedCategory, handleCategory, onLinkClick }) => {
+const Depth2 = ({
+  category,
+  selectedCategory,
+  handleCategory,
+  onLinkClick,
+}) => {
   const [isOpen, setIsOpen] = useState(selectedCategory?.id === category.id);
+
+  useEffect(() => {
+    setIsOpen(selectedCategory?.id === category.id);
+  }, [selectedCategory, category.id]);
 
   const toggleOpen = () => {
     handleCategory(category);
@@ -53,7 +62,7 @@ const Depth2 = ({ category, selectedCategory, handleCategory, onLinkClick }) => 
       >
         <Link
           to={`/product/list/${category.id}`}
-          onClick={onLinkClick}
+          onClick={() => onLinkClick(`/product/list/${category.id}`)}
           className="tw-no-underline tw-truncate"
         >
           <Typography>{category.name}</Typography>
@@ -61,7 +70,11 @@ const Depth2 = ({ category, selectedCategory, handleCategory, onLinkClick }) => 
 
         {category.children.length > 0 && (
           <IconButton onClick={toggleOpen} className="tw-cursor-pointer">
-            {isOpen ? <ExpandLess sx={{ color: 'grey.300' }} /> : <ExpandMore sx={{ color: 'grey.300' }} />}
+            {isOpen ? (
+              <ExpandLess sx={{ color: 'grey.300' }} />
+            ) : (
+              <ExpandMore sx={{ color: 'grey.300' }} />
+            )}
           </IconButton>
         )}
       </Box>
@@ -72,7 +85,11 @@ const Depth2 = ({ category, selectedCategory, handleCategory, onLinkClick }) => 
           style={{ maxHeight: isOpen ? '500px' : '0' }}
         >
           {category.children.map((categoryDepth3) => (
-            <Depth3 key={categoryDepth3.id} category={categoryDepth3} onLinkClick={onLinkClick} />
+            <Depth3
+              key={categoryDepth3.id}
+              category={categoryDepth3}
+              onLinkClick={onLinkClick}
+            />
           ))}
         </Box>
       </Collapse>
@@ -84,7 +101,6 @@ export function CategoryMenu() {
   const [selectedDepth1, setSelectedDepth1] = useState();
   const [selectedDepth2, setSelectedDepth2] = useState(null);
   const [selectedTab, setSelectedTab] = useState(0);
-  const [openDepth2, setOpenDepth2] = useState({});
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { categories, fetchCategories } = useCategoryStore();
@@ -95,7 +111,7 @@ export function CategoryMenu() {
 
   const handleChangeTab = (event, newValue) => {
     setSelectedTab(newValue);
-    setOpenDepth2({});
+    setSelectedDepth2(null);
   };
 
   const handleSelectedDepth2 = (category) => {
@@ -104,12 +120,9 @@ export function CategoryMenu() {
 
   const handleLinkClick = (to) => {
     setIsMenuOpen(false);
+    setSelectedDepth2(null);
     navigate(to);
   };
-
-  useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
 
   useEffect(() => {
     setSelectedDepth1(categories[0]);
@@ -117,10 +130,15 @@ export function CategoryMenu() {
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
+    if (!isMenuOpen) {
+      setSelectedDepth2(null);
+      setSelectedTab(0);
+    }
   };
 
   const handleClickAway = () => {
     setIsMenuOpen(false);
+    setSelectedDepth2(null);
   };
 
   return (
@@ -163,11 +181,22 @@ export function CategoryMenu() {
               <Box className="tw-flex-1 tw-py-5 tw-px-5">
                 <Link
                   to={`/product/list/${categories[selectedTab].id}`}
-                  onClick={() => handleLinkClick(`/product/list/${categories[selectedTab].id}`)}
+                  onClick={() =>
+                    handleLinkClick(
+                      `/product/list/${categories[selectedTab].id}`,
+                    )
+                  }
                 >
-                  <Typography variant="h6" component="h2" className="tw-flex tw-items-center tw-font-bold">
+                  <Typography
+                    variant="h6"
+                    component="h2"
+                    className="tw-flex tw-items-center tw-font-bold"
+                  >
                     {categories[selectedTab].name} 전체
-                    <ArrowForwardIosIcon className="tw-ml-1" sx={{ fontSize: '1rem' }} />
+                    <ArrowForwardIosIcon
+                      className="tw-ml-1"
+                      sx={{ fontSize: '1rem' }}
+                    />
                   </Typography>
                 </Link>
 
