@@ -81,7 +81,7 @@ function ProductCard({ product }) {
               boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
               transition: 'box-shadow 0.3s ease',
               '&:hover': {
-                boxShadow: '0px 0px 8px #ABA5F3',
+                boxShadow: '0px 0px 8px #FF9800',
               },
               display: 'flex',
               flexDirection: 'column',

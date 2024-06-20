@@ -144,25 +144,25 @@ const ProductDetail = () => {
     <PageContainer>
       {/* 상품 카드 */}
       <Card className="tw-max-w-5xl tw-mx-auto tw-my-8 tw-p-5 tw-overflow-hidden">
-        <Grid container spacing={3} className="tw-p-4 tw-md:p-8">
-          <Grid item md={6} className="tw-p-10">
+        <Grid container className="tw-p-2" justifyContent="space-between">
+          <Grid item className="tw-p-10">
             <div>
               {product.pictureUrl && (
                 <img
                   src={pictureUrl}
                   alt={product.title}
                   style={{
-                    width: '100%',
+                    width: 'auto',
                     height: '500px',
                     objectFit: 'contain',
                   }}
-                  className="tw-w-full tw-h-auto object-contain tw-shadow-md"
+                  className="tw-w-full tw-h-auto object-contain tw-shadow-xl"
                 />
               )}
             </div>
           </Grid>
-          <Grid item md={6} className="tw-flex tw-flex-col tw-justify-between">
-            <CardContent className="tw-space-y-6">
+          <Grid item className="tw-p-5" sx={{width:'50%'}}>
+            <CardContent className="tw-space-y-6 tw-p-0">
               {user.role === 'ROLE_ADMIN' && (
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
                   <Button
@@ -202,8 +202,8 @@ const ProductDetail = () => {
                     </Typography>
                   </Box>
               ) : (
-                  <Typography variant="h5" fontWeight="bold">
-                  `${product.fixedPrice.toLocaleString()}원`
+                  <Typography variant="h5" fontWeight="bold" align="right">
+                  {product.fixedPrice.toLocaleString()}원
                   </Typography>
               )}
 

@@ -45,32 +45,34 @@ function MainProductCard({ book }) {
   };
 
   return (
-    <Card
-      sx={{
-        borderRadius: '8px',
-        boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-        transition: 'box-shadow 0.3s ease',
-        '&:hover': {
-          boxShadow: '0px 0px 8px #ABA5F3',
-        },
-        height: '100%',
-      }}
-    >
-      <CardActionArea onClick={handleClick}>
-        <div className="tw-relative tw-pb-[90%]">
+      <Card
+          sx={{
+            borderRadius: '8px',
+            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+            transition: 'box-shadow 0.3s ease',
+            '&:hover': {
+              boxShadow: '0px 0px 8px #FF9800',
+            },
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+      >
+        <CardActionArea onClick={handleClick}>
           {isLoading ? (
-            <Skeleton variant="rectangular" width="100%" height="100%" />
+              <Skeleton variant="rectangular" width="100%" height="100%" />
           ) : (
-            <CardMedia
-              component="img"
-              sx={{ height: '100%' }}
-              className="tw-absolute tw-top-0 tw-left-0 tw-object-contain tw-h-full tw-w-full"
-              image={imageUrl}
-              alt={book.title || 'Book'}
-            />
+              <CardMedia
+                  component="img"
+                  sx={{
+                    height: 'auto',
+                    width: '100%',
+                    objectFit: 'contain'
+                  }}
+                  image={imageUrl}
+                  alt={book.title || 'Book'}
+              />
           )}
-        </div>
-        <CardContent sx={{ padding: '8px' }}>
+        <CardContent sx={{ padding: 2 }}>
           <Typography
             gutterBottom
             variant="h6"
