@@ -139,9 +139,26 @@ function ProductCard({ product }) {
               <Typography variant="body2" color="textSecondary" className="tw-py-2">
                 {product.author || 'Unknown Author'}
               </Typography>
-              <Typography variant="h7" component="div">
-                {formattedPrice}원
-              </Typography>
+              {/*<Typography variant="h7" component="div">*/}
+              {/*  {formattedPrice}원*/}
+              {/*</Typography>*/}
+              {product.discount ? (
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography variant="h8" color="primary" fontWeight="bold" sx={{mr: 1}}>
+                      10%
+                    </Typography>
+                    <Typography variant="body1" sx={{mr: 1, textDecoration: 'line-through', color: 'gray'}}>
+                      {formattedPrice}원
+                    </Typography>
+                    <Typography variant="h7" fontWeight="bold">
+                      {(product.fixedPrice * 0.9).toLocaleString()}원
+                    </Typography>
+                  </Box>
+              ) : (
+                  <Typography variant="h7" fontWeight="bold">
+                    {formattedPrice}원
+                  </Typography>
+              )}
             </CardContent>
           </Link>
 
