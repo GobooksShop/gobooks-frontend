@@ -4,6 +4,7 @@ import { getProduct } from '../../api/cart/cart';
 import useCartOrderStore from '../../store/useCartOrderStore';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
+import {Box, Checkbox, Grid, IconButton, Typography} from "@mui/material";
 
 const CartItems = (props) => {
   const [cartItems, setCartItems] = useState([]);
@@ -182,45 +183,75 @@ const CartItems = (props) => {
   };
 
   return (
-    <div className="detailslayout tw-min-h-[200px]">
-      <header className="tw-flex tw-justify-between tw-items-center tw-px-2 tw-bg-gray-400/35 md:tw-min-h-14">
-        {props.isOrders ? <></> :
+    <Box className="detailslayout tw-min-h-[200px]">
+      <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '0.5rem',
+            backgroundColor: '#f5f5f5',
+            minHeight: '3.5rem',
+          }}
+      >
+        {props.isOrders ? <>
+              <Typography variant="h6" className="tw-items-center tw-pl-2">주문 내역</Typography>
+            </> :
           <>
-            <div className="tw-flex tw-ml-2">
-              <input type="checkbox" checked={selectAll} onChange={handleSelectAll} />
-              <span>전체 선택</span>
-            </div>
-            <div onClick={handleDeleteSelected} className="tw-cursor-pointer">
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Checkbox checked={selectAll} onChange={handleSelectAll} />
+              <Typography variant="body1" className="tw-items-center">전체 선택</Typography>
+            </Box>
+            <IconButton onClick={handleDeleteSelected}>
               <DeleteIcon />
-            </div>
+            </IconButton>
           </>
         }
-      </header>
-      <div className="tw-grid-table-wrap tw-px-2 tw-border-0 tw-border-b tw-border-solid tw-border-gray-400/35">
-        <ul className="tw-px-2">
+      </Box>
+      <Box
+          className="tw-grid-table-wrap tw-px-2 tw-border-0 tw-border-b tw-border-solid tw-border-gray-400/35"
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
+          }}
+      >
           {cartItems.map((item, index) => (
-            <li key={item.productId + index}
-                className="tw-flex md:tw-items-center md:tw-gap-10 md:tw-h-36 tw-border-0 tw-border-b tw-border-solid tw-border-gray-400/35">
-              {props.isOrders ? <></> : <input
-                type="checkbox"
-                checked={cartItems[index]?.isSelected || false}
-                onChange={() => handleSelectItem(index)}
-              />
-              }
-              <div className="tw-h-full tw-overflow-hidden">
-                <img
-                  src={item.img_url}
-                  className="tw-max-w-32 tw-max-h-28 tw-w-full tw-h-auto"
+            <Box key={item.productId + index}
+                 sx={{
+                   display: 'flex',
+                   alignItems: 'center',
+                   gap: 2,
+                   borderBottom: '1px solid #ddd',
+                   padding: '0.5rem',
+                   '@media (min-width: 768px)': { // md 사이즈 이상에서 스타일 변경
+                     height: '9rem',
+                     gap: 4,
+                   },
+                 }}
+            >
+              {props.isOrders ? <></> :
+                <Checkbox
+                    checked={cartItems[index]?.isSelected || false}
+                    onChange={() => handleSelectItem(index)}
                 />
-              </div>
-              <div className="md:tw-w-96 tw-text-lg tw-font-normal">
-                <p>{item.product_name}</p>
-                <p><span className="tw-text-blue-500">10% </span><span
-                  className="tw-line-through">{item.price}원</span> {item.price * 0.9}원</p>
-              </div>
-              <div className="md:tw-w-52">
-                <div className="tw-w-20 tw-flex tw-flex-col tw-items-center">
-                  <span>{item.amount * 0.9}원</span>
+              }
+              <img
+                src={item.img_url}
+                className="tw-max-w-32 tw-max-h-28 tw-w-full tw-h-auto"
+              />
+              <Box sx={{flexGrow: 1}}>
+                <Typography variant="h6" component="p">
+                  {item.product_name}
+                </Typography>
+                <Typography variant="body1">
+                  <span className="tw-text-blue-500">10% </span>
+                  <span className="tw-line-through">{item.price.toLocaleString()}원</span>
+                  <Typography variant="h7" sx={{marginLeft:2, fontWeight:"bold"}}>{(item.price * 0.9).toLocaleString()}원</Typography>
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <Typography variant="h6">{(item.amount * 0.9).toLocaleString()}원</Typography>
                   {props.isOrders ? <></> :
                     <CartProductCounter
                       idx={index}
@@ -230,22 +261,17 @@ const CartItems = (props) => {
                       onCountChange={handleCountChange}
                     />
                   }
-                </div>
-              </div>
-              <div className="md:tw-grow md:tw-basis-0">
-                <span><strong>3일 이내 배송</strong></span>
-              </div>
+              </Box>
+              <Typography variant="h7" color="primary">3일 이내 배송</Typography>
               {props.isOrders ? <></> :
-                <div className="tw-self-start tw-mt-4 tw-justify-self-end ">
-                  <CloseIcon variant="h6" onClick={() => handleDeleteItem(index)}
-                             className=" tw-text-gray-500 hover:tw-text-gray-700 hover:tw-cursor-pointer" />
-                </div>
+                <IconButton onClick={() => handleDeleteItem(index)}>
+                  <CloseIcon className="tw-text-gray-500 hover:tw-text-gray-700 hover:tw-cursor-pointer" />
+                </IconButton>
               }
-            </li>
+            </Box>
           ))}
-        </ul>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 
