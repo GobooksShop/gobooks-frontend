@@ -108,7 +108,7 @@ const DeleveryInfo = (props) => {
       return false;
     }
     if (!realAddress) {
-      alert('실제 주소를 입력해주세요.');
+      alert('상세 주소를 입력해주세요.');
       return false;
     }
     if (!phoneNumber && !landlinePhoneNumber) {
@@ -201,13 +201,13 @@ const DeleveryInfo = (props) => {
           />
         </div>
         <div className="tw-pl-24 tw-row-start-4 tw-row-span-1 tw-col-span-4 tw-flex tw-items-center">
-          <label htmlFor="realAddress" className="tw-block tw-w-40 tw-pl-8">실제 주소</label>
+          <label htmlFor="realAddress" className="tw-block tw-w-40 tw-pl-8">상세 주소</label>
           <input
             type="text"
             id="realAddress"
             name="realAddress"
             className="tw-h-6 tw-bg-gray-50 tw-outline-none tw-border tw-border-solid tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 focus:tw-border-2 tw-block tw-w-full tw-p-2"
-            placeholder="실제 주소"
+            placeholder="상세 주소"
             required
             ref={el => inputActiveRef.current[1] = el}
             value={deliveryInfo.realAddress}
