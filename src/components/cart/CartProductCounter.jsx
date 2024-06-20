@@ -18,10 +18,10 @@ const CartProductCounter = ({ idx, productId, initialCount, onCountChange }) => 
   };
 
   return (
-    <div className="cart-product-counter">
-      <button onClick={handleDecrement} className="hover:tw-cursor-pointer">-</button>
+    <div className="cart-product-counter tw-flex tw-justify-center tw-px-2 tw-py-1 tw-gap-1 tw-border-solid tw-border tw-border-gray-500/70 tw-rounded tw-w-15">
+      <button onClick={handleDecrement} className="tw-border-none tw-bg-white hover:tw-cursor-pointer ">-</button>
       <span>{count}</span>
-      <button onClick={handleIncrement} className="hover:tw-cursor-pointer">+</button>
+      <button onClick={handleIncrement} className="tw-border-none tw-bg-white hover:tw-cursor-pointer">+</button>
     </div>
   );
 };

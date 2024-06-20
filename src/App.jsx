@@ -1,37 +1,54 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material';
 
+import { BrowserRouter } from 'react-router-dom';
 import Footer from './components/Footer';
 import Header from './components/header/Header';
 import Router from './Router';
+import { createContext, useState } from 'react';
 
+export const DeliveryContext = createContext(null);
+
+const DeliveryProvider = ({ children }) => {
+  const [deliveryInfo, setDeliveryInfo] = useState({
+    name: '',
+    label: '',
+    zipcode: '',
+    address: '',
+    realAddress: '',
+    phoneNumber: '',
+    landlinePhoneNumber: '',
+  });
+
+  return (
+    <DeliveryContext.Provider value={{ deliveryInfo, setDeliveryInfo }}>
+      {children}
+    </DeliveryContext.Provider>
+  );
+};
 function App() {
   const theme = createTheme({
     palette: {
       primary: {
-        // main: '#ABA5F3',
-        main: '#fff',
-        // light: will be calculated from palette.primary.main,
-        // dark: will be calculated from palette.primary.main,
-        // contrastText: will be calculated to contrast with palette.primary.main
+        main: '#8BC34A',
       },
       secondary: {
-        main: '#1cc7d0',
-        light: '#F5EBFF',
-        // dark: will be calculated from palette.secondary.main,
-        contrastText: '#47008F',
+        main: '#FF9800',
+        light: '#FFEB3B',
+        contrastText: '#364D1C',
       },
     },
   });
 
   return (
-    <div className="App font-pre">
+    <div className="tw-App tw-font-pre">
       <ThemeProvider theme={theme}>
+        <DeliveryProvider>
         <BrowserRouter>
           <Header />
           <Router />
           <Footer />
         </BrowserRouter>
+        </DeliveryProvider>
       </ThemeProvider>
     </div>
   );

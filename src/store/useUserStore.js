@@ -1,4 +1,5 @@
-import create from 'zustand';
+import commonStore from './commonStore';
+import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 const useUserStore = create(
@@ -9,14 +10,25 @@ const useUserStore = create(
         name: '',
         email: '',
         role: '',
+        addresses: [],
       },
       setUser: (user) => set({ user }),
+      setAddresses: (addresses) =>
+        set((state) => ({ user: { ...state.user, addresses } })),
       clearUser: () =>
-        set({ user: { userId: '', name: '', email: '', role: '' } }),
+        set({
+          user: {
+            userId: '',
+            name: '',
+            email: '',
+            role: '',
+            addresses: [],
+          },
+        }),
     }),
     {
-      name: 'userStore', // 로컬 스토리지에 저장될 키
-      getStorage: () => localStorage, // 기본값: localStorage
+      name: 'userStore',
+      storage: commonStore,
     },
   ),
 );

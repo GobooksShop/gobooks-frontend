@@ -1,44 +1,51 @@
 import { PageContainer } from '../../components/PageContainer';
 import CartItems from '../../components/cart/CartItems';
-import { useEffect, useState } from 'react';
-import {getCartData} from '../../api/cart/cart';
 import CartInfo from '../../components/cart/CartInfo';
 import DeleveryInfo from '../../components/order/DeleveryInfo';
-import PaymentInfo from '../../components/payment/PaymentInfo';
-const Order = () => {
-  const [cartItems, setCartItems] = useState([]);
+import { useEffect } from 'react';
+import useCartOrderStore from '../../store/useCartOrderStore';
+import { saveOrder } from '../../api/order/order';
+import useUserStore from '../../store/useUserStore';
+import OrderStatus from '../../components/order/OrderStatus';
 
+function Order() {
+
+  const { cartItems, setMerchantUid, merchantUid } = useCartOrderStore(state => state);
+  const { userId } = useUserStore(state => state.user);
   useEffect(() => {
-    const data = getCartData();
-    setCartItems(data);
-    console.log(cartItems);
+    if (merchantUid === '') {
+      const requestOrderItems = {
+        userId: userId,
+        merchantUid: '',
+        orderItemRequests: [],
+      };
+      cartItems.forEach(item => {
+        requestOrderItems.orderItemRequests.push({
+          productId: item.productId,
+          orderCount: item.quantity,
+          price: item.price,
+        });
+      });
+      console.log(JSON.stringify(requestOrderItems, null, 2));
+      saveOrder(requestOrderItems).then(data => {
+        console.log(data);
+        setMerchantUid(data.merchantUid);
+      });
+    }
   }, []);
-
-  useEffect(() => {
-    console.log("cartItems이 변경되었습니다:", cartItems);
-  }, [cartItems]);
-
   return (
     <PageContainer>
-      <div>
-        <ul className="tw-flex tw-gap-10">
-          <li>장바구니</li>
-          <li>주문</li>
-          <li>완료</li>
-        </ul>
-      </div>
-      {/*todo 컴포넌트 나누기 */}
+      <OrderStatus />
       <header className="title tw-h-24 tw-flex tw-items-center">
         <h1 className="tw-font-semibold tw-text-2xl">주문/결제</h1>
       </header>
       <div
-        className="tw-relative tw-grid tw-grid-cols-12 tw-mt-5 tw-gap-x-5 tw-max-w-[1440px] tw-min-h-[800px]">
+        className="tw-relative tw-grid tw-grid-cols-12 tw-mt-5 tw-gap-x-5 tw-max-w-[1240px]">
         <div className="main content tw-col-span-9">
-          <CartItems cartList={cartItems} isOrders={true}/>
+          <CartItems isOrders={true} />
           <DeleveryInfo />
-          <PaymentInfo />
         </div>
-        <CartInfo isOrders={true}/>
+        <CartInfo isOrders={true} />
       </div>
     </PageContainer>
   );

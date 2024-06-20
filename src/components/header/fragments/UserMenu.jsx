@@ -64,7 +64,7 @@ export function UserMenu({ onOpen, onClose, anchorElUser }) {
         )}
         <li>
           <IconButton
-            className="w-[35px] h-[35px]"
+            className="tw-w-[35px] tw-h-[35px]"
             aria-label="account of current user"
             aria-controls="menu-appbar"
             aria-haspopup="true"
@@ -82,7 +82,7 @@ export function UserMenu({ onOpen, onClose, anchorElUser }) {
               aria-controls="menu-appbar"
               aria-haspopup="true"
             >
-              <Link to="/category/management">
+              <Link to="/admin/manager">
                 <ManageAccountsIcon />
               </Link>
             </IconButton>
