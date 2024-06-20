@@ -44,7 +44,7 @@ const SocialLogin = () => {
 
   useEffect(() => {
     const handleAuthComplete = (event) => {
-      if (event.origin === 'https://www.gobookstore.shop' && event.data) {
+      if (event.origin === `${baseURL}` && event.data) {
         console.log('Login successful');
         const { accessToken, userId, name, email, role } = event.data;
         console.log('response.data:', event.data);
