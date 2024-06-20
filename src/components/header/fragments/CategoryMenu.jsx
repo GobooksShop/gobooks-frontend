@@ -111,7 +111,7 @@ export function CategoryMenu() {
 
   const handleChangeTab = (event, newValue) => {
     setSelectedTab(newValue);
-    setSelectedDepth2(null); // Reset selected depth2 category when changing top-level tab
+    setSelectedDepth2(null);
   };
 
   const handleSelectedDepth2 = (category) => {
@@ -120,6 +120,7 @@ export function CategoryMenu() {
 
   const handleLinkClick = (to) => {
     setIsMenuOpen(false);
+    setSelectedDepth2(null);
     navigate(to);
   };
 
@@ -129,10 +130,15 @@ export function CategoryMenu() {
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
+    if (!isMenuOpen) {
+      setSelectedDepth2(null);
+      setSelectedTab(0);
+    }
   };
 
   const handleClickAway = () => {
     setIsMenuOpen(false);
+    setSelectedDepth2(null);
   };
 
   return (
