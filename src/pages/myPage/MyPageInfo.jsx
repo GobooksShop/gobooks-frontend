@@ -288,7 +288,7 @@ function MyPageInfo() {
                 color="primary"
                 fullWidth
                 onClick={() => setIsEditing(true)}
-                sx={{ mt: 2 }}
+                sx={{ my: 1 }}
               >
                 정보 수정
               </Button>
@@ -298,7 +298,7 @@ function MyPageInfo() {
               color="error"
               fullWidth
               onClick={onClickDelete}
-              sx={{ mt: 1 }}
+              sx={{ my: 1 }}
             >
               회원 탈퇴
             </Button>

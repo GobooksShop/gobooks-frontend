@@ -1,10 +1,28 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Container, Grid, Paper, Typography, TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Select, MenuItem, Box, Pagination, CircularProgress } from '@mui/material';
+import {
+  Container,
+  Grid,
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Select,
+  MenuItem,
+  Box,
+  Pagination,
+  CircularProgress,
+  Stack
+} from '@mui/material';
 import { styled } from '@mui/system';
 import { getUserStatusCounts } from '../../../api/user/userApi'; // 적절한 경로로 수정하세요
 
 const FilterContainer = styled(Box)({
-  display: 'flex',
   alignItems: 'center',
   backgroundColor: '#f3f4f6',
   padding: '16px',
@@ -93,21 +111,33 @@ const UserManagement = () => {
         </Grid>
       </Grid>
       <FilterContainer>
-        <Select defaultValue="" displayEmpty>
-          <MenuItem value="">
-            <em>연락처</em>
-          </MenuItem>
-          <MenuItem value="email">이메일</MenuItem>
-          <MenuItem value="name">이름</MenuItem>
-          <MenuItem value="contact">연락처</MenuItem>
-        </Select>
-        <TextField className="tw-ml-4" placeholder="검색어를 입력하세요" variant="outlined" size="small" />
-        <SearchButton variant="contained" color="primary">
-          검색
-        </SearchButton>
-        <Button variant="outlined" color="primary">
-          검색 초기화
-        </Button>
+        <Stack
+            direction="row"
+            alignItems="center"
+            spacing={2}
+            sx={{
+              padding: 1,
+              height: 45,
+            }}
+        >
+          <Select defaultValue="" displayEmpty sx={{ minWidth: 120, height: 40 }}>
+            <MenuItem value="">
+              <em>연락처</em>
+            </MenuItem>
+            <MenuItem value="email">이메일</MenuItem>
+            <MenuItem value="name">이름</MenuItem>
+            <MenuItem value="contact">연락처</MenuItem>
+          </Select>
+          <TextField className="tw-ml-4" placeholder="검색어를 입력하세요" variant="outlined" size="small"
+                     fullWidth
+          />
+          <SearchButton variant="contained" color="primary">
+            검색
+          </SearchButton>
+          <Button variant="outlined" color="error" sx={{minWidth:'100px'}}>
+            검색 초기화
+          </Button>
+        </Stack>
       </FilterContainer>
       <Box className="tw-my-[3%] tw-flex tw-justify-end">
         <Select value={30} onChange={() => {}} className="tw-w-20">
