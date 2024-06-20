@@ -15,6 +15,8 @@ import ProductList from './pages/productList/ProductList';
 import UserManagement from './pages/manager/users/UserManagement';
 import OrdersComplete from './pages/order/OrdersComplete';
 import OrderList from './pages/order/OrderList';
+import { PrivateRoute } from './router/PrivateRoute';
+
 
 const Router = () => {
   return (
@@ -22,9 +24,11 @@ const Router = () => {
       <Route path="/" element={<Main />} />
       <Route path="/login" element={<Login />} />
       <Route path="/join" element={<Join />} />
-      <Route path="/order" element={<Order />} />
-      <Route path="/order/complete" element={<OrdersComplete />} />
-      <Route path="/order/:userId" element={<OrderList />}/>
+      <Route element={<PrivateRoute />}>
+        <Route path="/order" element={<Order />} />
+        <Route path="/order/complete" element={<OrdersComplete />} />
+        <Route path="/order/:userId" element={<OrderList />} />
+      </Route>
       <Route path="/product/list/:categoryId" element={<ProductList />} />
       <Route path="/product/detail/:id" element={<ProductDetail />} />
       <Route path="/admin/product/add" element={<ProductAdd />} />
