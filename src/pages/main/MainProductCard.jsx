@@ -11,7 +11,7 @@ import React, { useEffect, useState } from 'react';
 import noImage from '../../pages/productList/images/noimage.jpg';
 import { useNavigate } from 'react-router-dom';
 
-const baseURL = 'http://localhost:8080';
+const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 function MainProductCard({ book }) {
   const [isLoading, setIsLoading] = useState(true);
@@ -22,7 +22,7 @@ function MainProductCard({ book }) {
     setIsLoading(true);
 
     if (book.pictureUrl) {
-      const fullImageUrl = `${baseURL}/image/${book.pictureUrl}`;
+      const fullImageUrl = `${baseURL}/api/images/${book.pictureUrl}`;
       const img = new Image();
       img.src = fullImageUrl;
       img.onload = () => {
