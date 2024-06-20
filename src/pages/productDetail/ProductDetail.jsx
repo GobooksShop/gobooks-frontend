@@ -138,7 +138,7 @@ const ProductDetail = () => {
     return <p>No product found</p>;
   }
 
-  const pictureUrl = `${baseURL}/image/${product.pictureUrl}`;
+  const pictureUrl = `${baseURL}/api/images/${product.pictureUrl}`;
 
   return (
     <PageContainer>

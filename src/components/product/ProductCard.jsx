@@ -27,7 +27,7 @@ function ProductCard({ product }) {
     setIsLoading(true);
 
     if (product.pictureUrl) {
-      const fullImageUrl = `${baseURL}/image/${product.pictureUrl}`; // Construct full URL
+      const fullImageUrl = `${baseURL}/api/images/${product.pictureUrl}`; // Construct full URL
       const img = new Image();
       img.src = fullImageUrl;
       img.onload = () => {
