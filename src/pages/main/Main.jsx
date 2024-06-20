@@ -52,7 +52,7 @@ function BookCarousel({ books }) {
   const [currentPage, setCurrentPage] = useState(0);
 
   if (!books || books.length === 0) {
-    return null; // or return a placeholder, or loading indicator
+    return null;
   }
 
   const totalPages = Math.ceil(books.length / itemsPerPage);
@@ -71,7 +71,7 @@ function BookCarousel({ books }) {
 
   return (
     <Box sx={{ position: 'relative', padding: '0 60px' }}>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} alignItems="center">
         {books
           .slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
           .map((book) => (
@@ -116,12 +116,12 @@ function BookCarousel({ books }) {
 
 function Main() {
   const adImages = [
-    'https://i.imgur.com/y4j0R2X.jpg',
+    'https://i.imgur.com/yX6xL0R.jpg',
+    'https://i.imgur.com/9yMs0qi.jpg',
     'https://i.imgur.com/YNrOP7z.jpg',
     'https://i.imgur.com/BjZObZG.jpg',
     'https://i.imgur.com/0bSoyfO.jpg',
     'https://i.imgur.com/IDwQTwM.jpg',
-    'https://i.imgur.com/yX6xL0R.jpg',
   ];
 
   const [products, setProducts] = useState({
@@ -163,7 +163,7 @@ function Main() {
           <Typography
               variant="h4"
               sx={{
-                marginBottom: '1.5rem',
+                marginBottom: '2rem',
                 marginTop: '5rem',
                 textAlign: 'center'
               }}
@@ -181,7 +181,7 @@ function Main() {
           <Typography
               variant="h4"
               sx={{
-                marginBottom: '1.5rem',
+                marginBottom: '2rem',
                 marginTop: '5rem',
                 textAlign: 'center'
               }}
@@ -199,7 +199,7 @@ function Main() {
           <Typography
               variant="h4"
               sx={{
-                marginBottom: '1.5rem',
+                marginBottom: '2rem',
                 marginTop: '5rem',
                 textAlign: 'center'
               }}
@@ -217,7 +217,7 @@ function Main() {
           <Typography
               variant="h4"
               sx={{
-                marginBottom: '1.5rem',
+                marginBottom: '2rem',
                 marginTop: '5rem',
                 textAlign: 'center'
               }}
