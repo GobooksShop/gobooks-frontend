@@ -29,12 +29,12 @@ function App() {
   const theme = createTheme({
     palette: {
       primary: {
-        main: '#ABA5F3',
+        main: '#8BC34A',
       },
       secondary: {
-        main: '#1cc7d0',
-        light: '#F5EBFF',
-        contrastText: '#47008F',
+        main: '#FF9800',
+        light: '#FFEB3B',
+        contrastText: '#364D1C',
       },
     },
   });
