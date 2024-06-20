@@ -53,6 +53,7 @@ const CartItems = (props) => {
       const selectedOrderItems = storedCartItems.filter(item => item.isSelected && item.status == 'cart');
       for (const orderItem of selectedOrderItems) {
         const productData = data.find(item => item.id === orderItem.productId);
+        console.log(productData);
         const cartDatas = {
           'productId': productData.id,
           'product_name': productData.title,
@@ -61,7 +62,7 @@ const CartItems = (props) => {
           'isSelected': orderItem.isSelected,
           'amount': productData.fixedPrice * orderItem.quantity,
           'status': 'cart',
-          'img_url': 'https://contents.kyobobook.co.kr/sih/fit-in/300x0/pdt/9791192987675.jpg',
+          'img_url': `https://www.gobookstore.shop:8080/api/images/${productData.pictureUrl}`,
         };
         cartData.push(cartDatas);
       }
@@ -82,7 +83,7 @@ const CartItems = (props) => {
           'isSelected': storedItem.isSelected,
           'amount': item.fixedPrice * storedItem.quantity,
           'status': 'cart',
-          'img_url': 'https://contents.kyobobook.co.kr/sih/fit-in/300x0/pdt/9791192987675.jpg',
+          'img_url': `https://www.gobookstore.shop:8080/api/images/${item.pictureUrl}`,
         };
         cartData.push(cartDatas);
       }
