@@ -9,9 +9,9 @@ import useUserStore from '../../../store/useUserStore';
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 const providerUrls = {
-  google: `${baseURL}/api/login/oauth2/authorization/google`,
-  kakao: `${baseURL}/api/login/oauth2/authorization/kakao`,
-  naver: `${baseURL}/api/login/oauth2/authorization/naver`,
+  google: `${baseURL}/api/oauth2/authorization/google`,
+  kakao: `${baseURL}/api/oauth2/authorization/kakao`,
+  naver: `${baseURL}/api/oauth2/authorization/naver`,
 };
 
 const handleSocialLogin = (provider) => {
