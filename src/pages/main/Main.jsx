@@ -173,7 +173,7 @@ function Main() {
           {products[1] && products[1].length > 0 ? (
             <BookCarousel books={products[1]} />
           ) : (
-            <Typography>No data available for 상반기 베스트셀러.</Typography>
+            <Typography>No data available</Typography>
           )}
         </section>
 
@@ -191,7 +191,7 @@ function Main() {
           {products[2] && products[2].length > 0 ? (
             <BookCarousel books={products[2]} />
           ) : (
-            <Typography>No data available for 화제의 신상.</Typography>
+            <Typography>No data available</Typography>
           )}
         </section>
 
@@ -209,7 +209,7 @@ function Main() {
           {products[3] && products[3].length > 0 ? (
             <BookCarousel books={products[3]} />
           ) : (
-            <Typography>No data available for 오늘의 책.</Typography>
+            <Typography>No data available</Typography>
           )}
         </section>
 
@@ -227,7 +227,7 @@ function Main() {
           {products[4] && products[4].length > 0 ? (
             <BookCarousel books={products[4]} />
           ) : (
-            <Typography>No data available for 스테디셀러.</Typography>
+            <Typography>No data available</Typography>
           )}
         </section>
       </div>
