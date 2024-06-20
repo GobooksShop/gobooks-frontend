@@ -7,6 +7,7 @@ import useCartOrderStore from '../../store/useCartOrderStore';
 import { DeliveryContext } from '../../App';
 import { saveDelivery } from '../../api/delivery/delivery';
 import {useNavigate} from 'react-router-dom';
+import {Button} from "@mui/material";
 
 const Payment = ({productName}) => {
 
@@ -137,7 +138,9 @@ const Payment = ({productName}) => {
   };
 
   return (
-    <CustomButton color="success" size="large" onClick={handlePayment} text="결제하기" />
+      <Button variant="contained" color="secondary" size="large" onClick={handlePayment}>
+        결제하기
+      </Button>
   );
 };
 

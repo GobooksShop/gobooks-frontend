@@ -4,6 +4,14 @@ import Payment from '../payment/Payment';
 import useCartOrderStore from '../../store/useCartOrderStore';
 import { useNavigate } from 'react-router-dom';
 import { varifyCartDatas } from '../../api/cart/cart';
+import {
+  Box, Button,
+  Card,
+  CardContent,
+  Divider,
+  Stack,
+  Typography
+} from "@mui/material";
 
 const CartInfo = (props) => {
   const [isFixed, setIsFixed] = useState(false);
@@ -61,36 +69,45 @@ const CartInfo = (props) => {
   };
 
   return (
-    <div className="tw-col-span-3 tw-relative">
-      <div className={isFixed ? 'tw-fixed tw-top-24 tw-right-auto ' : 'tw-absolute tw-top-0 tw-right-0 tw-w-full'}>
-        <div className="cartInfo tw-relative tw-min-h-96 tw-w-96">
-          <div
-            className="tw-relative tw-mx-2 tw-p-5 tw-border tw-border-solid tw-rounded-[25px] tw-border-gray-500/70">
-            <div
-              className="tw-flex tw-justify-between  tw-min-h-[100px] tw-w-full tw-border-solid tw-border-0 tw-border-b tw-border-gray-500/70">
-              <div className="tw-flex tw-flex-col tw-gap-3">
-                <div>주문금액</div>
-                <div>배송비</div>
-                <div>할인 금액</div>
-              </div>
-              <div className="tw-flex tw-flex-col tw-items-end tw-gap-3">
-                <div>{totalAmount + discountAmount}원</div>
-                <div>0원</div>
-                <div>{-discountAmount}원</div>
-              </div>
+      <Card
+          className={isFixed ? 'tw-fixed tw-top-24 tw-right-auto' : 'tw-absolute tw-top-0 tw-right-0 tw-w-96'}
+          sx={{
+            width: '270px',
+            mx: 2,
+            mt: 3,
+            borderRadius: '12px',
+            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25)'
+          }}
+      >
+        <CardContent>
+          <Stack spacing={2}>
+            <div className="tw-min-h-[40px]">
+              <Stack direction="row" justifyContent="space-between" className="tw-py-1">
+                <Typography variant="body1">주문 금액</Typography>
+                <Typography variant="body1">{(totalAmount + discountAmount).toLocaleString()}원</Typography>
+              </Stack>
+              <Stack direction="row" justifyContent="space-between" className="tw-py-1">
+                <Typography variant="body1">배송비</Typography>
+                <Typography variant="body1">0원</Typography>
+              </Stack>
+              <Stack direction="row" justifyContent="space-between" className="tw-py-1">
+                <Typography variant="body1">할인 금액</Typography>
+                <Typography variant="body1">{(-discountAmount).toLocaleString()}원</Typography>
+              </Stack>
             </div>
-            <div className="cartBottom tw-flex tw-justify-between tw-pt-3 tw-font-bold tw-text-lg">
-              <div>총주문 금액</div>
-              <div>{totalAmount}원</div>
-            </div>
-            <div className="tw-flex tw-justify-center tw-mt-5">
-              {props.isOrders ? <Payment /> :
-                <CustomButton color="success" size="large" text="주문하기" onClick={handleOrderClick}></CustomButton>}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            <Divider />
+            <Stack direction="row" justifyContent="space-between">
+              <Typography variant="h6" >총 주문 금액 : </Typography>
+              <Typography variant="h5" fontWeight="bold">{totalAmount.toLocaleString()}원</Typography>
+            </Stack>
+            {props.isOrders ? <Payment /> :
+                <Button variant="contained" color="secondary" onClick={handleOrderClick}>
+                  주문하기
+                </Button>
+            }
+          </Stack>
+        </CardContent>
+      </Card>
   );
 };
 
