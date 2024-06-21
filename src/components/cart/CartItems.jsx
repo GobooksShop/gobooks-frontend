@@ -32,12 +32,14 @@ const CartItems = (props) => {
         'price': data[0].fixedPrice,
         'isSelected': existDirectOrder[0].isSelected,
         'amount': data[0].fixedPrice * existDirectOrder[0].quantity,
-        'img_url': 'https://contents.kyobobook.co.kr/sih/fit-in/300x0/pdt/9791192987675.jpg',
+        'img_url': `https://www.gobookstore.shop:8080/api/images/${data[0].pictureUrl}`,
       }];
 
       setCartItems(cartDatas);
+      store.setPayedProductName(cartDatas[0].product_name);
       store.updateTotalOrderAmount();
       store.resetOrderItems();
+
 
       return;
     }// end
@@ -66,6 +68,13 @@ const CartItems = (props) => {
         };
         cartData.push(cartDatas);
       }
+      if(cartData.length === 1){
+        store.setPayedProductName(cartData[0].product_name);
+      }else if(cartData.length > 1) {
+        console.log("carDataLength > 1");
+        store.setPayedProductName(`${cartData[0].product_name} 외 ${cartData.length - 1}건`);
+      }
+
     } else {
       for (const item of data) {
         console.log(storedCartItems);
@@ -86,6 +95,12 @@ const CartItems = (props) => {
           'img_url': `https://www.gobookstore.shop:8080/api/images/${item.pictureUrl}`,
         };
         cartData.push(cartDatas);
+      }
+      if(cartData.length === 1){
+        store.setPayedProductName(cartData[0].product_name);
+      }else if(cartData.length > 1) {
+        console.log("carDataLength > 1");
+        store.setPayedProductName(`${cartData[0].product_name} 외 ${cartData.length - 1}건`);
       }
     }
     //end

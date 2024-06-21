@@ -14,8 +14,8 @@ const Payment = ({productName}) => {
   const {
     merchantUid,
     totalAmount,
-    setMerchantUid,
-    resetMerchantUid,
+    paidProductName,
+    setMerchantUid
   } = useCartOrderStore(state => state);
   const { userId, name, email, role } = useUserStore(state => state.user);
   const { deliveryInfo } = useContext(DeliveryContext);
@@ -107,7 +107,7 @@ const Payment = ({productName}) => {
             pg: 'html5_inicis.INIpayTest',
             pay_method: 'card',
             merchant_uid: merchantUid,
-            name: productName,
+            name: paidProductName,
             amount: totalAmount,
             buyer_email: email,
             buyer_name: deliveryInfo.name,

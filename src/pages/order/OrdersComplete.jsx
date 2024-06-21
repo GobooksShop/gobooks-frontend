@@ -104,8 +104,12 @@ const OrdersComplete = () => {
               </ul>
             </div>
           </div>
-          {isLoading ? <OrderCompleteInfo deliveryInfo={orderCompleteData.orderDeliveryResponse}
-                                           merchentUid={orderCompleteData.merchantUid} paymentInfo={orderCompleteData.paymentResponse} /> : <CircularProgress />}
+          {isLoading ? <OrderCompleteInfo
+              deliveryInfo={orderCompleteData.orderDeliveryResponse}
+              merchentUid={orderCompleteData.merchantUid}
+              paymentInfo={orderCompleteData.paymentResponse}
+              orderDateTime= {orderCompleteData.orderDateTime}
+           /> : <CircularProgress />}
         </div>
       </div>
     </PageContainer>
