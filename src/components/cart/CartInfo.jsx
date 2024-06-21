@@ -70,8 +70,10 @@ const CartInfo = (props) => {
 
   return (
       <Card
-          className={isFixed ? 'tw-fixed tw-top-24 tw-right-auto' : 'tw-absolute tw-top-0 tw-right-0 tw-w-96'}
           sx={{
+            position: 'fixed',
+            top: 180,
+            right: 0,
             width: '270px',
             mx: 2,
             mt: 3,
