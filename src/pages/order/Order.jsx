@@ -7,6 +7,7 @@ import useCartOrderStore from '../../store/useCartOrderStore';
 import { saveOrder } from '../../api/order/order';
 import useUserStore from '../../store/useUserStore';
 import OrderStatus from '../../components/order/OrderStatus';
+import {Box} from "@mui/material";
 
 function Order() {
 
@@ -37,14 +38,20 @@ function Order() {
   return (
     <PageContainer>
       <OrderStatus currentStep={currentStep}/>
-      <div
-        className="tw-relative tw-grid tw-grid-cols-12 tw-mt-5 tw-pt-5 tw-gap-x-5 tw-max-w-[1240px]">
-        <div className="main content tw-col-span-9">
+      <Box
+          display="flex"
+          mt={5}
+          pt={5}
+          pr={35}
+          maxWidth={1240}
+          className="tw-relative"
+      >
+        <Box flexGrow={1} className="main content">
           <CartItems isOrders={true} />
           <DeleveryInfo />
-        </div>
+        </Box>
         <CartInfo isOrders={true} />
-      </div>
+      </Box>
     </PageContainer>
   );
 }

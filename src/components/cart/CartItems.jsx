@@ -261,7 +261,7 @@ const CartItems = (props) => {
                   {item.product_name}
                 </Typography>
                 <Typography variant="body1">
-                  <span className="tw-text-blue-500">10% </span>
+                  <span className="tw-text-orange-500">10% </span>
                   <span className="tw-line-through">{item.price.toLocaleString()}원</span>
                   <Typography variant="h7" sx={{marginLeft:2, fontWeight:"bold"}}>{(item.price * 0.9).toLocaleString()}원</Typography>
                 </Typography>

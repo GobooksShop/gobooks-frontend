@@ -21,7 +21,7 @@ const OrderStatus = ({ currentStep }: { currentStep: number }) => {
               {index < steps.length - 1 && (
                   <ArrowForwardIosIcon
                       className={`tw-text-gray-400 ${
-                          index < currentStep ? 'tw-text-purple-400' : ''
+                          index < currentStep ? 'tw-text-orange-300' : ''
                       }`}
                   />
               )}
