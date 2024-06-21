@@ -38,7 +38,7 @@ const ProductDetail = () => {
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const { addCart, addOrder } = useCartOrderStore((state) => state);
+  const { addCart, addOrder, resetMerchantUid } = useCartOrderStore((state) => state);
   const { fetchProductDetails, fetchProductImgDetail, deleteProduct } =
     useProductStore();
   const [totalPrice, setTotalPrice] = useState(0);
@@ -86,6 +86,7 @@ const ProductDetail = () => {
   };
 
   const handleBuyNow = () => {
+    resetMerchantUid();
     addOrder(product.id, quantity, product.fixedPrice, 'order');
     navigate(`/order`);
   };

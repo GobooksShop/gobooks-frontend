@@ -10,7 +10,7 @@ function Cart() {
     <PageContainer>
       <OrderStatus currentStep={currentStep} />
       <div
-        className="tw-relative tw-grid tw-grid-cols-12 tw-mt-5 tw-pt-5 tw-gap-x-5 tw-max-w-[1440px]">
+        className="tw-relative tw-grid tw-grid-cols-12 tw-mt-5 tw-pt-5 tw-gap-x-5 tw-max-w-[1440px] tw-min-h-[650px]">
         <div className="main content tw-col-span-9">
           <CartItems isOrders={false}/>
         </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const OrderCompleteInfo = ({deliveryInfo, merchentUid, paymentInfo }) => {
+const OrderCompleteInfo = ({deliveryInfo, merchentUid, orderDateTime, paymentInfo }) => {
 
   return (
     <>
@@ -74,7 +74,7 @@ const OrderCompleteInfo = ({deliveryInfo, merchentUid, paymentInfo }) => {
               type="text"
               className="tw-h-6 tw-bg-gray-50 tw-outline-none tw-border tw-border-solid tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 focus:tw-border-2 tw-block tw-w-full tw-p-2"
               readOnly
-              value={deliveryInfo}
+              value={orderDateTime}
               disabled
             />
           </div>
