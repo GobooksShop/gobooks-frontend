@@ -49,14 +49,6 @@ export default function UserDashboard() {
           label="회원 정보"
           sx={{ fontSize: '1rem', fontWeight: 'bold', padding: '10px 20px' }}
         />
-        <Tab
-          label="주소 관리"
-          sx={{ fontSize: '1rem', fontWeight: 'bold', padding: '10px 20px' }}
-        />
-        <Tab
-          label="주문 관리"
-          sx={{ fontSize: '1rem', fontWeight: 'bold', padding: '10px 20px' }}
-        />
       </Tabs>
       <TabPanel value={tabIndex} index={0}>
         <MyPageInfo />
