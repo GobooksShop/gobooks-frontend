@@ -1,6 +1,11 @@
 import {
   Button,
   Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   FormControlLabel,
   Grid,
   TextField,
@@ -10,6 +15,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { deleteUser, updateUserInfo } from '../../api/user/userApi';
 
 import { PageContainer } from '../../components/PageContainer';
+import { useNavigate } from 'react-router-dom';
 import useUserStore from '../../store/useUserStore';
 
 function MyPageInfo() {
@@ -25,6 +31,9 @@ function MyPageInfo() {
   const [errors, setErrors] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [openDialog, setOpenDialog] = useState(false); // State for the dialog
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setUserInfo({ ...user, password: '', phone: user.phone || '' });
@@ -167,9 +176,15 @@ function MyPageInfo() {
       await deleteUser(user.userId);
       clearUser();
       console.log('탈퇴 처리되었습니다.');
+      setOpenDialog(true); // Open the dialog
     } catch (error) {
       console.error('탈퇴 처리 오류', error);
     }
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    navigate('/'); // Redirect to home
   };
 
   return (
@@ -305,6 +320,18 @@ function MyPageInfo() {
           </form>
         </Grid>
       </Grid>
+
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>알림</DialogTitle>
+        <DialogContent>
+          <DialogContentText>회원 탈퇴되었습니다. 감사합니다</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            확인
+          </Button>
+        </DialogActions>
+      </Dialog>
     </PageContainer>
   );
 }
