@@ -3,3 +3,5 @@
 #REACT_APP_API_BASE_URL=http://localhost:8080
 #운영 주소 도메인
 REACT_APP_API_BASE_URL=https://api.gobookstore.shop
+#빌드 시 CI 환경에서 오류로 ESLint 경고 무시
+CI=false
