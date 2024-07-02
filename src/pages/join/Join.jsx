@@ -305,6 +305,7 @@ function Join() {
               <Grid item xs={3}>
                 <Button
                   variant="contained"
+                  height="100%"
                   color={emailChecked ? 'primary' : 'secondary'}
                   fullWidth
                   onClick={emailButtonDisabled ? null : checkEmailUnique}
@@ -315,6 +316,7 @@ function Join() {
                     marginTop: '16px',
                     textTransform: 'none',
                     fontSize: '1rem',
+                    minHeight: '56px'
                   }}
                 >
                   {emailChecked ? '사용 가능' : '중복 확인'}
@@ -342,6 +344,8 @@ function Join() {
                     marginTop: '16px',
                     textTransform: 'none',
                     fontSize: '1rem',
+                    whiteSpace: 'nowrap',
+                    minHeight: '56px'
                   }}
                 >
                   {resendAvailable
@@ -490,6 +494,7 @@ function Join() {
             <Button
               variant="contained"
               color="primary"
+              size="large"
               fullWidth
               onClick={onClickJoin}
               disabled={!validateForm()}

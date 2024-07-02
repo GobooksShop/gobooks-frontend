@@ -7,15 +7,15 @@ import useCartOrderStore from '../../store/useCartOrderStore';
 import { DeliveryContext } from '../../App';
 import { saveDelivery } from '../../api/delivery/delivery';
 import {useNavigate} from 'react-router-dom';
-import {complete_payment} from '../../api/payment/payment';
+import {Button} from "@mui/material";
 
-const Payment = () => {
+const Payment = ({productName}) => {
 
   const {
     merchantUid,
     totalAmount,
-    setMerchantUid,
-    resetMerchantUid,
+    paidProductName,
+    setMerchantUid
   } = useCartOrderStore(state => state);
   const { userId, name, email, role } = useUserStore(state => state.user);
   const { deliveryInfo } = useContext(DeliveryContext);
@@ -39,10 +39,6 @@ const Payment = () => {
         console.warn('이미 존재하는 주문번호입니다.');
       });
   }, []);
-
-  const validatePayment = () => {
-
-  };
 
   const validateCustomer = async () => {
     const { name, zipcode, address, realAddress, phoneNumber, landlinePhoneNumber } = deliveryInfo;
@@ -71,9 +67,9 @@ const Payment = () => {
   };
 
   const saveDeliveryInfo = async () => {
-    const isCustomerValid = await validateCustomer(); // validateCustomer()의 결과를 변수에 저장
+    const isCustomerValid = await validateCustomer();
     if (!isCustomerValid) {
-      return false; // false를 반환하여 이후 코드를 실행하지 않도록 함
+      return false;
     }
     else{
     const requestData = {
@@ -111,8 +107,8 @@ const Payment = () => {
             pg: 'html5_inicis.INIpayTest',
             pay_method: 'card',
             merchant_uid: merchantUid,
-            name: '주문명:결제테스트',
-            amount: 1200,
+            name: paidProductName,
+            amount: totalAmount,
             buyer_email: email,
             buyer_name: deliveryInfo.name,
             buyer_tel: deliveryInfo.phoneNumber.length > 0 ? deliveryInfo.phoneNumber : deliveryInfo.landlinePhoneNumber,
@@ -129,21 +125,22 @@ const Payment = () => {
               };
               navigate("/order/complete", {state: {payData: requestPaymentData }});
             } else {
-              console.log("실패 else문을 탑니다.");
+              console.log("");
             }
           },
         );
       })
-
       .catch(error => {
-        alert(error + "배송 정보를 확인할 수 없습니다.");
+
       });
 
 
   };
 
   return (
-    <CustomButton color="success" size="large" onClick={handlePayment} text="결제하기" />
+      <Button variant="contained" color="secondary" size="large" onClick={handlePayment}>
+        결제하기
+      </Button>
   );
 };
 

@@ -50,10 +50,6 @@ export default function ManagerDashboard() {
         }}
       >
         <Tab
-          label="회원 관리"
-          sx={{ fontSize: '1rem', fontWeight: 'bold', padding: '10px 20px' }}
-        />
-        <Tab
           label="카테고리 관리"
           sx={{ fontSize: '1rem', fontWeight: 'bold', padding: '10px 20px' }}
         />
@@ -67,15 +63,12 @@ export default function ManagerDashboard() {
         />
       </Tabs>
       <TabPanel value={tabIndex} index={0}>
-        <UserManagement />
-      </TabPanel>
-      <TabPanel value={tabIndex} index={1}>
         <Category />
       </TabPanel>
-      <TabPanel value={tabIndex} index={2}>
+      <TabPanel value={tabIndex} index={1}>
         <ProductAdd />
       </TabPanel>
-      <TabPanel value={tabIndex} index={3}>
+      <TabPanel value={tabIndex} index={2}>
         <ProductEdit />
       </TabPanel>
     </Box>

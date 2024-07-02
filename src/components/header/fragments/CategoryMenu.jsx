@@ -50,7 +50,7 @@ const Depth2 = ({
   };
 
   return (
-    <Box sx={{ width: '200px', minWidth: '150px' }}>
+    <Box>
       <Box
         sx={{
           display: 'flex',
@@ -200,16 +200,39 @@ export function CategoryMenu() {
                   </Typography>
                 </Link>
 
-                <Box className="tw-flex tw-flex-col tw-gap-1 tw-mt-4">
-                  {categories[selectedTab].children.map((categoryDepth2) => (
-                    <Depth2
-                      key={categoryDepth2.id}
-                      category={categoryDepth2}
-                      selectedCategory={selectedDepth2}
-                      handleCategory={handleSelectedDepth2}
-                      onLinkClick={handleLinkClick}
-                    />
-                  ))}
+                <Box
+                  className="tw-flex tw-flex-wrap tw-gap-4 tw-mt-4"
+                  sx={{
+                    gridTemplateColumns: 'repeat(2, 1fr)',
+                    gridAutoRows: 'minmax(50px, auto)',
+                  }}
+                >
+                  <Box sx={{ flex: 1 }}>
+                    {categories[selectedTab].children
+                      .filter((_, index) => index % 2 === 0)
+                      .map((categoryDepth2) => (
+                        <Depth2
+                          key={categoryDepth2.id}
+                          category={categoryDepth2}
+                          selectedCategory={selectedDepth2}
+                          handleCategory={handleSelectedDepth2}
+                          onLinkClick={handleLinkClick}
+                        />
+                      ))}
+                  </Box>
+                  <Box sx={{ flex: 1 }}>
+                    {categories[selectedTab].children
+                      .filter((_, index) => index % 2 !== 0)
+                      .map((categoryDepth2) => (
+                        <Depth2
+                          key={categoryDepth2.id}
+                          category={categoryDepth2}
+                          selectedCategory={selectedDepth2}
+                          handleCategory={handleSelectedDepth2}
+                          onLinkClick={handleLinkClick}
+                        />
+                      ))}
+                  </Box>
                 </Box>
               </Box>
             )}

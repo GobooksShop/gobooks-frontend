@@ -53,7 +53,7 @@ function Header() {
 
             <Logo />
             <ClickAwayListener onClickAway={handleClickAway}>
-            <div className="tw-relative">
+            <div className="tw-relative tw-pl-1">
                 {categories && (
                   <CategoryMenu
                     categories={categories}

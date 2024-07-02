@@ -7,11 +7,13 @@ import useCartOrderStore from '../../store/useCartOrderStore';
 import { saveOrder } from '../../api/order/order';
 import useUserStore from '../../store/useUserStore';
 import OrderStatus from '../../components/order/OrderStatus';
+import {Box} from "@mui/material";
 
 function Order() {
 
   const { cartItems, setMerchantUid, merchantUid } = useCartOrderStore(state => state);
   const { userId } = useUserStore(state => state.user);
+  const currentStep = 1;
   useEffect(() => {
     if (merchantUid === '') {
       const requestOrderItems = {
@@ -35,18 +37,21 @@ function Order() {
   }, []);
   return (
     <PageContainer>
-      <OrderStatus />
-      <header className="title tw-h-24 tw-flex tw-items-center">
-        <h1 className="tw-font-semibold tw-text-2xl">주문/결제</h1>
-      </header>
-      <div
-        className="tw-relative tw-grid tw-grid-cols-12 tw-mt-5 tw-gap-x-5 tw-max-w-[1240px]">
-        <div className="main content tw-col-span-9">
+      <OrderStatus currentStep={currentStep}/>
+      <Box
+          display="flex"
+          mt={5}
+          pt={5}
+          pr={35}
+          maxWidth={1240}
+          className="tw-relative"
+      >
+        <Box flexGrow={1} className="main content">
           <CartItems isOrders={true} />
           <DeleveryInfo />
-        </div>
+        </Box>
         <CartInfo isOrders={true} />
-      </div>
+      </Box>
     </PageContainer>
   );
 }

@@ -6,6 +6,7 @@ import SocialLogin from './fragments/SocialLogin';
 import { login } from '../../api/authApi';
 import { useNavigate } from 'react-router-dom';
 import useUserStore from '../../store/useUserStore';
+import gobookie_login from './fragments/gobookie_login.png';
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -46,9 +47,21 @@ function Login() {
   return (
     <PageContainer>
       <Container component="main" maxWidth="xs">
+        <Box sx={{ display: 'flex', justifyContent: 'center'}}>
+          <Box
+              sx={{
+                width: 200,
+                height: 200,
+                backgroundImage: `url(${gobookie_login})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                marginTop: 5,
+              }}
+          />
+        </Box>
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 3,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',

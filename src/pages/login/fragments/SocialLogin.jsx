@@ -6,11 +6,12 @@ import kakaoIcon from '../../../assets/socialLoginImages/btn_kakao.svg';
 import naverIcon from '../../../assets/socialLoginImages/btn_naver.svg';
 import { useNavigate } from 'react-router-dom';
 import useUserStore from '../../../store/useUserStore';
+const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 const providerUrls = {
-  google: `https://www.gobookstore.shop/oauth2/authorization/google`,
-  kakao: `https://www.gobookstore.shop/oauth2/authorization/kakao`,
-  naver: `https://www.gobookstore.shop/oauth2/authorization/naver`,
+  google: `${baseURL}/api/login/oauth2/authorization/google`,
+  kakao: `${baseURL}/api/login/oauth2/authorization/kakao`,
+  naver: `${baseURL}/api/login/oauth2/authorization/naver`,
 };
 
 const handleSocialLogin = (provider) => {
@@ -43,7 +44,7 @@ const SocialLogin = () => {
 
   useEffect(() => {
     const handleAuthComplete = (event) => {
-      if (event.origin === 'https://www.gobookstore.shop' && event.data) {
+      if (event.origin === `${baseURL}` && event.data) {
         console.log('Login successful');
         const { accessToken, userId, name, email, role } = event.data;
         console.log('response.data:', event.data);
