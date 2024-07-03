@@ -11,10 +11,10 @@ import React from 'react';
 import noImage from '../../pages/productList/images/noimage.jpg';
 import { useNavigate } from 'react-router-dom';
 
-const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 function MainProductCard({ book }) {
   const navigate = useNavigate();
+  const baseURL = process.env.REACT_APP_API_BASE_URL;
   const imageUrl = book.pictureUrl ? `${baseURL}/api/images/${book.pictureUrl}` : noImage;
 
   const handleClick = () => {
