@@ -14,6 +14,7 @@ import FloatingButton from '../../components/util/FloatingButton';
 import MainProductCard from './MainProductCard';
 import { PageContainer } from '../../components/PageContainer';
 import { fetchMainProducts } from '../../api/product/productApi';
+import LazyLoad from 'react-lazyload';
 
 const itemsPerPage = 4;
 
@@ -76,7 +77,9 @@ function BookCarousel({ books }) {
           .slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
           .map((book) => (
             <Grid item xs={12} sm={6} md={3} lg={3} key={book.id}>
+              <LazyLoad height={200} offset={100} once>
               <MainProductCard book={book} />
+              </LazyLoad>
             </Grid>
           ))}
       </Grid>
