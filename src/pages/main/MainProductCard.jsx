@@ -10,6 +10,7 @@ import React, { useEffect, useState } from 'react';
 
 import noImage from '../../pages/productList/images/noimage.jpg';
 import { useNavigate } from 'react-router-dom';
+import LazyLoad from 'react-lazyload';
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
@@ -61,6 +62,7 @@ function MainProductCard({ book }) {
           {isLoading ? (
               <Skeleton variant="rectangular" width="100%" height="100%" />
           ) : (
+            <LazyLoad>
               <CardMedia
                   component="img"
                   sx={{
@@ -71,6 +73,7 @@ function MainProductCard({ book }) {
                   image={imageUrl}
                   alt={book.title || 'Book'}
               />
+            </LazyLoad>
           )}
         <CardContent sx={{ padding: 2 }}>
           <Typography
