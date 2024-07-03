@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
 
-export const PrivateRoute = () => {
+const PrivateRoute = () => {
 
   const useAuthenticate = () => {
     const accessToken = localStorage.getItem("accessToken") || null;
@@ -15,3 +15,5 @@ export const PrivateRoute = () => {
 
   return useAuthenticate() ? <Outlet /> : <Navigate to="/login" />;
 };
+
+export default PrivateRoute;
