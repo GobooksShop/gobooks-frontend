@@ -7,7 +7,7 @@ import useCartOrderStore from '../../store/useCartOrderStore';
 import { saveOrder } from '../../api/order/order';
 import useUserStore from '../../store/useUserStore';
 import OrderStatus from '../../components/order/OrderStatus';
-import {Box} from "@mui/material";
+import { Box } from '@mui/material';
 
 function Order() {
 

@@ -3,14 +3,12 @@ import {
   CardActionArea,
   CardContent,
   CardMedia,
-  Skeleton,
   Typography,
 } from '@mui/material';
 import React from 'react';
 
 import noImage from '../../pages/productList/images/noimage.jpg';
 import { useNavigate } from 'react-router-dom';
-
 
 function MainProductCard({ book }) {
   const navigate = useNavigate();

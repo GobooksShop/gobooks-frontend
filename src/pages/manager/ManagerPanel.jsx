@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import Category from './category/Category';
 import ProductAdd from './product/ProductAdd';
 import ProductEdit from './product/ProductEdit';
-import UserManagement from './users/UserManagement';
 
 function TabPanel(props) {
   const { children, value, index } = props;

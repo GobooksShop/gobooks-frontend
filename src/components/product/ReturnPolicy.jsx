@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Divider, Box } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 
 function ReturnPolicy() {
   return (

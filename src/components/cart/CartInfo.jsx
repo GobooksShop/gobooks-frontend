@@ -1,17 +1,16 @@
-import CustomButton from '../ui/CustomButton';
 import { useEffect, useState } from 'react';
 import Payment from '../payment/Payment';
 import useCartOrderStore from '../../store/useCartOrderStore';
 import { useNavigate } from 'react-router-dom';
 import { varifyCartDatas } from '../../api/cart/cart';
 import {
-  Box, Button,
+  Button,
   Card,
   CardContent,
   Divider,
   Stack,
-  Typography
-} from "@mui/material";
+  Typography,
+} from '@mui/material';
 
 const CartInfo = (props) => {
   const [isFixed, setIsFixed] = useState(false);

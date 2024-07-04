@@ -13,30 +13,6 @@ import {Box, Button, Stack, TextField, Typography} from "@mui/material";
 const DeleveryInfo = (props) => {
   const {deliveryInfo, setDeliveryInfo} = useContext(DeliveryContext);
   const inputActiveRef =  useRef([]);
-  // useEffect(() => {
-  //   const button = document.getElementById('dropdownHoverButton');
-  //   const dropdown = document.getElementById('dropdownHover');
-  //
-  //   const showDropdown = () => {
-  //     dropdown.classList.remove('tw-hidden');
-  //   };
-  //
-  //   const hideDropdown = () => {
-  //     dropdown.classList.add('tw-hidden');
-  //   };
-  //
-  //   button.addEventListener('mouseover', showDropdown);
-  //   button.addEventListener('mouseout', hideDropdown);
-  //   dropdown.addEventListener('mouseover', showDropdown);
-  //   dropdown.addEventListener('mouseout', hideDropdown);
-  //
-  //   return () => {
-  //     button.removeEventListener('mouseover', showDropdown);
-  //     button.removeEventListener('mouseout', hideDropdown);
-  //     dropdown.removeEventListener('mouseover', showDropdown);
-  //     dropdown.removeEventListener('mouseout', hideDropdown);
-  //   };
-  // }, []);
   useEffect(() => {
     disabledAllInputs();
   }, [])

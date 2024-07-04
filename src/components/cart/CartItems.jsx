@@ -4,7 +4,7 @@ import { getProduct } from '../../api/cart/cart';
 import useCartOrderStore from '../../store/useCartOrderStore';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
-import {Box, Checkbox, Grid, IconButton, Typography} from "@mui/material";
+import { Box, Checkbox, IconButton, Typography } from '@mui/material';
 
 const CartItems = (props) => {
   const [cartItems, setCartItems] = useState([]);
