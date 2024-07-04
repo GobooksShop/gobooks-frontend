@@ -19,6 +19,7 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import review from '../../api/product/review';
 
 import AddIcon from '@mui/icons-material/Add';
 import { PageContainer } from '../../components/PageContainer';
@@ -45,6 +46,28 @@ const ProductDetail = () => {
   const { user } = useUserStore((state) => state);
   const [isSoldOut, setIsSoldOut] = useState(null);
   const baseURL = process.env.REACT_APP_API_BASE_URL;
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const reviewsData = await review.getReviewsByProductId(id); // Use review to fetch reviews
+        setReviews(reviewsData);
+      } catch (error) {
+        console.error('Failed to fetch reviews', error);
+      }
+    };
+
+    fetchReviews();
+  }, [id]);
+
+  const handleAddReview = async (content, rating) => {
+    try {
+      await review.addReview(id, content, rating); // Use review to add a review
+    } catch (error) {
+      console.error('Failed to add review', error);
+    }
+  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -405,6 +428,46 @@ const ProductDetail = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Box>
+        <Box mt={4}>
+          <Typography variant="h5" gutterBottom>
+            상품 리뷰
+          </Typography>
+          {reviews.length > 0 ? (
+              reviews.map((review) => (
+                  <Box key={review.id} mb={2}>
+                    <Typography variant="body1">{review.content}</Typography>
+                    <Typography variant="body2">Rating: {review.rating}</Typography>
+                    {/* Display other review details as needed */}
+                  </Box>
+              ))
+          ) : (
+              <Typography variant="body2">리뷰가 없습니다.</Typography>
+          )}
+        </Box>
+
+        {/* Add a form or UI to allow adding a review */}
+        {/* Example form to add a review */}
+        {/* Replace with your UI for adding a review */}
+        <Box mt={4}>
+          <Typography variant="h5" gutterBottom>
+            리뷰 작성
+          </Typography>
+          <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                // Replace with your form state or handlers
+                handleAddReview('Test review content', 5); // Example values, replace with actual form values
+              }}
+          >
+            {/* Example form fields */}
+            {/* Replace with your form inputs */}
+            <textarea rows="4" cols="50" placeholder="리뷰를 작성해주세요." />
+            <input type="number" placeholder="평점 (1-5)" />
+            <button type="submit">리뷰 작성</button>
+          </form>
+        </Box>
+      </Box>
     </PageContainer>
   );
 };
