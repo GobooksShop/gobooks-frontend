@@ -4,13 +4,13 @@ import { getProduct } from '../../api/cart/cart';
 import useCartOrderStore from '../../store/useCartOrderStore';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
-import {Box, Checkbox, Grid, IconButton, Typography} from "@mui/material";
+import { Box, Checkbox, IconButton, Typography } from '@mui/material';
 
 const CartItems = (props) => {
   const [cartItems, setCartItems] = useState([]);
   const [selectAll, setSelectAll] = useState(true);
   const store = useCartOrderStore();
-
+  const baseUrl = process.env.REACT_APP_API_BASE_URL;
   const fetchData = async () => {
 
     const storeData = JSON.parse(localStorage.getItem('cart-storage')).state || [];
@@ -32,7 +32,7 @@ const CartItems = (props) => {
         'price': data[0].fixedPrice,
         'isSelected': existDirectOrder[0].isSelected,
         'amount': data[0].fixedPrice * existDirectOrder[0].quantity,
-        'img_url': `https://www.gobookstore.shop:8080/api/images/${data[0].pictureUrl}`,
+        'img_url': `${baseUrl}/api/images/${data[0].pictureUrl}`,
       }];
 
       setCartItems(cartDatas);
@@ -64,7 +64,7 @@ const CartItems = (props) => {
           'isSelected': orderItem.isSelected,
           'amount': productData.fixedPrice * orderItem.quantity,
           'status': 'cart',
-          'img_url': `https://www.gobookstore.shop:8080/api/images/${productData.pictureUrl}`,
+          'img_url': `${baseUrl}/api/images/${productData.pictureUrl}`,
         };
         cartData.push(cartDatas);
       }
@@ -92,7 +92,7 @@ const CartItems = (props) => {
           'isSelected': storedItem.isSelected,
           'amount': item.fixedPrice * storedItem.quantity,
           'status': 'cart',
-          'img_url': `https://www.gobookstore.shop:8080/api/images/${item.pictureUrl}`,
+          'img_url': `${baseUrl}/api/images/${item.pictureUrl}`,
         };
         cartData.push(cartDatas);
       }

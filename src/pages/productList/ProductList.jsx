@@ -15,6 +15,7 @@ import ProductCard from '../../components/product/ProductCard';
 import Sort from '../../components/util/Sort';
 import axios from 'axios';
 import useCategoryStore from '../../store/useCategoryStore';
+
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 function ProductList() {

@@ -4,6 +4,7 @@ import {
   FormControlLabel,
   FormGroup,
   Grid,
+  LinearProgress,
   TextField,
   Typography,
 } from '@mui/material';
@@ -14,8 +15,6 @@ import {
   signUp,
   verifyCode,
 } from '../../api/user/userApi';
-
-import { LinearProgress } from '@mui/material';
 import { PageContainer } from '../../components/PageContainer';
 import TermsModal from './fragments/TermsModal';
 import { useNavigate } from 'react-router-dom';

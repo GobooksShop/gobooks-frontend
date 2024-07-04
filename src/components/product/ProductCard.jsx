@@ -1,17 +1,21 @@
 import {
   Box,
-  Button, ButtonGroup,
+  Button,
   Card,
   CardContent,
-  CardMedia, Dialog, DialogActions, DialogContent, DialogTitle, IconButton,
-  Skeleton, TextField,
+  CardMedia,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Skeleton,
   Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
-import {Link, useNavigate} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import noImage from '../../pages/productList/images/noimage.jpg';
-import useCartOrderStore from "../../store/useCartOrderStore";
+import useCartOrderStore from '../../store/useCartOrderStore';
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 

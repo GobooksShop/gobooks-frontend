@@ -5,7 +5,10 @@ import OrderCompleteInfo from '../../components/order/OrderCompleteInfo';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useCartOrderStore from '../../store/useCartOrderStore';
-import { complete_payment, getPaymentCompleteData } from '../../api/payment/payment';
+import {
+  complete_payment,
+  getPaymentCompleteData,
+} from '../../api/payment/payment';
 import { CircularProgress } from '@mui/material';
 
 const OrdersComplete = () => {

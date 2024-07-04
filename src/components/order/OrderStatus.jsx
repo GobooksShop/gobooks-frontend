@@ -1,6 +1,6 @@
-import {Box, Button, Typography} from "@mui/material";
-import React from "react";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { Box, Button } from '@mui/material';
+import React from 'react';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const steps = ['장바구니', '주문/결제', '주문 완료'];
 

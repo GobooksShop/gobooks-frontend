@@ -6,6 +6,7 @@ import kakaoIcon from '../../../assets/socialLoginImages/btn_kakao.svg';
 import naverIcon from '../../../assets/socialLoginImages/btn_naver.svg';
 import { useNavigate } from 'react-router-dom';
 import useUserStore from '../../../store/useUserStore';
+
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 const providerUrls = {
