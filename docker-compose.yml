@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  gobooks-frontend:
+    build: .
+    image: gobooks-frontend:latest
+    container_name: gobooks-frontend
+    ports:
+      - "3000:80"
