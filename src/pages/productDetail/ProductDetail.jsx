@@ -16,11 +16,11 @@ import {
   TextField,
   Toolbar,
   Typography,
+  Rating,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import review from '../../api/product/review';
-
 import AddIcon from '@mui/icons-material/Add';
 import { PageContainer } from '../../components/PageContainer';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -28,6 +28,7 @@ import ReturnPolicy from '../../components/product/ReturnPolicy';
 import useCartOrderStore from '../../store/useCartOrderStore';
 import useProductStore from '../../store/useProductStore';
 import useUserStore from '../../store/useUserStore';
+import StarRating from './StarRating';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -47,6 +48,23 @@ const ProductDetail = () => {
   const [isSoldOut, setIsSoldOut] = useState(null);
   const baseURL = process.env.REACT_APP_API_BASE_URL;
   const [reviews, setReviews] = useState([]);
+  const [newReview, setNewReview] = useState({ content: '', rating: 0 });
+
+  const handleReviewSubmit = async (event) => {
+    event.preventDefault();
+    const { content, rating } = newReview;
+
+    if (content && rating >= 1 && rating <= 5) {
+      try {
+        await handleAddReview(content, rating);
+        setNewReview({ content: '', rating: 0 }); // Reset form after submission
+      } catch (error) {
+        console.error('Failed to add review', error);
+      }
+    } else {
+      alert('Please enter valid content and rating (1-5).');
+    }
+  };
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -64,6 +82,7 @@ const ProductDetail = () => {
   const handleAddReview = async (content, rating) => {
     try {
       await review.addReview(id, content, rating); // Use review to add a review
+      setReviews([...reviews, { content, rating, userId: user.id, createdAt: new Date().toISOString() }]); // Update local state with new review
     } catch (error) {
       console.error('Failed to add review', error);
     }
@@ -428,44 +447,78 @@ const ProductDetail = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <Box>
-        <Box mt={4}>
-          <Typography variant="h5" gutterBottom>
-            상품 리뷰
-          </Typography>
-          {reviews.length > 0 ? (
-              reviews.map((review) => (
-                  <Box key={review.id} mb={2}>
-                    <Typography variant="body1">{review.content}</Typography>
-                    <Typography variant="body2">Rating: {review.rating}</Typography>
-                    {/* Display other review details as needed */}
-                  </Box>
-              ))
-          ) : (
-              <Typography variant="body2">리뷰가 없습니다.</Typography>
-          )}
-        </Box>
+      {/* 리뷰 섹션 */}
+      <Box className="tw-max-w-5xl tw-mx-auto tw-p-4 tw-md:p-8">
+        <Typography variant="h5" gutterBottom>
+          상품 리뷰
+        </Typography>
+        {reviews.length > 0 ? (
+            reviews.map((review) => (
+                <Box key={review.id} mb={2}>
+                  <Typography variant="body1">{review.content}</Typography>
+                  <Rating name="read-only" value={review.rating} readOnly />
+                  <Typography variant="body2" color="textSecondary">
+                    User ID: {review.userId}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    {new Date(review.date).toLocaleDateString()}
+                  </Typography>
+                  <Divider sx={{ my: 2 }} />
+                </Box>
+            ))
+        ) : (
+            <Typography variant="body2" color="textSecondary">
+              아직 리뷰가 없습니다.
+            </Typography>
+        )}
 
-        {/* Add a form or UI to allow adding a review */}
-        {/* Example form to add a review */}
-        {/* Replace with your UI for adding a review */}
+        {/* 리뷰 작성 섹션 */}
         <Box mt={4}>
-          <Typography variant="h5" gutterBottom>
-            리뷰 작성
+          <Typography variant="h6" gutterBottom>
+            리뷰 작성하기
           </Typography>
-          <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                // Replace with your form state or handlers
-                handleAddReview('Test review content', 5); // Example values, replace with actual form values
-              }}
+          <Box
+              component="form"
+              onSubmit={handleReviewSubmit}
+              noValidate
+              sx={{ mt: 1 }}
           >
-            {/* Example form fields */}
-            {/* Replace with your form inputs */}
-            <textarea rows="4" cols="50" placeholder="리뷰를 작성해주세요." />
-            <input type="number" placeholder="평점 (1-5)" />
-            <button type="submit">리뷰 작성</button>
-          </form>
+            <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="reviewContent"
+                label="리뷰 내용"
+                name="reviewContent"
+                autoComplete="reviewContent"
+                autoFocus
+                value={newReview.content}
+                onChange={(e) =>
+                    setNewReview({ ...newReview, content: e.target.value })
+                }
+            />
+            <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+              <Typography variant="body1" sx={{ mr: 2 }}>
+                평점:
+              </Typography>
+              <StarRating
+                  value={newReview.rating}
+                  onChange={(event, newValue) =>
+                      setNewReview({ ...newReview, rating: newValue })
+                  }
+              />
+            </Box>
+            <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                sx={{ mt: 3, mb: 2 }}
+            >
+              리뷰 제출
+            </Button>
+          </Box>
         </Box>
       </Box>
     </PageContainer>
