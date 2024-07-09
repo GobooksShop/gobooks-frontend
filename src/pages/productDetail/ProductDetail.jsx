@@ -57,12 +57,14 @@ const ProductDetail = () => {
     if (content && rating >= 1 && rating <= 5) {
       try {
         await handleAddReview(content, rating);
+        alert("상품 리뷰가 작성되었습니다.");
         setNewReview({ content: '', rating: 0 }); // Reset form after submission
       } catch (error) {
         console.error('Failed to add review', error);
+        alert("리뷰를 작성할 수 없습니다.");
       }
     } else {
-      alert('Please enter valid content and rating (1-5).');
+      alert('유효한 값을 선택해주세요.');
     }
   };
 
